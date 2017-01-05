@@ -23,7 +23,7 @@ export default class Roster extends React.Component {
                     renderScrollComponent={props => <ScrollView {...props} />}
                     dataSource={dataSource}
                     renderRow={(row) =>
-                            <Text style={styles.messageItem}>{row.presence} {row.displayName}</Text>}
+                            <TouchableHighlight onPress={} style={styles.messageItem}>{row.presence} {row.displayName}</TouchableHighlight>}
           />
           <Button onPress={() => xmpp.fetchRoster()}>Klikk her!</Button>
          </View>
