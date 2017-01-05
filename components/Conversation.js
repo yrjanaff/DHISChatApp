@@ -3,7 +3,7 @@ import {View, Text, ScrollView, TextInput, Keyboard, ListView, Dimensions}  from
 import styles from './styles';
 const height = Dimensions.get('window').height;
 import Button from 'react-native-button';
-var {Actions} = require('react-native-router-flux');
+import {Actions} from 'react-native-mobx';
 var InvertibleScrollView = require('react-native-invertible-scroll-view');
 import xmpp from '../stores/XmppStore';
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -20,9 +20,8 @@ class Conversation extends React.Component {
         Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
         Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this));
         this.mounted = true;
-        xmpp.login({local:xmpp.local, remote:xmpp.remote});
     }
-    
+
     componentWillUnmount(){
         this.mounted = false;
         Keyboard.removeListener('keyboardWillShow');
@@ -31,11 +30,11 @@ class Conversation extends React.Component {
     keyboardWillShow (e) {
         if (this.mounted) this.setState({height: e.endCoordinates.height});
     }
-    
+
     keyboardWillHide (e) {
         if (this.mounted) this.setState({height: 0});
     }
-    
+
     render(){
         const dataSource = ds.cloneWithRows(xmpp.conversation.map(x=>x));
         return (
@@ -68,9 +67,3 @@ class Conversation extends React.Component {
 }
 
 module.exports = Conversation;
-
-/*
- <View style={styles.sendButton}>
- <Button onPress={()=>{xmpp.sendMessage(this.state.message);this.setState({message:''})}} disabled={!this.state.message || !this.state.message.trim()}>Send</Button>
- </View>
- */

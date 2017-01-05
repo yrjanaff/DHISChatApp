@@ -24,8 +24,6 @@ const LOG = (message) => {
 class XMPP{
 
   constructor(){
-console.log(NativeModules);
-    console.log(XMPPModule);
     this.isConnected = false;
     this.isLogged = false;
     this.listeners = [

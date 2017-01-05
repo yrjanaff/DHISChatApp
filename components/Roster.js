@@ -1,15 +1,14 @@
 import React from 'react';
-import {View, Text, ListView, ScrollView}  from 'react-native';
+import {View, Text, ListView, ScrollView, TouchableHighlight}  from 'react-native';
 import Button from 'react-native-button';
 import styles from './styles';
 import xmpp from '../stores/XmppStore';
+import { Actions } from 'react-native-mobx';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 export default class Roster extends React.Component {
   constructor( props ) {
-    console.log("Inni roster");
-    console.log(props);
     super(props);
     this.state = {};
   }
@@ -17,13 +16,13 @@ export default class Roster extends React.Component {
   render() {
     const dataSource = ds.cloneWithRows(xmpp.roster.map(x=>x));
     return (
-        <View style={styles.container}>
+         <View style={styles.container}>
           <ListView enableEmptySections
                     ref="roster"
                     renderScrollComponent={props => <ScrollView {...props} />}
                     dataSource={dataSource}
                     renderRow={(row) =>
-                            <TouchableHighlight onPress={} style={styles.messageItem}>{row.presence} {row.displayName}</TouchableHighlight>}
+                        <TouchableHighlight onPress={() => Actions.conversation({remote: row.displayName})}><Text>{row.presence} {row.displayName}</Text></TouchableHighlight>}
           />
           <Button onPress={() => xmpp.fetchRoster()}>Klikk her!</Button>
          </View>

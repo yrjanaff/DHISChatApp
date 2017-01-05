@@ -1,5 +1,5 @@
 import XMPP from './CallbackHandler';
-const DOMAIN = "1x-193-157-200-122.uio.no";
+const DOMAIN = "1x-193-157-182-210.uio.no";
 import {observable} from 'mobx';
 import autobind from 'autobind';
 
@@ -56,20 +56,16 @@ class XmppStore {
 
 
     onLoginError(){
-        console.log("Inni onLoginError!!!");
         this.loading = false;
         this.conversation.replace([]);
         this.loginError = "Cannot authenticate, please use correct local username";
     }
 
     onFetchedRoster(rosterList){
-        console.log("Inni onFetchedRoster i XMPPStore");
-        console.log(rosterList);
         this.roster.replace(rosterList);
     }
 
     onError(message){
-        console.log("inni onError!!!");
         this.error = message;
     }
 
@@ -79,7 +75,6 @@ class XmppStore {
     }
 
     onLogin(){
-        console.log("LOGGED!");
         this.conversation.replace([]);
         this.loading = false;
         this.loginError = null;
@@ -87,7 +82,6 @@ class XmppStore {
     }
 
     login({local, remote}){
-        console.log("Inni XmppStore sin login");
         this.local = local;
         this.remote = remote;
         if (!local || !local.trim()){
@@ -99,19 +93,15 @@ class XmppStore {
         } else {
             this.loginError = null;
 
-            console.log("fortsatt i login, før trustHosts");
-            XMPP.trustHosts(['1x-193-157-200-122.uio.no'])
+            XMPP.trustHosts(['1x-193-157-182-210.uio.no'])
             // try to login to test domain with the same password as username
-            console.log("fortatt i login, etter trusthost, før connect");
             XMPP.connect(this._userForName(this.local),this.local, "", DOMAIN, 5222);
-            console.log("fortsatt inni login, etter connect");
             this.loading = true;
         }
 
     }
 
     fetchRoster() {
-        console.log("inni XMPPStore fetchRoster");
        XMPP.fetchRoster();
     }
 
