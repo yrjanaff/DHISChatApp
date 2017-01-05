@@ -10,6 +10,7 @@ class XmppStore {
     @observable loginError = null;
     @observable error = null;
     @observable conversation = [];
+    @observable roster = [];
     
     constructor() {
         console.log(XMPP);
@@ -18,7 +19,7 @@ class XmppStore {
         XMPP.on('disconnect', this.onDisconnect);
         XMPP.on('login', this.onLogin);
         XMPP.on('message', this.onReceiveMessage);
-        //XMPP.on('roster', this.onFetchedRoster);
+        XMPP.on('roster', this.onFetchedRoster);
         // default values
         this.local = 'rntestuser1';
         this.remote = 'rntestuser2';
@@ -61,10 +62,11 @@ class XmppStore {
         this.loginError = "Cannot authenticate, please use correct local username";
     }
 
-   /* onFetchedRoster(props){
+    onFetchedRoster(rosterList){
         console.log("Inni onFetchedRoster i XMPPStore");
-        console.log(props);
-    }*/
+        console.log(rosterList);
+        this.roster.replace(rosterList);
+    }
 
     onError(message){
         console.log("inni onError!!!");
@@ -108,10 +110,14 @@ class XmppStore {
 
     }
 
-   /* fetchRoster() {
-        XMPP.fetchRoster();
-    }*/
+    fetchRoster() {
+        console.log("inni XMPPStore fetchRoster");
+       XMPP.fetchRoster();
+    }
 
+    presence() {
+        console.log("inni XMPPStore presence");
+    }
     disconnect() {
         XMPP.disconnect();
     }

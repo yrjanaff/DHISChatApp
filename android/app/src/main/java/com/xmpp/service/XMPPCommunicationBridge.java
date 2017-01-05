@@ -14,6 +14,7 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterGroup;
+import org.jivesoftware.smack.packet.Presence;
 
 import com.xmpp.utils.Parser;
 import android.util.Log;
@@ -73,8 +74,17 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
         WritableArray rosterResponse = Arguments.createArray();
         for (RosterEntry rosterEntry : roster.getEntries()) {
             WritableMap rosterProps = Arguments.createMap();
+            Log.d("ComBridge", "RosterProps");
+            Log.d("ComBridge", rosterEntry.toString());
             rosterProps.putString("username", rosterEntry.getUser());
             rosterProps.putString("displayName", rosterEntry.getName());
+            Presence presence = roster.getPresence(rosterEntry.getUser());
+            String status = presence.getStatus();
+            if (status == null) {
+                status = presence.getType().name();
+            }
+            rosterProps.putString("presence", status);
+            rosterProps.putString("status", roster.getPresence(rosterEntry.getUser()).toString());
             WritableArray groupArray = Arguments.createArray();
             for (RosterGroup rosterGroup : rosterEntry.getGroups()) {
                 groupArray.pushString(rosterGroup.getName());

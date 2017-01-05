@@ -1,8 +1,10 @@
-/*import React from 'react';
-import {View, Text}  from 'react-native';
+import React from 'react';
+import {View, Text, ListView, ScrollView}  from 'react-native';
 import Button from 'react-native-button';
-
+import styles from './styles';
 import xmpp from '../stores/XmppStore';
+
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 export default class Roster extends React.Component {
   constructor( props ) {
@@ -10,19 +12,22 @@ export default class Roster extends React.Component {
     console.log(props);
     super(props);
     this.state = {};
-
-    console.log(View);
-    console.log(Text);
-    console.log(Button);
-    console.log(xmpp);
   }
 
   render() {
+    const dataSource = ds.cloneWithRows(xmpp.roster.map(x=>x));
     return (
-        <View>
-
-        </View>
+        <View style={styles.container}>
+          <ListView enableEmptySections
+                    ref="roster"
+                    renderScrollComponent={props => <ScrollView {...props} />}
+                    dataSource={dataSource}
+                    renderRow={(row) =>
+                            <Text style={styles.messageItem}>{row.presence} {row.displayName}</Text>}
+          />
+          <Button onPress={() => xmpp.fetchRoster()}>Klikk her!</Button>
+         </View>
     )
   }
 
-}*/
+}

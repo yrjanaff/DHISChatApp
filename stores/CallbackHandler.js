@@ -34,7 +34,7 @@ console.log(NativeModules);
         NativeAppEventEmitter.addListener(map.error, this.onError.bind(this)),
         NativeAppEventEmitter.addListener(map.loginError, this.onLoginError.bind(this)),
         NativeAppEventEmitter.addListener(map.login, this.onLogin.bind(this)),
-        //NativeAppEventEmitter.addListener(map.roster, this.onFetchedRoster(this))
+        NativeAppEventEmitter.addListener(map.roster, this.onFetchedRoster.bind(this))
     ];
   }
 
@@ -64,10 +64,10 @@ console.log(NativeModules);
     LOG("LoginError: "+text);
   }
 
- /* onFetchedRoster(props){
+  onFetchedRoster(props){
     console.log("Roster fetched");
     console.log(props);
-  }*/
+  }
 
   on(type, callback){
     if (map[type]){
