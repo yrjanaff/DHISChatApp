@@ -72,6 +72,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         String[] serviceNameParts = jidParts[1].split("/");
         String serviceName = serviceNameParts[0];
 
+       this.password = password;
         //  Se på connectionConfig for unødvendig kode
 
         XMPPTCPConnectionConfiguration.Builder confBuilder = XMPPTCPConnectionConfiguration.builder()

@@ -36,7 +36,12 @@ class Conversation extends React.Component {
     }
 
     render(){
-        const dataSource = ds.cloneWithRows(xmpp.conversation.map(x=>x));
+
+        console.log("conversation render");
+        console.log(xmpp.conversation);
+        console.log(xmpp.remote);
+        console.log(xmpp.conversation[xmpp.remote].chat);
+        const dataSource = ds.cloneWithRows(xmpp.conversation[xmpp.remote].chat.map(x=>x));
         return (
             <View style={styles.container}>
                 <View style={{flex:1}}>

@@ -10,6 +10,7 @@ import TabIcon from './components/TabIcon';
 import xmpp from './stores/XmppStore';
 // Define all routes of the app
 var XmppDemo = React.createClass({
+
   render: function() {
 
      const reducerCreate = params=>{

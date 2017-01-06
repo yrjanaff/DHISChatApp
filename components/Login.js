@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ScrollView, TextInput, ListView, Dimensions}  from 'react-native';
+import {View, Text, ScrollView, TextInput, ListView, Dimensions, AsyncStorage}  from 'react-native';
 import styles from './styles';
 import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';
@@ -10,6 +10,7 @@ export default class Login extends React.Component {
     super(props);
     this.state = {};
   }
+  
   render(){
     return (
       <View style={[styles.container,{alignItems:'center'}]}>
@@ -21,18 +22,19 @@ export default class Login extends React.Component {
                      autoCorrect={false}
                      autoCapitalize="none"
                      autoFocus={true}
-                     placeholder="Local (http://1x-193-157-200-122.uio.no)"
-                     value={this.state.local}
-                     onChangeText={(local)=>this.setState({local})}
+                     placeholder="Username"
+                     value={this.state.username}
+                     onChangeText={(username)=>this.setState({username})}
           />
         </View>
         <View style={styles.lastRow}>
           <TextInput style={styles.rowInput}
+                     secureTextEntry={true}
                      autoCorrect={false}
                      autoCapitalize="none"
-                     placeholder="Remote (http://1x-193-157-200-122.uio.no)"
-                     value={this.state.remote}
-                     onChangeText={(remote)=>this.setState({remote})}
+                     placeholder="Password"
+                     value={this.state.password}
+                     onChangeText={(password)=>this.setState({password})}
           />
         </View>
         <View style={styles.button}><Button onPress={()=>xmpp.login(this.state)}>Login</Button></View>

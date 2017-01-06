@@ -1,6 +1,6 @@
 'use strict';
 var React = require('react-native');
-var {NativeAppEventEmitter, NativeModules} = React;
+var {NativeAppEventEmitter, NativeModules, AsyncStorage} = React;
 var XMPPModule = NativeModules.XMPP;
 
 var map = {
@@ -42,6 +42,7 @@ class XMPP{
   }
 
   onLogin(props){
+    AsyncStorage.setItem("userCredentials", JSON.stringify(props));
     LOG("Login");
     console.log(props);
     this.isLogged = true;

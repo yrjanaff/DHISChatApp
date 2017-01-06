@@ -1,7 +1,9 @@
 import XMPP from './CallbackHandler';
-const DOMAIN = "1x-193-157-182-210.uio.no";
+const DOMAIN = "1x-193-157-200-122.uio.no";
+
 import {observable} from 'mobx';
 import autobind from 'autobind';
+import {AsyncStorage} from 'react-native';
 
 @autobind
 class XmppStore {
@@ -9,7 +11,7 @@ class XmppStore {
     @observable loading = false;
     @observable loginError = null;
     @observable error = null;
-    @observable conversation = [];
+    @observable conversation = {};
     @observable roster = [];
     
     constructor() {
@@ -21,12 +23,32 @@ class XmppStore {
         XMPP.on('message', this.onReceiveMessage);
         XMPP.on('roster', this.onFetchedRoster);
         // default values
-        this.local = 'rntestuser1';
-        this.remote = 'rntestuser2';
+        this.usename = '';
+        this.password = '';
+        this.remote = '';
+
+        AsyncStorage.getItem("conversation").then((value) => {
+            this.conversation = JSON.parse(value);
+        });
+
+        console.log("constructor i store");
+        console.log(this.conversation);
     }
-    
+
     _userForName(name){
         return name + '@' + DOMAIN;
+    }
+
+    setRemote(remote){
+        this.remote = remote;
+        console.log("setRemote");
+        console.log(!this.conversation[this.remote]);
+        console.log(this.conversation);
+        if(!this.conversation[this.remote]) {
+            console.log("inni if i setRemote");
+          this.conversation = Object.assign({}, this.conversation, {[this.remote]: {chat: []}});
+        }
+        console.log(this.conversation);
     }
 
     sendMessage(message){
@@ -36,12 +58,15 @@ class XmppStore {
         if (!message || !message.trim()){
             return false;
         }
-        // add to list of messages
-        this.conversation.unshift({own:true, text:message.trim()});
+
+       this.conversation[this.remote].chat.unshift({own:true, text:message })
+
         // empty sent message
         this.error = null;
         // send to XMPP server
-        XMPP.message(message.trim(), this._userForName(this.remote))
+        XMPP.message(message.trim(), this.remote)
+
+        AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
     }
 
     onReceiveMessage({from, body}){
@@ -51,13 +76,15 @@ class XmppStore {
             return;
         }
         var name = from.match(/^([^@]*)@/)[1];
-        this.conversation.unshift({own:false, text:body});
+
+        this.conversation[this.remote].chat.unshift({own:false, text:body })
+
+        AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
     }
 
 
     onLoginError(){
         this.loading = false;
-        this.conversation.replace([]);
         this.loginError = "Cannot authenticate, please use correct local username";
     }
 
@@ -75,27 +102,25 @@ class XmppStore {
     }
 
     onLogin(){
-        this.conversation.replace([]);
         this.loading = false;
         this.loginError = null;
         this.logged = true;
+        //this.conversation = {};
     }
 
-    login({local, remote}){
-        this.local = local;
-        this.remote = remote;
-        if (!local || !local.trim()){
-            this.loginError = "Local username should not be empty";
-        } else if (!remote || !remote.trim()){
-            this.loginError = "Remote username should not be empty";
-        } else if (local==remote){
-            this.loginError = "Local username should not be the same as remote username";
+    login({username, password}){
+        this.username = username;
+        this.password = password;
+        if (!username || !username.trim()){
+            this.loginError = "Username should not be empty";
+        } else if (!password || !password.trim()){
+            this.loginError = "Password should not be empty";
         } else {
             this.loginError = null;
 
-            XMPP.trustHosts(['1x-193-157-182-210.uio.no'])
+            XMPP.trustHosts(['1x-193-157-182-210.uio.no', '1x-193-157-200-122.uio.no'])
             // try to login to test domain with the same password as username
-            XMPP.connect(this._userForName(this.local),this.local, "", DOMAIN, 5222);
+            XMPP.connect(this._userForName(this.username),this.password, "", DOMAIN, 5222);
             this.loading = true;
         }
 

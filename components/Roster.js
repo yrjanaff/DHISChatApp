@@ -17,14 +17,14 @@ export default class Roster extends React.Component {
     const dataSource = ds.cloneWithRows(xmpp.roster.map(x=>x));
     return (
          <View style={styles.container}>
+           <Button onPress={() => xmpp.fetchRoster()}>Klikk her!</Button>
           <ListView enableEmptySections
                     ref="roster"
                     renderScrollComponent={props => <ScrollView {...props} />}
                     dataSource={dataSource}
                     renderRow={(row) =>
-                        <TouchableHighlight onPress={() => Actions.conversation({remote: row.displayName})}><Text>{row.presence} {row.displayName}</Text></TouchableHighlight>}
+                        <TouchableHighlight onPress={() => {Actions.conversation({remote: row.displayName}); xmpp.setRemote(row.username)}}><Text>{row.presence} {row.displayName}</Text></TouchableHighlight>}
           />
-          <Button onPress={() => xmpp.fetchRoster()}>Klikk her!</Button>
          </View>
     )
   }
