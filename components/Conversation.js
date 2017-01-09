@@ -10,7 +10,8 @@ const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 class Conversation extends React.Component {
     static title(props){
-        return xmpp.remote;
+      const username = xmpp.remote.split("@");
+      return username[0];
     }
     constructor(props) {
         super(props);
@@ -36,11 +37,6 @@ class Conversation extends React.Component {
     }
 
     render(){
-
-        console.log("conversation render");
-        console.log(xmpp.conversation);
-        console.log(xmpp.remote);
-        console.log(xmpp.conversation[xmpp.remote].chat);
         const dataSource = ds.cloneWithRows(xmpp.conversation[xmpp.remote].chat.map(x=>x));
         return (
             <View style={styles.container}>

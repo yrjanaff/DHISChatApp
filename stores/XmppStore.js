@@ -1,5 +1,6 @@
 import XMPP from './CallbackHandler';
-const DOMAIN = "1x-193-157-200-122.uio.no";
+const DOMAIN = "1x-193-157-182-210.uio.no";
+
 
 import {observable} from 'mobx';
 import autobind from 'autobind';
@@ -13,7 +14,7 @@ class XmppStore {
     @observable error = null;
     @observable conversation = {};
     @observable roster = [];
-    
+
     constructor() {
         console.log(XMPP);
         XMPP.on('loginError', this.onLoginError);
@@ -28,11 +29,12 @@ class XmppStore {
         this.remote = '';
 
         AsyncStorage.getItem("conversation").then((value) => {
-            this.conversation = JSON.parse(value);
+            if(value != null) {
+              this.conversation = JSON.parse(value);
+            }else {
+              this.conversation = {};
+            }
         });
-
-        console.log("constructor i store");
-        console.log(this.conversation);
     }
 
     _userForName(name){
@@ -41,14 +43,10 @@ class XmppStore {
 
     setRemote(remote){
         this.remote = remote;
-        console.log("setRemote");
-        console.log(!this.conversation[this.remote]);
-        console.log(this.conversation);
+
         if(!this.conversation[this.remote]) {
-            console.log("inni if i setRemote");
           this.conversation = Object.assign({}, this.conversation, {[this.remote]: {chat: []}});
         }
-        console.log(this.conversation);
     }
 
     sendMessage(message){
@@ -59,25 +57,25 @@ class XmppStore {
             return false;
         }
 
-       this.conversation[this.remote].chat.unshift({own:true, text:message })
-
+       this.conversation[this.remote].chat.unshift({own:true, text:message, date: new Date()})
         // empty sent message
         this.error = null;
         // send to XMPP server
         XMPP.message(message.trim(), this.remote)
 
         AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
+
+
     }
 
-    onReceiveMessage({from, body}){
-        console.log("onReceiveMessage")
+    onReceiveMessage({from, body, thread, subject, src}){
         // extract username from XMPP UID
         if (!from || !body){
             return;
         }
         var name = from.match(/^([^@]*)@/)[1];
 
-        this.conversation[this.remote].chat.unshift({own:false, text:body })
+        this.conversation[this.remote].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
 
         AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
     }
@@ -118,7 +116,7 @@ class XmppStore {
         } else {
             this.loginError = null;
 
-            XMPP.trustHosts(['1x-193-157-182-210.uio.no', '1x-193-157-200-122.uio.no'])
+            XMPP.trustHosts(['1x-193-157-182-210.uio.no', '1x-193-157-200-122.uio.no', 'yj-dev.dhis2.org'])
             // try to login to test domain with the same password as username
             XMPP.connect(this._userForName(this.username),this.password, "", DOMAIN, 5222);
             this.loading = true;

@@ -10,6 +10,7 @@ import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.delay.packet.DelayInformation;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
@@ -69,8 +70,6 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
 
     @Override
     public void onRosterReceived(Roster roster) {
-        Log.d("ComBridge", "Inni onRosterRecieved");
-        Log.d("ComBridge", roster.toString());
         WritableArray rosterResponse = Arguments.createArray();
         for (RosterEntry rosterEntry : roster.getEntries()) {
             WritableMap rosterProps = Arguments.createMap();

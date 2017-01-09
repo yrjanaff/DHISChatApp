@@ -6,7 +6,7 @@ var styles = StyleSheet.create({
         flex:1,
         paddingTop: 70,
         backgroundColor: '#F7F7F7',
-        
+
     },
     row: {
         flexDirection: 'row',
@@ -103,6 +103,15 @@ var styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor:'white'
+    },
+    touch: {
+        alignSelf: 'stretch',
+    },
+    bold:{
+      fontWeight: 'bold'
+    },
+    toContainer: {
+      justifyContent: 'space-between'
     }
 
 });
