@@ -106,14 +106,38 @@ var styles = StyleSheet.create({
     },
     touch: {
         alignSelf: 'stretch',
+        marginLeft: 10,
+        marginBottom: 10
     },
     bold:{
       fontWeight: 'bold'
     },
     toContainer: {
       justifyContent: 'space-between'
-    }
+    },
+    dateColor: {
+      color: '#c3c3c3',
+      fontSize: 11
+    },
 
+    online: {
+      borderRadius: 100,
+      width: 10,
+      height: 10,
+      backgroundColor:"#57B061"
+    },
+    unavailable: {
+      borderRadius: 100,
+      width: 10,
+      height: 10,
+      backgroundColor:"#778899"
+    },
+    idle: {
+      borderRadius: 100,
+      width: 10,
+      height: 10,
+      backgroundColor:"#ffea00"
+    }
 });
 
 

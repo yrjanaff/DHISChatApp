@@ -11,6 +11,11 @@ export default class Roster extends React.Component {
     this.state = {};
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({roster: nextProps.roster})
+
+  }
+
   render() {
     return (
          <View style={styles.container}>

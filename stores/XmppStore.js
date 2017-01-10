@@ -16,7 +16,6 @@ class XmppStore {
     @observable roster = [];
 
     constructor() {
-        console.log(XMPP);
         XMPP.on('loginError', this.onLoginError);
         XMPP.on('error', this.onError);
         XMPP.on('disconnect', this.onDisconnect);
@@ -27,6 +26,7 @@ class XmppStore {
         this.usename = '';
         this.password = '';
         this.remote = '';
+        this.messageSentorRecieved = false;
 
         AsyncStorage.getItem("conversation").then((value) => {
             if(value != null) {
@@ -43,12 +43,11 @@ class XmppStore {
 
     setRemote(remote){
         this.remote = remote;
-
-        if(!this.conversation[this.remote]) {
-          this.conversation = Object.assign({}, this.conversation, {[this.remote]: {chat: []}});
-        }
     }
 
+    createConversationObject(remote) {
+        this.conversation = Object.assign({}, this.conversation, {[remote]: {chat: []}});
+    }
     sendMessage(message){
         if (!this.remote || !this.remote.trim()){
             console.error("No remote username is defined");
@@ -56,26 +55,34 @@ class XmppStore {
         if (!message || !message.trim()){
             return false;
         }
+        if( !this.conversation[this.remote] ) {
+            this.createConversationObject(this.remote);
+        }
 
-       this.conversation[this.remote].chat.unshift({own:true, text:message, date: new Date()})
+        this.conversation[this.remote].chat.unshift({own:true, text:message, date: new Date()})
         // empty sent message
         this.error = null;
         // send to XMPP server
         XMPP.message(message.trim(), this.remote)
-
+         this.messageSentorRecieved = true;
         AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
 
 
     }
 
-    onReceiveMessage({from, body, thread, subject, src}){
+    onReceiveMessage({from, body}){
         // extract username from XMPP UID
         if (!from || !body){
             return;
         }
         var name = from.match(/^([^@]*)@/)[1];
 
-        this.conversation[this.remote].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
+        if( !this.conversation[from] ) {
+            this.createConversationObject(from);
+        }
+
+        this.conversation[from].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
+        this.messageSentorRecieved = true;
 
         AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
     }

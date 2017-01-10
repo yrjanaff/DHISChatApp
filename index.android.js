@@ -3,7 +3,7 @@ import {AppRegistry} from 'react-native';
 import { Scene, Router, Reducer, Switch } from 'react-native-mobx';
 import Conversation from './components/Conversation';
 import Login from './components/Login';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import Roster from './components/Roster';
 import Chats from './components/Chats';
 import ChatCreater from './components/ChatCreater';
@@ -26,7 +26,7 @@ var XmppDemo = React.createClass({
             <Scene key="main" component={Switch} tabs selector={()=>!xmpp.logged ? 'login' : 'tabs'}>
               <Scene key="login" component={Login} title="Login"/>
               <Scene key="tabs" tabs={true} hideNavBar>
-                <Scene key="chat" title="Chats" groups={false} component={Chats}  hideBackImage icon={TabIcon} onLeft={()=>alert("Left button!")} leftTitle="Left" />
+                <Scene key="chat" title="Chats" groups={false} component={Chats}  hideBackImage icon={TabIcon}  onLeft={()=>alert("Left button!")} leftTitle="Left" />
                 <Scene key="contacts" title="Contacts" icon={TabIcon}>
                   <Scene key="roster" component={Roster}  hideBackImage  initial={true} title="Roster" onLeft={()=>alert("Left button!")} leftTitle="Left"/>
                   <Scene key="conversation" component={Conversation} hideTabBar duration={1}/>

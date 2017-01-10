@@ -1,19 +1,42 @@
 import React from 'react';
-import {Text, ListView, ScrollView, TouchableHighlight}  from 'react-native';
+import {View, Text, ListView, ScrollView, TouchableHighlight}  from 'react-native';
 import xmpp from '../stores/XmppStore';
-import { Actions } from 'react-native-mobx';
+import { Actions } from 'react-native-mobx'
+import styles from './styles';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 export default class ListRoster extends React.Component {
+
+  sortAlphabetically(array) {
+    return array.sort(function( a, b ) {
+      var nameA = a.displayName.toLowerCase();
+      var nameB = b.displayName.toLowerCase();
+      if( nameA < nameB ) {
+        return -1;
+      }
+      if( nameA > nameB ) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
   constructor( props ) {
     super(props);
-    this.state = {roster: props.roster};
+    this.state = {roster: this.sortAlphabetically(props.roster)};
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({roster: nextProps.roster})
+  }
 
+  getAvailableIcon(status) {
+    switch(status) {
+      case 'Online': return styles.online;
+      case 'Away': return styles.idle;
+      case 'unavailable': return styles.unavailable;
+    }
   }
 
   render() {
@@ -24,7 +47,7 @@ export default class ListRoster extends React.Component {
                     renderScrollComponent={props => <ScrollView {...props} />}
                     dataSource={dataSource}
                     renderRow={(row) =>
-                        <TouchableHighlight onPress={() => {Actions.conversation({remote: row.displayName}); xmpp.setRemote(row.username)}}><Text>{row.presence} {row.displayName}</Text></TouchableHighlight>}
+                        <TouchableHighlight onPress={() => {Actions.conversation({remote: row.displayName}); xmpp.setRemote(row.username)}}><View><View style={[this.getAvailableIcon(row.presence) ]}/><Text> {row.displayName}</Text></View></TouchableHighlight>}
           />
     )
   }

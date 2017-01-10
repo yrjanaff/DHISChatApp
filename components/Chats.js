@@ -1,22 +1,35 @@
 import React from 'react';
-import {View,Text, TouchableHighlight}  from 'react-native';
+import {View,Text, TouchableHighlight, ScrollView}  from 'react-native';
 import styles from './styles';
 import xmpp from '../stores/XmppStore';
 import { Actions } from 'react-native-mobx';
+var dateFormat = require('dateformat');
 
 import Button from 'react-native-button';
 
 export default class Chats extends React.Component {
 
-  sortRecentConversations(conversationsList, people){       //Denne må sortere etterhvert og daa
+  sortArray(array) {
+    return array.sort(function( a, b ) {
+      var nameA = new Date(xmpp.conversation[a].chat[0].date);
+      var nameB = new Date(xmpp.conversation[b].chat[0].date);
+      return nameB - nameA;
+    });
+  }
+
+  sortRecentConversations(conversationsList, people){
     for(let remote in conversationsList){
             people.push(remote);
     }
-    return people;
+    return this.sortArray(people);
   }
 
   constructor( props ) {
     super(props);
+    this.setUp(props);
+  }
+
+  setUp(props){
     let tempmessages = {};
     let tempPeople = [];
     if(!props.groups)  {
@@ -47,9 +60,13 @@ export default class Chats extends React.Component {
   }
 
   render() {
+    if(xmpp.messageSentorRecieved) {
+      this.setUp(this.state);
+      xmpp.messageSentorRecieved = false;
+    }
     return (
-
         <View style={styles.container}>
+          <ScrollView  automaticallyAdjustContentInsets={true} horizontal={false} >
           <Button onPress={()=>Actions.newChat()}>Klikk her for ny {!this.state.group ? 'chat' : 'group'}!</Button>
         {
            this.state.people.map((remote) => {
@@ -57,16 +74,16 @@ export default class Chats extends React.Component {
                         <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={remote} onPress={() => {Actions.conversation({remote: this.prettifyUsername(remote)}); xmpp.setRemote(remote)}}>
                           <View>
                             <Text style={styles.bold}>{this.prettifyUsername(remote)}</Text>
-                            {console.log(remote)}
                             {
                               this.prevMessage(xmpp.conversation[remote].chat[0].text)
                             }
-
+                            <Text style={styles.dateColor}>{dateFormat(xmpp.conversation[remote].chat[0].date, "dd.mm.yyyy h:MM:ss TT")}</Text>
                           </View>
                         </TouchableHighlight>
                   );
            })
         }
+          </ScrollView>
         </View>
      )
   }
