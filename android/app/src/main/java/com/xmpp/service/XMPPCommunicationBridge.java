@@ -36,6 +36,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     public static final String RNXMPP_CONNECT =     "XMPPConnect";
     public static final String RNXMPP_DISCONNECT =  "XMPPDisconnect";
     public static final String RNXMPP_LOGIN =       "XMPPLogin";
+    public static final String RNXMPP_MUCINVITATION = "XMPPMucInvitation";
     ReactContext reactContext;
 
     public XMPPCommunicationBridge(ReactContext reactContext) {
@@ -125,6 +126,19 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
         params.putString("username", username);
         params.putString("password", password);
         sendEvent(reactContext, RNXMPP_LOGIN, params);
+    }
+
+    @Override
+    public void onMucInvotationRecevied(String room, String inviter, Message message){
+        WritableMap params = Arguments.createMap();
+        params.putString("thread", message.getThread());
+        params.putString("subject", message.getSubject());
+        params.putString("body", message.getBody());
+        params.putString("from", message.getFrom());
+        params.putString("src", message.toXML().toString());
+        params.putString("room", room);
+        params.putString("inviter", inviter);
+        sendEvent(reactContext, RNXMPP_MUCINVITATION, params);
     }
 
     void sendEvent(ReactContext reactContext, String eventName, @Nullable Object params) {

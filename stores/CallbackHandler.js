@@ -12,7 +12,8 @@ var map = {
   'error': 'XMPPError',
   'loginError': 'XMPPLoginError',
   'login': 'XMPPLogin',
-  'roster': 'XMPPRoster'
+  'roster': 'XMPPRoster',
+  'mucInvitation': 'XMPPMucInvitation'
 }
 
 const LOG = (message) => {
@@ -32,7 +33,8 @@ class XMPP{
         NativeAppEventEmitter.addListener(map.error, this.onError.bind(this)),
         NativeAppEventEmitter.addListener(map.loginError, this.onLoginError.bind(this)),
         NativeAppEventEmitter.addListener(map.login, this.onLogin.bind(this)),
-        NativeAppEventEmitter.addListener(map.roster, this.onFetchedRoster.bind(this))
+        NativeAppEventEmitter.addListener(map.roster, this.onFetchedRoster.bind(this)),
+        NativeAppEventEmitter.addListener(map.roster, this.onMucInvitationReceived.bind(this))
     ];
   }
 
@@ -140,6 +142,11 @@ class XMPP{
   createConference(chatName, subject, description, participants, from) {
     console.log('conference is being created');
     XMPPModule.createConference(chatName, subject, description, participants, from);
+  }
+
+  onMucInvitationReceived(props) {
+    console.log("inne i onReveieved MUC");
+    console.log(propa);
   }
 }
 

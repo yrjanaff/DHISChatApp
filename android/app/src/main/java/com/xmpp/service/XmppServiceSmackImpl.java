@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import android.util.Log;
-import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.Arguments;
 
 //import com.project.rnxmpp.ssl.DisabledSSLContext;
 import com.xmpp.ssl.UnsafeSSLContext;
@@ -124,28 +124,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
         ChatManager.getInstanceFor(connection).addChatListener(this);
 
-        MultiUserChatManager.getInstanceFor(connection).addInvitationListener(this);/*new InvitationListener() {
-           @Override
-            public void invitationReceived(XMPPConnection conn, MultiUserChat room, String inviter, String reason,
-                String password, Message message) {
-                // Reject the invitation
-                logger.info("Fikk ei invitation da -- inne i connect");
-                try {
-                    room.join(currentJid);
+        MultiUserChatManager.getInstanceFor(connection).addInvitationListener(this);
 
-                } catch (SmackException.NoResponseException e) {
-                    logger.info("No response from chat server.." + e);
-                } catch (XMPPException.XMPPErrorException e) {
-                    logger.info( "XMPP Error" + e);
-                } catch (SmackException e) {
-                    logger.info("Something wrong with chat server.." + e);
-                } catch (Exception e) {
-                    logger.info("Something went wrong.." + e);
-                }
-
-
-            }
-        });*/
         roster = Roster.getInstanceFor(connection);
         roster.addRosterLoadedListener(this);
 
@@ -318,11 +298,20 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     @Override
     public void invitationReceived(XMPPConnection conn, MultiUserChat room, String inviter, String reason,
         String password, Message message) {
-        logger.info("Fikk ei invitation da --- egen invitationRecevied");
         try {
             String[] tmp = connection.getUser().split("/");
             String jid = tmp[0];
             room.join(jid);
+
+            logger.info(room.toString());
+       /*     List<String> participants = room.getOccupants();
+            String[] temp = new String[participants.size()];
+                temp = participants.toArray(temp);
+            WriteableArray occupants =  Arguments.fromArray(temp);*/
+
+
+
+            this.xmppServiceListener.onMucInvotationRecevied(room.toString(), inviter, message);
 
         } catch (SmackException.NoResponseException e) {
             logger.info("No response from chat server.." + e);
@@ -357,11 +346,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             logger.info("Is joining room" + from);
             muc.join(from);
             logger.info("is adding invitationRejected");
-            muc.addInvitationRejectionListener(new InvitationRejectionListener() {
-                public void invitationDeclined(String invitee, String reason) {
-                    logger.info("En invitasjon got declined: " + invitee + " and the reason is " + reason );
-                }
-            });
+
 
             for(int i = 0; i< participants.size(); i++)
             {
