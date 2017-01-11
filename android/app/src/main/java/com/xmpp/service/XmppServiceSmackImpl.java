@@ -80,6 +80,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         String[] serviceNameParts = jidParts[1].split("/");
         String serviceName = serviceNameParts[0];
 
+        final String currentJid = jid;
+
        this.password = password;
         //  Se på connectionConfig for unødvendig kode
 
@@ -122,7 +124,27 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
         ChatManager.getInstanceFor(connection).addChatListener(this);
 
-        MultiUserChatManager.getInstanceFor(connection).addInvitationListener(this);
+        MultiUserChatManager.getInstanceFor(connection).addInvitationListener(new InvitationListener() {
+            public void invitationReceived(XMPPConnection conn, MultiUserChat room, String inviter, String reason,
+                String password, Message message) {
+                // Reject the invitation
+                logger.info("Fikk ei invitation da -- inne i connect");
+                try {
+                    room.join(currentJid);
+
+                } catch (SmackException.NoResponseException e) {
+                    logger.info("No response from chat server.." + e);
+                } catch (XMPPException.XMPPErrorException e) {
+                    logger.info( "XMPP Error" + e);
+                } catch (SmackException e) {
+                    logger.info("Something wrong with chat server.." + e);
+                } catch (Exception e) {
+                    logger.info("Something went wrong.." + e);
+                }
+
+
+            }
+        });
         roster = Roster.getInstanceFor(connection);
         roster.addRosterLoadedListener(this);
 
@@ -295,7 +317,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     @Override
     public void invitationReceived(XMPPConnection conn, MultiUserChat room, String inviter, String reason,
         String password, Message message) {
-        logger.info("Fikk ei invitation da");
+        logger.info("Fikk ei invitation da --- egen invitationRecevied");
         try {
             String[] tmp = connection.getUser().split("/");
             String jid = tmp[0];

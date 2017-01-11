@@ -68,7 +68,7 @@ export default class Chats extends React.Component {
         <View style={styles.container}>
           <ScrollView  automaticallyAdjustContentInsets={true} horizontal={false} >
           <Button onPress={()=>Actions.newChat()}>Klikk her for ny {!this.state.group ? 'chat' : 'group'}!</Button>
-            <Button onPress={()=> xmpp.createConference('TestDIZSHIT', 'TestingDIz', "Dette er en test multichat for å se om det går", ['yrjanaff@1x-193-157-182-210.uio.no','julie@1x-193-157-182-210.uio.no'], "administrator") }>TEST</Button>
+            <Button onPress={()=> xmpp.createConference('Testingtesting', 'Testingz', "Dette er en test multichat for å se om det går", ['yrjanaff@1x-193-157-182-210.uio.no','julie@1x-193-157-182-210.uio.no'], "administrator") }>TEST</Button>
 
             {
            this.state.people.map((remote) => {
