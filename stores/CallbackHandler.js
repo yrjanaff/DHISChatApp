@@ -146,7 +146,7 @@ class XMPP{
 
   onMucInvitationReceived(props) {
     console.log("inne i onReveieved MUC");
-    console.log(propa);
+    console.log(props);
   }
 }
 
