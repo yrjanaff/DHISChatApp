@@ -7,6 +7,7 @@ import { Actions, ActionConst } from 'react-native-router-flux';
 import Roster from './components/Roster';
 import Chats from './components/Chats';
 import ChatCreater from './components/ChatCreater';
+import MucCreater from './components/MucCreater';
 import TabIcon from './components/TabIcon';
 import xmpp from './stores/XmppStore';
 // Define all routes of the app
@@ -33,6 +34,7 @@ var XmppDemo = React.createClass({
                   <Scene key="newChat" component={ChatCreater} hideTabBar duration={1} title="Create a new chat"/>
                 </Scene>
                 <Scene key="group" title="Groups" groups={true} component={Chats} hideBackImage icon={TabIcon} onLeft={()=>alert("Left button!")} leftTitle="Left"  />
+                <Scene key="newMuc" component={MucCreater} hideTabBar duration={1} title="Create a new conference"/>
               </Scene>
             </Scene>
           </Router>

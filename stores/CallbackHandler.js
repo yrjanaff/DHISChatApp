@@ -13,7 +13,8 @@ var map = {
   'loginError': 'XMPPLoginError',
   'login': 'XMPPLogin',
   'roster': 'XMPPRoster',
-  'mucInvitation': 'XMPPMucInvitation'
+  'mucInvitation': 'XMPPMucInvitation',
+  'allMucs': 'XMPPAllMucRooms'
 }
 
 const LOG = (message) => {
@@ -34,7 +35,8 @@ class XMPP{
         NativeAppEventEmitter.addListener(map.loginError, this.onLoginError.bind(this)),
         NativeAppEventEmitter.addListener(map.login, this.onLogin.bind(this)),
         NativeAppEventEmitter.addListener(map.roster, this.onFetchedRoster.bind(this)),
-        NativeAppEventEmitter.addListener(map.roster, this.onMucInvitationReceived.bind(this))
+        NativeAppEventEmitter.addListener(map.mucInvitation, this.onMucInvitationReceived.bind(this)),
+        NativeAppEventEmitter.addListener(map.allMucs, this.onAllMucsFetched.bind(this)),
     ];
   }
 
@@ -147,6 +149,16 @@ class XMPP{
   onMucInvitationReceived(props) {
     console.log("inne i onReveieved MUC");
     console.log(props);
+  }
+
+  getAllJoinedMucs(username){
+    XMPPModule.getAllJoinedMucs(username);
+  }
+
+  onAllMucsFetched(props){
+    console.log('allMucsFetced');
+    console.log(props);
+
   }
 }
 

@@ -10,13 +10,12 @@ export default class Login extends React.Component {
     super(props);
     this.state = {};
   }
-  
+
   render(){
     return (
       <View style={[styles.container,{alignItems:'center'}]}>
         {xmpp.loginError && <Text style={{color:'red'}}>{xmpp.loginError}</Text>}
-        <Text style={styles.categoryLabel}>Please enter local and remote usernames</Text>
-        <Text style={styles.categoryLabel}>(rntestuserN, where N=1,2,3 or 4) </Text>
+        <Text style={styles.categoryLabel}>Please enter username and password</Text>
         <View style={styles.row}>
           <TextInput style={styles.rowInput}
                      autoCorrect={false}
@@ -39,7 +38,7 @@ export default class Login extends React.Component {
         </View>
         <View style={styles.button}><Button onPress={()=>xmpp.login(this.state)}>Login</Button></View>
         <ActivityIndicator active={xmpp.loading}/>
-      
+
       </View>
     )
   }

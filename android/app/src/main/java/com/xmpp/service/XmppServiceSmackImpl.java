@@ -29,6 +29,8 @@ import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jivesoftware.smackx.xdata.Form;
 import org.jivesoftware.smackx.muc.InvitationListener;
 import org.jivesoftware.smackx.muc.InvitationRejectionListener;
+//import org.jivesoftware.smackx.muc.ParticipantStatusListener;
+//import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.*;
 
 import android.os.AsyncTask;
@@ -44,14 +46,14 @@ import com.facebook.react.bridge.Arguments;
 //import com.project.rnxmpp.ssl.DisabledSSLContext;
 import com.xmpp.ssl.UnsafeSSLContext;
 import com.xmpp.utils.Parser;
-
+//, ParticipantStatusListener, MessageListener
 
 /**
  * Created by Kristian Frølund on 7/19/16.
  * Copyright (c) 2016. Teletronics. All rights reserved
  */
 
-public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener, InvitationListener  {
+public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener, InvitationListener{
     XmppServiceListener xmppServiceListener;
     Logger logger = Logger.getLogger(XmppServiceSmackImpl.class.getName());
 
@@ -92,11 +94,9 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             //.setDebuggerEnabled(true)
             .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled); //required
 
-        if (serviceNameParts.length>1){
-            confBuilder.setResource(serviceNameParts[1]);
-        } else {
-            confBuilder.setResource(Long.toHexString(Double.doubleToLongBits(Math.random())));
-        }
+
+            confBuilder.setResource("DHISCHAT");
+
         if (hostname != null){
             confBuilder.setHost(hostname);
         }
@@ -125,6 +125,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         ChatManager.getInstanceFor(connection).addChatListener(this);
 
         MultiUserChatManager.getInstanceFor(connection).addInvitationListener(this);
+
 
         roster = Roster.getInstanceFor(connection);
         roster.addRosterLoadedListener(this);
@@ -272,8 +273,14 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public void processMessage(Chat chat, Message message) {
+        logger.info("fikk melding på chat");
         this.xmppServiceListener.onMessage(message);
     }
+
+  /*  @Override
+    public void processMessage(Message message) {
+        logger.info("fikk melding på muc");
+    }*/
 
     @Override
     public void onRosterLoaded(Roster roster) {
@@ -354,6 +361,9 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
                 muc.invite(participants.getString(i), "Join us in a chat on " + subject);
             }
 
+           // muc.addParticipantStatusListener(this);
+           // muc.addMessageListener(this);
+
             logger.info("all OK");
 
         } catch (SmackException.NoResponseException e) {
@@ -366,6 +376,30 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             logger.info("Something went wrong.." + e);
         }
 
+    }
+
+    @Override
+    public void getAllJoinedMucs(String username){
+        try
+        {
+            List<String> joinedRooms = MultiUserChatManager.getInstanceFor( connection ).getJoinedRooms( username );
+            logger.info(joinedRooms.isEmpty() + "");
+            String[] temp = new String[joinedRooms.size()];
+            temp = joinedRooms.toArray( temp );
+
+            logger.info(temp + "");
+
+            this.xmppServiceListener.onAllMucFetced( temp );
+            logger.info("alt gikk ?");
+        }catch (SmackException.NoResponseException e) {
+            logger.info("No response from chat server.." + e);
+        } catch (XMPPException.XMPPErrorException e) {
+            logger.info( "XMPP Error" + e);
+        } catch (SmackException e) {
+            logger.info("Something wrong with chat server.." + e);
+        } catch (Exception e) {
+            logger.info("Something went wrong.." + e);
+        }
     }
 
 }

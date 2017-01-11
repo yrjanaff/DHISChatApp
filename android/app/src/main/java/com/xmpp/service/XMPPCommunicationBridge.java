@@ -37,6 +37,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     public static final String RNXMPP_DISCONNECT =  "XMPPDisconnect";
     public static final String RNXMPP_LOGIN =       "XMPPLogin";
     public static final String RNXMPP_MUCINVITATION = "XMPPMucInvitation";
+    public static final String RNXMPP_ALLMUCS = "XMPPAllMucRooms";
     ReactContext reactContext;
 
     public XMPPCommunicationBridge(ReactContext reactContext) {
@@ -139,6 +140,18 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
         params.putString("room", room);
         params.putString("inviter", inviter);
         sendEvent(reactContext, RNXMPP_MUCINVITATION, params);
+    }
+
+
+    @Override
+    public void onAllMucFetced(String[] mucRooms) {
+        Log.d("room", "ko jeg inn ?");
+        WritableArray rooms = Arguments.createArray();
+        for (String room : mucRooms) {
+            rooms.pushString(room);
+            Log.d("room",room);
+        }
+        sendEvent(reactContext, RNXMPP_ALLMUCS, rooms);
     }
 
     void sendEvent(ReactContext reactContext, String eventName, @Nullable Object params) {

@@ -28,6 +28,7 @@ class XmppStore {
         this.password = '';
         this.remote = '';
         this.messageSentorRecieved = false;
+        this.mucUsername = '';
 
         AsyncStorage.getItem("conversation").then((value) => {
             if(value != null) {
@@ -59,7 +60,7 @@ class XmppStore {
         if( !this.conversation[this.remote] ) {
             this.createConversationObject(this.remote);
         }
-
+        console.log(this.remote);
         this.conversation[this.remote].chat.unshift({own:true, text:message, date: new Date()})
         // empty sent message
         this.error = null;
@@ -76,13 +77,15 @@ class XmppStore {
         if (!from || !body){
             return;
         }
-        var name = from.match(/^([^@]*)@/)[1];
 
-        if( !this.conversation[from] ) {
-            this.createConversationObject(from);
+        const from_name = from.split("/")[0];
+
+        if( !this.conversation[from_name] ) {
+            this.createConversationObject(from_name);
         }
 
-        this.conversation[from].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
+        console.log(from_name)
+        this.conversation[from_name].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
         this.messageSentorRecieved = true;
 
         AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
@@ -116,6 +119,7 @@ class XmppStore {
 
     login({username, password}){
         this.username = username;
+        this.mucUsername = this._userForName(username) + "/DHISCHAT";
         this.password = password;
         if (!username || !username.trim()){
             this.loginError = "Username should not be empty";
@@ -151,6 +155,12 @@ class XmppStore {
         console.log('conference is being created');
         XMPP.createConference(chatName, subject, description, participants, from)
     }
+
+  getAllJoinedMucs(username){
+        console.log(username);
+        XMPP.getAllJoinedMucs(username);
+    }
+
 
 }
 

@@ -22,5 +22,6 @@ public interface XmppServiceListener {
     void onDisconnect(Exception e);
     void onLogin(String username, String password);
     void onMucInvotationRecevied(String room, String inviter, Message message);
+    void onAllMucFetced(String[] mucRooms);
 
 }

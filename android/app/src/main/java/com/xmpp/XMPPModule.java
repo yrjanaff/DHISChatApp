@@ -82,4 +82,8 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
     public void createConference(String name, String subject, String description, ReadableArray participants, String from) {
         this.xmppService.createConference(name, subject, description, participants, from);
     }
+
+    @Override
+    @ReactMethod
+    public void getAllJoinedMucs(String username){ this.xmppService.getAllJoinedMucs(username);}
 }
