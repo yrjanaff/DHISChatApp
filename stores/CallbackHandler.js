@@ -136,6 +136,11 @@ class XMPP{
       XMPPModule.disconnect();
     }
   }
+
+  createConference(chatName, subject, description, participants, from) {
+    console.log('conference is being created');
+    XMPPModule.createConference(chatName, subject, description, participants, from);
+  }
 }
 
 module.exports = new XMPP();

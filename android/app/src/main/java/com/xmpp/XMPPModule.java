@@ -76,4 +76,10 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
     public void sendStanza(String stanza) {
         this.xmppService.sendStanza(stanza);
     }
+
+    @Override
+    @ReactMethod
+    public void createConference(String name, String subject, String description, ReadableArray participants, String from) {
+        this.xmppService.createConference(name, subject, description, participants, from);
+    }
 }

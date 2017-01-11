@@ -97,6 +97,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
 
     @Override
     public void onIQ(IQ iq) {
+        Log.d("ComBridge", iq.toString());
         sendEvent(reactContext, RNXMPP_IQ, Parser.parse(iq.toString()));
     }
 

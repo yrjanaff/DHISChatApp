@@ -24,6 +24,12 @@ import org.jivesoftware.smack.sasl.SASLErrorException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.XmlStringBuilder;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.MultiUserChatManager;
+import org.jivesoftware.smackx.xdata.Form;
+import org.jivesoftware.smackx.muc.InvitationListener;
+import org.jivesoftware.smackx.muc.InvitationRejectionListener;
+import org.jivesoftware.smack.*;
 
 import android.os.AsyncTask;
 
@@ -33,9 +39,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import android.util.Log;
+import com.facebook.react.bridge.WritableArray;
 
 //import com.project.rnxmpp.ssl.DisabledSSLContext;
 import com.xmpp.ssl.UnsafeSSLContext;
+import com.xmpp.utils.Parser;
 
 
 /**
@@ -43,7 +51,7 @@ import com.xmpp.ssl.UnsafeSSLContext;
  * Copyright (c) 2016. Teletronics. All rights reserved
  */
 
-public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener {
+public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener, InvitationListener  {
     XmppServiceListener xmppServiceListener;
     Logger logger = Logger.getLogger(XmppServiceSmackImpl.class.getName());
 
@@ -113,6 +121,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         logger.info(connection.toString());
 
         ChatManager.getInstanceFor(connection).addChatListener(this);
+
+        MultiUserChatManager.getInstanceFor(connection).addInvitationListener(this);
         roster = Roster.getInstanceFor(connection);
         roster.addRosterLoadedListener(this);
 
@@ -281,4 +291,73 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     public void reconnectionSuccessful() {
         logger.log(Level.INFO, "Did reconnect");
     }
+
+    @Override
+    public void invitationReceived(XMPPConnection conn, MultiUserChat room, String inviter, String reason,
+        String password, Message message) {
+        logger.info("Fikk ei invitation da");
+        try {
+            String[] tmp = connection.getUser().split("/");
+            String jid = tmp[0];
+            room.join(jid);
+
+        } catch (SmackException.NoResponseException e) {
+            logger.info("No response from chat server.." + e);
+        } catch (XMPPException.XMPPErrorException e) {
+            logger.info( "XMPP Error" + e);
+        } catch (SmackException e) {
+            logger.info("Something wrong with chat server.." + e);
+        } catch (Exception e) {
+            logger.info("Something went wrong.." + e);
+        }
+    }
+
+    // NY KODE
+    @Override
+    public void createConference(String name, String subject, String description, ReadableArray participants, String from) {
+      MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+      MultiUserChat muc = manager.getMultiUserChat(name + "@conference." + connection.getServiceName());
+        try {
+            String[] tmp = connection.getUser().split("/");
+            String jid = tmp[0];
+            muc.create(jid);
+            logger.info("vreated: " + jid);
+            muc.changeSubject(subject);
+            Form submitForm = muc.getConfigurationForm().createAnswerForm();
+
+
+            submitForm.setAnswer("muc#roomconfig_publicroom", true);
+            submitForm.setAnswer("muc#roomconfig_persistentroom", true);
+            submitForm.setAnswer("muc#roomconfig_enablelogging", true);
+            submitForm.setAnswer("muc#roomconfig_roomdesc", description);
+            muc.sendConfigurationForm(submitForm);
+            logger.info("Is joining room" + from);
+            muc.join(from);
+            logger.info("is adding invitationRejected");
+            muc.addInvitationRejectionListener(new InvitationRejectionListener() {
+                public void invitationDeclined(String invitee, String reason) {
+                    logger.info("En invitasjon got declined: " + invitee + " and the reason is " + reason );
+                }
+            });
+
+            for(int i = 0; i< participants.size(); i++)
+            {
+                logger.info("inviting participant: " + participants.getString(i));
+                muc.invite(participants.getString(i), "Join us in a chat on " + subject);
+            }
+
+            logger.info("all OK");
+
+        } catch (SmackException.NoResponseException e) {
+            logger.info("No response from chat server.." + e);
+        } catch (XMPPException.XMPPErrorException e) {
+            logger.info( "XMPP Error" + e);
+        } catch (SmackException e) {
+            logger.info("Something wrong with chat server.." + e);
+        } catch (Exception e) {
+            logger.info("Something went wrong.." + e);
+        }
+
+    }
+
 }

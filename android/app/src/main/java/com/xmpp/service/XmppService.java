@@ -8,22 +8,23 @@ import com.facebook.react.bridge.ReadableArray;
  * Copyright (c) 2016. Teletronics. All rights reserved
  */
 
-public interface XmppService {
+public interface XmppService
+{
 
     @ReactMethod
-    public void trustHosts(ReadableArray trustedHosts);
+    public void trustHosts( ReadableArray trustedHosts );
 
     @ReactMethod
-    void connect(String jid, String password, String authMethod, String hostname, Integer port);
+    void connect( String jid, String password, String authMethod, String hostname, Integer port );
 
     @ReactMethod
-    void message(String text, String to, String thread);
+    void message( String text, String to, String thread );
 
     @ReactMethod
-    void presence(String to, String type);
+    void presence( String to, String type );
 
     @ReactMethod
-    void removeRoster(String to);
+    void removeRoster( String to );
 
     @ReactMethod
     void disconnect();
@@ -32,6 +33,9 @@ public interface XmppService {
     void fetchRoster();
 
     @ReactMethod
-    void sendStanza(String stanza);
+    void sendStanza( String stanza );
+
+    @ReactMethod
+    void createConference( String name, String subject, String description, ReadableArray participants, String from );
 }
 

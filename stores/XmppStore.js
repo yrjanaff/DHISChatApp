@@ -1,6 +1,6 @@
 import XMPP from './CallbackHandler';
-const DOMAIN = "1x-193-157-182-210.uio.no";
-
+//const DOMAIN = "1x-193-157-182-210.uio.no";
+const DOMAIN = "yj-dev.dhis2.org";
 
 import {observable} from 'mobx';
 import autobind from 'autobind';
@@ -14,6 +14,7 @@ class XmppStore {
     @observable error = null;
     @observable conversation = {};
     @observable roster = [];
+    @observable multiUserChat = {};
 
     constructor() {
         XMPP.on('loginError', this.onLoginError);
@@ -131,6 +132,10 @@ class XmppStore {
 
     }
 
+    getAllMuc(){
+        XMPP.getAllMuc()
+    }
+
     fetchRoster() {
        XMPP.fetchRoster();
     }
@@ -142,6 +147,10 @@ class XmppStore {
         XMPP.disconnect();
     }
 
+    createConference(chatName, subject, description, participants, from) {
+        console.log('conference is being created');
+        XMPP.createConference(chatName, subject, description, participants, from)
+    }
 
 }
 
