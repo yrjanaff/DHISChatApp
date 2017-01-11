@@ -124,7 +124,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
         ChatManager.getInstanceFor(connection).addChatListener(this);
 
-        MultiUserChatManager.getInstanceFor(connection).addInvitationListener(new InvitationListener() {
+        MultiUserChatManager.getInstanceFor(connection).addInvitationListener(this);/*new InvitationListener() {
+           @Override
             public void invitationReceived(XMPPConnection conn, MultiUserChat room, String inviter, String reason,
                 String password, Message message) {
                 // Reject the invitation
@@ -144,7 +145,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
 
             }
-        });
+        });*/
         roster = Roster.getInstanceFor(connection);
         roster.addRosterLoadedListener(this);
 
