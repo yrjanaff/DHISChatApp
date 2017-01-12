@@ -69,6 +69,7 @@ export default class Interpretation extends React.Component {
                        .then((userResJson) => {
                          displayname = userResJson.displayName;
                          return displayname;
+                         
                        });
 
                    const interpretationMetadata = new InterpretationMeta(id, userId, displayname, text, type, typeId, comments);
