@@ -20,6 +20,7 @@ import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterLoadedListener;
+import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.sasl.SASLErrorException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Collection;
 import android.util.Log;
 import com.facebook.react.bridge.Arguments;
 
@@ -53,7 +55,7 @@ import com.xmpp.utils.Parser;
  * Copyright (c) 2016. Teletronics. All rights reserved
  */
 
-public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener, InvitationListener{
+public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener, RosterListener, InvitationListener{
     XmppServiceListener xmppServiceListener;
     Logger logger = Logger.getLogger(XmppServiceSmackImpl.class.getName());
 
@@ -129,6 +131,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
         roster = Roster.getInstanceFor(connection);
         roster.addRosterLoadedListener(this);
+        roster.addRosterListener(this);
 
         new AsyncTask<Void, Void, Void>() {
 
@@ -277,15 +280,35 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         this.xmppServiceListener.onMessage(message);
     }
 
-  /*  @Override
-    public void processMessage(Message message) {
-        logger.info("fikk melding på muc");
-    }*/
 
     @Override
     public void onRosterLoaded(Roster roster) {
         this.xmppServiceListener.onRosterReceived(roster);
     }
+
+    @Override
+    public void presenceChanged(Presence precense){
+        String user = precense.getFrom();
+        Presence bestPresence = roster.getPresence(user);
+        fetchRoster();
+        //this.xmppServiceListener.onPresenceChanged(user, bestPresence.getStatus());
+    }
+
+    @Override
+    public void entriesDeleted(Collection<String> addresses){
+        logger.info("kom inn i enriesDeleted");
+    }
+
+    @Override
+    public void entriesUpdated(Collection<String> addresses){
+        logger.info("kom inn i entriesUpdated");
+    }
+
+    @Override
+    public void entriesAdded(Collection<String> addresses){
+        logger.info("kom inn i entriesAdded");
+    }
+
 
     @Override
     public void connectionClosedOnError(Exception e) {
@@ -311,14 +334,14 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             room.join(jid);
 
             logger.info(room.toString());
-       /*     List<String> participants = room.getOccupants();
+            List<String> participants = room.getOccupants();
             String[] temp = new String[participants.size()];
                 temp = participants.toArray(temp);
-            WriteableArray occupants =  Arguments.fromArray(temp);*/
 
 
 
-            this.xmppServiceListener.onMucInvotationRecevied(room.toString(), inviter, message);
+
+            this.xmppServiceListener.onMucInvotationRecevied(room.toString(), inviter, message, temp);
 
         } catch (SmackException.NoResponseException e) {
             logger.info("No response from chat server.." + e);
@@ -401,5 +424,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             logger.info("Something went wrong.." + e);
         }
     }
+
+    //public void presenceChanged(String XMPPAddress)
 
 }

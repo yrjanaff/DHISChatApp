@@ -23,6 +23,7 @@ class XmppStore {
         XMPP.on('login', this.onLogin);
         XMPP.on('message', this.onReceiveMessage);
         XMPP.on('roster', this.onFetchedRoster);
+        XMPP.on('presenceChanged', this.onPresenceChanged)
         // default values
         this.usename = '';
         this.password = '';
@@ -139,9 +140,6 @@ class XmppStore {
        XMPP.fetchRoster();
     }
 
-    presence() {
-        console.log("inni XMPPStore presence");
-    }
     disconnect() {
         XMPP.disconnect();
     }
@@ -151,7 +149,7 @@ class XmppStore {
         XMPP.createConference(chatName, subject, description, participants, from)
     }
 
-  getAllJoinedMucs(username){
+    getAllJoinedMucs(username){
         console.log(username);
         XMPP.getAllJoinedMucs(username);
     }
