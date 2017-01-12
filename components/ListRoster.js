@@ -33,8 +33,9 @@ export default class ListRoster extends React.Component {
 
   getAvailableIcon(status) {
     switch(status) {
+      case 'available':
       case 'Online': return styles.online;
-      case 'Away due to idle': return styles.idle;
+      case 'Away due to idle':
       case 'Away': return styles.idle;
       case 'unavailable': return styles.unavailable;
     }

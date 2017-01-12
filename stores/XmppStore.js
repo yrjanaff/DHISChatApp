@@ -27,7 +27,6 @@ class XmppStore {
         this.usename = '';
         this.password = '';
         this.remote = '';
-        this.messageSentorRecieved = false;
         this.mucUsername = '';
 
         AsyncStorage.getItem("conversation").then((value) => {
@@ -47,8 +46,8 @@ class XmppStore {
         this.remote = remote;
     }
 
-    createConversationObject(remote) {
-        this.conversation = Object.assign({}, this.conversation, {[remote]: {chat: []}});
+    createConversationObject(remote, own, message) {
+        this.conversation = Object.assign({}, this.conversation, {[remote]: {chat: [{own:own, text:message, date: new Date()}]}});
     }
     sendMessage(message){
         if (!this.remote || !this.remote.trim()){
@@ -58,15 +57,14 @@ class XmppStore {
             return false;
         }
         if( !this.conversation[this.remote] ) {
-            this.createConversationObject(this.remote);
+          this.createConversationObject(this.remote, true, message);
+        }else{
+            this.conversation[this.remote].chat.unshift({own:true, text:message, date: new Date()})
         }
-        console.log(this.remote);
-        this.conversation[this.remote].chat.unshift({own:true, text:message, date: new Date()})
         // empty sent message
         this.error = null;
         // send to XMPP server
         XMPP.message(message.trim(), this.remote)
-         this.messageSentorRecieved = true;
         AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
 
 
@@ -81,13 +79,10 @@ class XmppStore {
         const from_name = from.split("/")[0];
 
         if( !this.conversation[from_name] ) {
-            this.createConversationObject(from_name);
+            this.createConversationObject(from_name, false, body);
+        }else{
+          this.conversation[from_name].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
         }
-
-        console.log(from_name)
-        this.conversation[from_name].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
-        this.messageSentorRecieved = true;
-
         AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
     }
 

@@ -59,15 +59,8 @@ export default class Chats extends React.Component {
     return tmp[0];
   }
 
-  createNew(){
-    return !this.state.group ?  Actions.newChat() :  Actions.newMuc()
-  }
-
   render() {
-    if(xmpp.messageSentorRecieved) {
-      this.setUp(this.state);
-      xmpp.messageSentorRecieved = false;
-    }
+    this.setUp(this.state);
     return (
         <View style={styles.container}>
           <ScrollView  automaticallyAdjustContentInsets={true} horizontal={false} >
