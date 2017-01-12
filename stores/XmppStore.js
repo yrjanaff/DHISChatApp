@@ -98,7 +98,7 @@ class XmppStore {
     }
 
     onFetchedRoster(rosterList){
-        this.roster.replace(rosterList);
+        this.roster =  rosterList;
     }
 
     onError(message){

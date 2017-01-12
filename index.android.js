@@ -18,23 +18,30 @@ var XmppDemo = React.createClass({
      const reducerCreate = params=>{
          const defaultReducer = Reducer(params);
          return (state, action)=>{
+           console.log(state);
+           console.log(action)
              return defaultReducer(state, action);
          }
      };
 
+
+
       return (
-          <Router xmpp={xmpp} createReducer={reducerCreate}>
-            <Scene key="main" component={Switch} tabs selector={()=>!xmpp.logged ? 'login' : 'tabs'}>
+          <Router xmpp={xmpp} >
+            <Scene key="main" component={Switch} tabs selector={()=>!xmpp.logged ? 'login' : 'content'}>
               <Scene key="login" component={Login} title="Login"/>
+              <Scene key="content" title="her er det en tittel">
               <Scene key="tabs" tabs={true} hideNavBar>
-                <Scene key="chat" title="Chats" groups={false} component={Chats}  hideBackImage icon={TabIcon}  onLeft={()=>alert("Left button!")} leftTitle="Left" />
-                <Scene key="contacts" title="Contacts" icon={TabIcon}>
-                  <Scene key="roster" component={Roster}  hideBackImage  initial={true} title="Roster" onLeft={()=>alert("Left button!")} leftTitle="Left"/>
-                  <Scene key="conversation" component={Conversation} hideTabBar duration={1}/>
-                  <Scene key="newChat" component={ChatCreater} hideTabBar duration={1} title="Create a new chat"/>
-                </Scene>
-                <Scene key="group" title="Groups" groups={true} component={Chats} hideBackImage icon={TabIcon} onLeft={()=>alert("Left button!")} leftTitle="Left"  />
-                <Scene key="newMuc" component={MucCreater} hideTabBar duration={1} title="Create a new conference"/>
+                <Scene key="chat" title="Chats" icon={TabIcon} groups={false} component={Chats}  initial={true} hideBackImage onBack={() => console.log("tried to go back")}
+                       onRight={() => Actions.newChat()} rightTitle="new"/>
+                <Scene key="contacts" title="Contacts" icon={TabIcon} component={Roster}  hideBackImage onBack={() => console.log("tried to go back")} onLeft={() => xmpp.fetchRoster()} leftTitle="update"/>
+                <Scene key="group" title="Groups" icon={TabIcon}  groups={true} component={Chats}  hideBackImage onBack={() => console.log("tried to go back")}
+                       onRight={() => Actions.newMuc()}
+                       rightTitle="new"/>
+                <Scene key="newChat" component={ChatCreater} hideTabBar duration={1} title="Create a new chat" onLeft={() => Actions.chat()} leftTitle="back" />
+                <Scene key="newMuc" component={MucCreater} hideTabBar duration={1} title="Create a new conference" onLeft={() => Actions.group()} leftTitle="back"/>
+                <Scene key="conversation" component={Conversation} hideTabBar duration={1} onLeft={() => Actions.chat()} leftTitle="back"/>
+              </Scene>
               </Scene>
             </Scene>
           </Router>
@@ -44,6 +51,9 @@ var XmppDemo = React.createClass({
 
 
 AppRegistry.registerComponent('XmppDemo', () => XmppDemo);
+
+
+
 
 
 

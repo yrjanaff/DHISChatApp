@@ -71,7 +71,6 @@ export default class Chats extends React.Component {
     return (
         <View style={styles.container}>
           <ScrollView  automaticallyAdjustContentInsets={true} horizontal={false} >
-          <Button onPress={()=>this.createNew()}>Klikk her for ny {!this.state.group ? 'chat' : 'group'}!</Button>
             {
               this.state.group ?  <Button onPress={()=>xmpp.getAllJoinedMucs(xmpp.mucUsername)}>Klikk her for å hente alle muc!</Button> : null
             }

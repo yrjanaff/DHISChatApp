@@ -30,10 +30,10 @@ export default class ChatCreater extends React.Component {
   render() {
     return(
         <View style={styles.container}>
-          <View style={styles.toContainer}>
-            <Text>TO:</Text>
+          <View  style={[{flex:0}, {flexDirection: 'row'}]}>
+            <Text style={{marginTop:10}}>TO:</Text>
             <TextInput
-              style={{height: 40, borderColor: 'gray', borderWidth: 1, marginBottom:20}}
+              style={{height: 40, borderColor: 'gray', borderWidth: 1, marginBottom:20, width: 300}}
               onChangeText={(text) => {this.setState({text});this.foundMatch(text)}}
               value={this.state.text}
             />

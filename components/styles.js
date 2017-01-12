@@ -121,18 +121,27 @@ var styles = StyleSheet.create({
     },
 
     online: {
+      marginTop: 7,
+      marginLeft: 10,
+      marginRight: 7,
       borderRadius: 100,
       width: 10,
       height: 10,
       backgroundColor:"#57B061"
     },
     unavailable: {
+      marginTop: 7,
+      marginLeft: 10,
+      marginRight: 7,
       borderRadius: 100,
       width: 10,
       height: 10,
       backgroundColor:"#778899"
     },
     idle: {
+      marginTop: 7,
+      marginLeft: 10,
+      marginRight: 7,
       borderRadius: 100,
       width: 10,
       height: 10,

@@ -34,6 +34,7 @@ export default class ListRoster extends React.Component {
   getAvailableIcon(status) {
     switch(status) {
       case 'Online': return styles.online;
+      case 'Away due to idle': return styles.idle;
       case 'Away': return styles.idle;
       case 'unavailable': return styles.unavailable;
     }
@@ -47,7 +48,7 @@ export default class ListRoster extends React.Component {
                     renderScrollComponent={props => <ScrollView {...props} />}
                     dataSource={dataSource}
                     renderRow={(row) =>
-                        <TouchableHighlight onPress={() => {Actions.conversation({remote: row.displayName}); xmpp.setRemote(row.username)}}><View><View style={[this.getAvailableIcon(row.presence) ]}/><Text> {row.displayName}</Text></View></TouchableHighlight>}
+                        <TouchableHighlight onPress={() => {Actions.conversation({remote: row.displayName}); xmpp.setRemote(row.username)}}><View style={[{flex:1}, {flexDirection: 'row'},{marginTop: 10}]}><View style={[this.getAvailableIcon(row.presence), {justifyContent: 'flex-start'} ]}/><Text style={[{fontSize:16},{color: '#000000'}]}> {row.displayName}</Text></View></TouchableHighlight>}
           />
     )
   }
