@@ -30,6 +30,7 @@ export default class Chats extends React.Component {
   }
 
   setUp(props){
+    console.log(props)
     let tempmessages = {};
     let tempPeople = [];
     if(!props.groups)  {
@@ -61,13 +62,10 @@ export default class Chats extends React.Component {
 
   render() {
     this.setUp(this.state);
+    console.log(this.state.group)
     return (
         <View style={styles.container}>
           <ScrollView  automaticallyAdjustContentInsets={true} horizontal={false} >
-            {
-              this.state.group ?  <Button onPress={()=>xmpp.getAllJoinedMucs(xmpp.mucUsername)}>Klikk her for å hente alle muc!</Button> : null
-            }
-
             {
            this.state.people.map((remote) => {
                   return (

@@ -14,20 +14,8 @@ import xmpp from './stores/XmppStore';
 var XmppDemo = React.createClass({
 
   render: function() {
-
-     const reducerCreate = params=>{
-         const defaultReducer = Reducer(params);
-         return (state, action)=>{
-           console.log(state);
-           console.log(action)
-             return defaultReducer(state, action);
-         }
-     };
-
-
-
       return (
-          <Router xmpp={xmpp} >
+          <Router xmpp={xmpp}>
             <Scene key="main" component={Switch} tabs selector={()=>!xmpp.logged ? 'login' : 'content'}>
               <Scene key="login" component={Login} title="Login"/>
               <Scene key="content" title="her er det en tittel">
@@ -35,7 +23,7 @@ var XmppDemo = React.createClass({
                 <Scene key="chat" title="Chats" icon={TabIcon} groups={false} component={Chats}  initial={true} hideBackImage onBack={() => console.log("tried to go back")}
                        onRight={() => Actions.newChat()} rightTitle="new"/>
                 <Scene key="contacts" title="Contacts" icon={TabIcon} component={Roster}  hideBackImage onBack={() => console.log("tried to go back")}/>
-                <Scene key="group" title="Groups" icon={TabIcon}  groups={true} component={Chats}  hideBackImage onBack={() => console.log("tried to go back")}
+                <Scene key="group" title="Groups" icon={TabIcon}  groups={true} component={Chats}  hideBackImage onLeft={()=>xmpp.getAllJoinedMucs(xmpp.mucUsername)} leftTitle="get MUCs"
                        onRight={() => Actions.newMuc()}
                        rightTitle="new"/>
                 <Scene key="newChat" component={ChatCreater} hideTabBar duration={1} title="Create a new chat" onLeft={() => Actions.chat()} leftTitle="back" />
