@@ -40,5 +40,6 @@ public interface XmppService
 
     @ReactMethod
     void getAllJoinedMucs(String username);
+
 }
 

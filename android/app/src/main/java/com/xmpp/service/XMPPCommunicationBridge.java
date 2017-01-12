@@ -38,6 +38,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     public static final String RNXMPP_LOGIN =       "XMPPLogin";
     public static final String RNXMPP_MUCINVITATION = "XMPPMucInvitation";
     public static final String RNXMPP_ALLMUCS = "XMPPAllMucRooms";
+    public static final String RNXMPP_PRESENCECHANGE = "XMPPPresenceChanced";
     ReactContext reactContext;
 
     public XMPPCommunicationBridge(ReactContext reactContext) {
@@ -130,7 +131,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     }
 
     @Override
-    public void onMucInvotationRecevied(String room, String inviter, Message message){
+    public void onMucInvotationRecevied(String room, String inviter, Message message, String[] occupants){
         WritableMap params = Arguments.createMap();
         params.putString("thread", message.getThread());
         params.putString("subject", message.getSubject());
@@ -139,6 +140,12 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
         params.putString("src", message.toXML().toString());
         params.putString("room", room);
         params.putString("inviter", inviter);
+        WritableArray participants = Arguments.createArray();
+        for (String occupant : occupants) {
+            participants.pushString(occupant);
+            Log.d("occupants",occupant);
+        }
+        params.putArray("occupants", participants);
         sendEvent(reactContext, RNXMPP_MUCINVITATION, params);
     }
 
@@ -152,6 +159,14 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
             Log.d("room",room);
         }
         sendEvent(reactContext, RNXMPP_ALLMUCS, rooms);
+    }
+
+    @Override
+    public void onPresenceChanged(String user, String status){
+        WritableMap params = Arguments.createMap();
+        params.putString("user", user);
+        params.putString("status", status);
+        sendEvent(reactContext, RNXMPP_PRESENCECHANGE, params);
     }
 
     void sendEvent(ReactContext reactContext, String eventName, @Nullable Object params) {

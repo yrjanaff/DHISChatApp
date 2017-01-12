@@ -24,11 +24,11 @@ export default class ListRoster extends React.Component {
 
   constructor( props ) {
     super(props);
-    this.state = {roster: this.sortAlphabetically(props.roster)};
+    this.state = {roster: this.sortAlphabetically(xmpp.roster)};
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({roster: nextProps.roster})
+    this.setState({roster: xmpp.roster})
   }
 
   getAvailableIcon(status) {
@@ -38,11 +38,13 @@ export default class ListRoster extends React.Component {
       case 'Away due to idle':
       case 'Away': return styles.idle;
       case 'unavailable': return styles.unavailable;
+      default: return styles.unavailable;
     }
   }
 
   render() {
-    const dataSource = ds.cloneWithRows(this.state.roster.map(x=>x));
+    const data = this.sortAlphabetically(xmpp.roster)
+    const dataSource = ds.cloneWithRows(data.map(x=>x));
     return (
           <ListView enableEmptySections
                     ref="roster"

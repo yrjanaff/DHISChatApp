@@ -34,7 +34,7 @@ var XmppDemo = React.createClass({
               <Scene key="tabs" tabs={true} hideNavBar>
                 <Scene key="chat" title="Chats" icon={TabIcon} groups={false} component={Chats}  initial={true} hideBackImage onBack={() => console.log("tried to go back")}
                        onRight={() => Actions.newChat()} rightTitle="new"/>
-                <Scene key="contacts" title="Contacts" icon={TabIcon} component={Roster}  hideBackImage onBack={() => console.log("tried to go back")} onLeft={() => xmpp.fetchRoster()} leftTitle="update"/>
+                <Scene key="contacts" title="Contacts" icon={TabIcon} component={Roster}  hideBackImage onBack={() => console.log("tried to go back")}/>
                 <Scene key="group" title="Groups" icon={TabIcon}  groups={true} component={Chats}  hideBackImage onBack={() => console.log("tried to go back")}
                        onRight={() => Actions.newMuc()}
                        rightTitle="new"/>
