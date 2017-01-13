@@ -41,7 +41,7 @@ export default class Chats extends React.Component {
     }
 
     this.state = {
-      group: props.groups,
+      groups: props.groups,
       messages: tempmessages,
       people: tempPeople
     };
@@ -62,7 +62,6 @@ export default class Chats extends React.Component {
 
   render() {
     this.setUp(this.state);
-    console.log(this.state.group)
     return (
         <View style={styles.container}>
           <ScrollView  automaticallyAdjustContentInsets={true} horizontal={false} >

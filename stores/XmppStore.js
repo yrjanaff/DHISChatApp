@@ -15,6 +15,7 @@ class XmppStore {
     @observable conversation = {};
     @observable roster = [];
     @observable multiUserChat = {};
+    @observable remote = '';
 
     constructor() {
         XMPP.on('loginError', this.onLoginError);

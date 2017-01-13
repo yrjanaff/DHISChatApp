@@ -27,7 +27,7 @@ var XmppDemo = React.createClass({
                 <Scene key="group" title="Groups" icon={TabIcon}  groups={true} component={Chats}  hideBackImage onLeft={()=>xmpp.getAllJoinedMucs(xmpp.mucUsername)} leftTitle="get MUCs"
                        onRight={() => Actions.newMuc()}
                        rightTitle="new"/>
-                <Scene key="interpretation" title="Interpretations" icon={TabIcon} component={Interpretation} hideBackImage />
+                <Scene key="interpretation" title="Interpretations" icon={TabIcon} component={Interpretation} hideBackImage onBack={() => console.log("tried to go back")}/>
                 <Scene key="newChat" component={ChatCreater} hideTabBar duration={1} title="Create a new chat" onLeft={() => Actions.chat()} leftTitle="back" />
                 <Scene key="newMuc" component={MucCreater} hideTabBar duration={1} title="Create a new conference" onLeft={() => Actions.group()} leftTitle="back"/>
                 <Scene key="conversation" component={Conversation} hideTabBar duration={1} onLeft={() => Actions.chat()} leftTitle="back"/>

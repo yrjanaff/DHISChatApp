@@ -24,11 +24,11 @@ export default class ListRoster extends React.Component {
 
   constructor( props ) {
     super(props);
-    this.state = {roster: this.sortAlphabetically(xmpp.roster)};
+    this.state = {roster: this.sortAlphabetically(props.roster)};
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({roster: xmpp.roster})
+    this.setState({roster: nextProps.roster})
   }
 
   getAvailableIcon(status) {
@@ -43,7 +43,7 @@ export default class ListRoster extends React.Component {
   }
 
   render() {
-    const data = this.sortAlphabetically(xmpp.roster)
+    const data = this.sortAlphabetically(this.state.roster)
     const dataSource = ds.cloneWithRows(data.map(x=>x));
     return (
           <ListView enableEmptySections
