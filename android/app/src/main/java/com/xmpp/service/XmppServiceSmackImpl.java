@@ -30,6 +30,9 @@ import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jivesoftware.smackx.xdata.Form;
 import org.jivesoftware.smackx.muc.InvitationListener;
 import org.jivesoftware.smackx.muc.InvitationRejectionListener;
+import org.jivesoftware.smackx.muc.HostedRoom;
+import org.jivesoftware.smackx.muc.RoomInfo;
+import org.jivesoftware.smackx.muc.DiscussionHistory;
 //import org.jivesoftware.smackx.muc.ParticipantStatusListener;
 //import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.*;
@@ -43,6 +46,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Collection;
 import android.util.Log;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.Arguments;
 
 //import com.project.rnxmpp.ssl.DisabledSSLContext;
@@ -367,8 +371,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             muc.changeSubject(subject);
             Form submitForm = muc.getConfigurationForm().createAnswerForm();
 
-
-            submitForm.setAnswer("muc#roomconfig_publicroom", true);
+            submitForm.setAnswer("muc#roomconfig_publicroom", false);
+            submitForm.setAnswer("muc#roomconfig_membersonly", true);
             submitForm.setAnswer("muc#roomconfig_persistentroom", true);
             submitForm.setAnswer("muc#roomconfig_enablelogging", true);
             submitForm.setAnswer("muc#roomconfig_roomdesc", description);
@@ -405,14 +409,26 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     public void getAllJoinedMucs(String username){
         try
         {
-            List<String> joinedRooms = MultiUserChatManager.getInstanceFor( connection ).getJoinedRooms( username );
-            logger.info(joinedRooms.isEmpty() + "");
-            String[] temp = new String[joinedRooms.size()];
-            temp = joinedRooms.toArray( temp );
+            Collection<HostedRoom> hostedRooms = MultiUserChatManager.getInstanceFor( connection ).getHostedRooms("conference.yj-dev.dhis2.org");
+            WritableArray rooms = Arguments.createArray();
+            if(!hostedRooms.isEmpty()){
+                logger.info("HostedRooms is not emptyy");
+                for (HostedRoom j : hostedRooms)
+                {
+                    WritableArray room = Arguments.createArray();
+                    RoomInfo roomInfo = MultiUserChatManager.getInstanceFor( connection ).getRoomInfo( j.getJid() );
+                    room.pushString( roomInfo.getName());
+                    room.pushString( j.getJid());
+                    room.pushString( roomInfo.getSubject());
+                    room.pushString( Integer.toString(roomInfo.getOccupantsCount()));
+                    logger.info( "\n" + roomInfo.getRoom() );
+                    logger.info( "\n" + roomInfo.getSubject());
+                    logger.info( "\n" + Integer.toString(roomInfo.getOccupantsCount()));
+                    rooms.pushArray(room);
+                }
+            }
+            this.xmppServiceListener.onAllMucFetced(rooms);
 
-            logger.info(temp + "");
-
-            this.xmppServiceListener.onAllMucFetced( temp );
             logger.info("alt gikk ?");
         }catch (SmackException.NoResponseException e) {
             logger.info("No response from chat server.." + e);
@@ -425,6 +441,44 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         }
     }
 
-    //public void presenceChanged(String XMPPAddress)
+    @Override
+    public void joinMuc(String roomId){
+        MultiUserChat muc = MultiUserChatManager.getInstanceFor( connection ).getMultiUserChat(roomId);
+        DiscussionHistory dh = new DiscussionHistory();
+        dh.setMaxStanzas(35);
+
+        try {
+            String[] tmp = connection.getUser().split("/");
+            String jid = tmp[0];
+            muc.join(jid,null, dh, connection.getPacketReplyTimeout());
+
+            WritableArray occupants = Arguments.createArray();
+            List<String> participants = muc.getOccupants();
+            for (String nick : participants)
+                occupants.pushString(nick);
+
+
+            WritableArray messages = Arguments.createArray();
+            while(true){
+                Message message = muc.nextMessage();
+                if (message == null)
+                    break;
+                else { messages.pushString(message.getBody());
+                        messages.pushString(message.getFrom());
+                }
+            }
+
+            this.xmppServiceListener.onJoinedMessage(occupants, messages);
+
+        } catch (SmackException.NoResponseException e) {
+            logger.info("No response from chat server.." + e);
+        } catch (XMPPException.XMPPErrorException e) {
+            logger.info( "XMPP Error" + e);
+        } catch (SmackException e) {
+            logger.info("Something wrong with chat server.." + e);
+        } catch (Exception e) {
+            logger.info("Something went wrong.." + e);
+        }
+    }
 
 }

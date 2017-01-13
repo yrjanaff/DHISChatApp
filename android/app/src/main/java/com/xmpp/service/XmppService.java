@@ -41,5 +41,8 @@ public interface XmppService
     @ReactMethod
     void getAllJoinedMucs(String username);
 
+    @ReactMethod
+    void joinMuc(String roomId);
+
 }
 

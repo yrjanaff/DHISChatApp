@@ -4,6 +4,7 @@ import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
+import com.facebook.react.bridge.WritableArray;
 
 /**
  * Created by Kristian Frølund on 7/19/16.
@@ -22,7 +23,8 @@ public interface XmppServiceListener {
     void onDisconnect(Exception e);
     void onLogin(String username, String password);
     void onMucInvotationRecevied(String room, String inviter, Message message, String[] occupants);
-    void onAllMucFetced(String[] mucRooms);
+    void onAllMucFetced(WritableArray mucRooms);
     void onPresenceChanged(String user, String status);
+    void onJoinedMessage(WritableArray occupants, WritableArray messages);
 
 }

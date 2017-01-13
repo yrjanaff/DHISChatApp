@@ -5,8 +5,6 @@ import xmpp from '../stores/XmppStore';
 import { Actions } from 'react-native-mobx';
 var dateFormat = require('dateformat');
 
-import Button from 'react-native-button';
-
 export default class Chats extends React.Component {
 
   sortArray(array) {
@@ -33,15 +31,11 @@ export default class Chats extends React.Component {
     console.log(props)
     let tempmessages = {};
     let tempPeople = [];
-    if(!props.groups)  {
-      tempmessages = xmpp.conversation;
-      tempPeople = this.sortRecentConversations(xmpp.conversation, tempPeople);
-    }else {
-      tempmessages = {}; //denne skal settes til gruppe meldingene
-    }
+
+    tempmessages = xmpp.conversation;
+    tempPeople = this.sortRecentConversations(xmpp.conversation, tempPeople);
 
     this.state = {
-      groups: props.groups,
       messages: tempmessages,
       people: tempPeople
     };

@@ -15,7 +15,8 @@ var map = {
   'roster': 'XMPPRoster',
   'mucInvitation': 'XMPPMucInvitation',
   'allMucs': 'XMPPAllMucRooms',
-  'presenceChanged': 'XMPPPresenceChanced'
+  'presenceChanged': 'XMPPPresenceChanced',
+  'joinedRoom': 'XMPPRoomJoined'
 }
 
 const LOG = (message) => {
@@ -39,6 +40,7 @@ class XMPP{
         NativeAppEventEmitter.addListener(map.mucInvitation, this.onMucInvitationReceived.bind(this)),
         NativeAppEventEmitter.addListener(map.allMucs, this.onAllMucsFetched.bind(this)),
         NativeAppEventEmitter.addListener(map.presenceChanged, this.onPresenceChanged.bind(this)),
+        NativeAppEventEmitter.addListener(map.joinedRoom, this.onRoomJoined.bind(this)),
     ];
   }
 
@@ -162,6 +164,14 @@ class XMPP{
   }
 
   onPresenceChanged(props){
+    console.log(props);
+  }
+
+  joinMuc(roomId){
+    XMPPModule.joinMuc(roomId);
+  }
+
+  onRoomJoined(props){
     console.log(props);
   }
 }

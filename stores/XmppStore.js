@@ -14,7 +14,7 @@ class XmppStore {
     @observable error = null;
     @observable conversation = {};
     @observable roster = [];
-    @observable multiUserChat = {};
+    @observable multiUserChat = [];
     @observable remote = '';
 
     constructor() {
@@ -25,6 +25,8 @@ class XmppStore {
         XMPP.on('message', this.onReceiveMessage);
         XMPP.on('roster', this.onFetchedRoster);
         XMPP.on('presenceChanged', this.onPresenceChanged)
+        XMPP.on('allMucs',this.onAllMucsFetched);
+        XMPP.on('joinedRoom', this.onRoomJoined);
         // default values
         this.usename = '';
         this.password = '';
@@ -153,6 +155,18 @@ class XmppStore {
     getAllJoinedMucs(username){
         console.log(username);
         XMPP.getAllJoinedMucs(username);
+    }
+
+    onAllMucsFetched(allMucs){
+      this.multiUserChat = allMucs;
+    }
+
+    joinMuc(roomId){
+        XMPP.joinMuc(roomId);
+    }
+
+    onRoomJoined(props){
+      console.log(props);
     }
 
 

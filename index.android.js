@@ -8,6 +8,7 @@ import Roster from './components/Roster';
 import Chats from './components/Chats';
 import ChatCreater from './components/ChatCreater';
 import MucCreater from './components/MucCreater';
+import Groups from './components/Groups';
 import TabIcon from './components/TabIcon';
 import Interpretation from './components/Interpretation';
 import xmpp from './stores/XmppStore';
@@ -21,10 +22,10 @@ var XmppDemo = React.createClass({
               <Scene key="login" component={Login} title="Login"/>
               <Scene key="content" title="her er det en tittel">
               <Scene key="tabs" tabs={true} hideNavBar>
-                <Scene key="chat" title="Chats" icon={TabIcon} groups={false} component={Chats}  initial={true} hideBackImage onBack={() => console.log("tried to go back")}
+                <Scene key="chat" title="Chat" icon={TabIcon} groups={false} component={Chats}  initial={true} hideBackImage onBack={() => console.log("tried to go back")}
                        onRight={() => Actions.newChat()} rightTitle="new"/>
                 <Scene key="contacts" title="Contacts" icon={TabIcon} component={Roster}  hideBackImage onBack={() => console.log("tried to go back")}/>
-                <Scene key="group" title="Groups" icon={TabIcon}  groups={true} component={Chats}  hideBackImage onLeft={()=>xmpp.getAllJoinedMucs(xmpp.mucUsername)} leftTitle="get MUCs"
+                <Scene key="group" title="Groups" icon={TabIcon}  groups={true} component={Groups}  hideBackImage onLeft={()=>xmpp.getAllJoinedMucs(xmpp.mucUsername)} leftTitle="get MUCs"
                        onRight={() => Actions.newMuc()}
                        rightTitle="new"/>
                 <Scene key="interpretation" title="Interpretations" icon={TabIcon} component={Interpretation} hideBackImage onBack={() => console.log("tried to go back")}/>
