@@ -2,12 +2,13 @@ import React from 'react';
 import {View,Text, TouchableHighlight, ScrollView}  from 'react-native';
 import styles from './styles';
 import xmpp from '../stores/XmppStore';
+var btoa = require('Base64').btoa;
 
 
 let header = {
   method: 'GET',
   headers: {
-    'Authorization': 'Basic '+btoa('admin:district'),
+    'Authorization': `Basic ${btoa('admin:district')}`,
     'Content-Type': 'application/json'
   }
 };
