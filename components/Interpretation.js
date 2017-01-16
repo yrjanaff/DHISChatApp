@@ -1,5 +1,5 @@
 import React from 'react';
-import {View,Text, TouchableHighlight, ScrollView}  from 'react-native';
+import {View, Text, TouchableHighlight, ScrollView}  from 'react-native';
 import styles from './styles';
 import xmpp from '../stores/XmppStore';
 var btoa = require('Base64').btoa;
@@ -13,9 +13,11 @@ let header = {
   }
 };
 
-class InterpretationMeta{
+let page = 1;
 
-  constructor( iId, userId, userName, iText, iType, typeId, comments ){
+class InterpretationMeta {
+
+  constructor( iId, userId, userName, iText, iType, typeId, comments ) {
     this.iId = iId;
     this.userId = userId;
     this.userName = userName;
@@ -29,68 +31,102 @@ class InterpretationMeta{
 
 export default class Interpretation extends React.Component {
 
-  getInterpretations() {
-    this.fetchInterpretations();
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      interpretations: []
+    };
+
+    this.getInterpretations = this.getInterpretations.bind(this);
   }
 
-  fetchInterpretations() {
-    return fetch('https://play.dhis2.org/demo/api/interpretations.json?page=1&pageSize=10', header)
-        .then((response) => response.json())
-        .then((responseJson) => {
-          console.log("Inside fetchInterpretations");
-          console.log(responseJson);
-          console.log(responseJson.interpretations);
-          console.log("skal inn i for!");
-          for(let i = 0; i < responseJson.interpretations.length; i++){
-             fetch('https://play.dhis2.org/demo/api/interpretations/' + responseJson.interpretations[i].id, header)
-                 .then((intResponse) => intResponse.json())
-                 .then((intResponseJson) => {
-                   console.log(intResponseJson);
-                   let id = intResponseJson.id;
-                   let userId = intResponseJson.user.id;
-                   let text = intResponseJson.text;
-                   let comments = intResponseJson.comments;
+  componentDidMount(){
+    this.getInterpretations();
+  }
 
-                   let type = intResponseJson.type.toLowerCase();
-                   let typeId = '';
-                   let metaList = [];
-                   if(type === 'chart'){
-                      typeId = intResponseJson.chart.id;
-                   }
-                   else if(type === 'map'){
-                     typeId = intResponseJson.map.id;
-                   }
-                   else if(type === 'report_table'){
-                     typeId = intResponseJson.reportTable.id;
-                     type = 'reporTable';
-                   }
-                   let displayname = '';
-                   fetch('https://play.dhis2.org/demo/api/users/' + userId, header)
-                       .then((userRes) => userRes.json())
-                       .then((userResJson) => {
-                         displayname = userResJson.displayName;
-                         return displayname;
-                         
-                       });
+  async getInterpretations() {
+    let interpretationsMeta = await this.fetchInterpretations();
+  }
 
-                   const interpretationMetadata = new InterpretationMeta(id, userId, displayname, text, type, typeId, comments);
-                   console.log(interpretationMetadata);
-                 })
+  setInterpret(list){
+    //legge til i lista hvis den allerede eksisterer!
+    this.setState({interpretations: list});
+    console.log('satte state i setInterpret');
+  }
+
+  async fetchInterpretations() {
+    let interpretations = new Array();
+    return fetch('https://play.dhis2.org/demo/api/interpretations.json?page='+ page + '&pageSize=10', header)
+        .then(( response ) => response.json())
+        .then(async( responseJson ) => {
+
+          for( let i = 0; i < responseJson.interpretations.length; i++ ) {
+            fetch('https://play.dhis2.org/demo/api/interpretations/' + responseJson.interpretations[i].id, header)
+                .then(( intResponse ) => intResponse.json())
+                .then(async( intResponseJson ) => {
+
+                  let type = intResponseJson.type.toLowerCase();
+                  let typeId = '';
+
+                  if( type === 'charts' ) {
+                    typeId = intResponseJson.chart.id;
+                  }
+                  else if( type === 'maps' ) {
+                    typeId = intResponseJson.map.id;
+                  }
+                  else if( type === 'report_table' ) {
+                    typeId = intResponseJson.reportTable.id;
+                    type = 'reportTables';
+                  }
+
+                  let username = await this.getUsername(intResponseJson.user.id);
+
+                  interpretations.push(new InterpretationMeta(intResponseJson.id, intResponseJson.user.id, username, intResponseJson.text, type, typeId, intResponseJson.comments));
+
+                  if(i + 1 == responseJson.interpretations.length){
+                    this.setInterpret(interpretations);
+                  }//console.log(interpretationMetadata);
+                })
           }
 
-          return responseJson.interpretations;
-        })
-        .catch((error) => {
+          return interpretations;
+        }).then( this.setInterpret(interpretations))
+        .catch(( error ) => {
           console.error(error);
         });
   }
 
+  async getUsername( userId ) {
+    console.log('Inside getUsername!!!');
+    const response = await fetch('https://play.dhis2.org/demo/api/users/' + userId, header);
+    const json = await response.json();
+
+    return json.displayName;
+  }
+
+  loadMore() {
+    page++;
+    this.fetchInterpretations();
+  }
+
   render() {
-    this.getInterpretations();
     return (
         <View style={styles.container}>
-          <ScrollView  automaticallyAdjustContentInsets={true} horizontal={false} >
-
+          <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
+            {console.log(this.state.interpretations)}
+            {this.state.interpretations.map(( interpretation, index ) => {
+              return (
+                  <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={index}>
+                  <View key={index}>
+                    <Text style={styles.bold}>{interpretation.userName}</Text>
+                    <Text>
+                      {interpretation.iText}
+                    </Text>
+                  </View>
+              </TouchableHighlight>
+              );
+            })}
           </ScrollView>
         </View>
     )
