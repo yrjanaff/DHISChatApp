@@ -8,6 +8,13 @@ var styles = StyleSheet.create({
         backgroundColor: '#F7F7F7',
 
     },
+    centercontainer: {
+        flex:1,
+        paddingTop: 70,
+        backgroundColor: '#F7F7F7',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     row: {
         flexDirection: 'row',
         backgroundColor:'white',
