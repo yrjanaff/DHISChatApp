@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableHighlight, ScrollView}  from 'react-native';
+import Button from 'react-native-button';
 import styles from './styles';
 import xmpp from '../stores/XmppStore';
 var btoa = require('Base64').btoa;
@@ -29,7 +30,7 @@ class InterpretationMeta {
 
 }
 
-export default class Interpretation extends React.Component {
+export default class InterpretationList extends React.Component {
 
   constructor(props) {
     super(props);
@@ -51,11 +52,17 @@ export default class Interpretation extends React.Component {
 
   setInterpret(list){
     //legge til i lista hvis den allerede eksisterer!
-    this.setState({interpretations: list});
+    if(this.state.interpretations === []) {
+      this.setState({interpretations: list});
+    }
+    else{
+      this.setState({interpretations: this.state.interpretations.concat(list)});
+    }
     console.log('satte state i setInterpret');
   }
 
   async fetchInterpretations() {
+    console.log('Inni fetch interpretations');
     let interpretations = new Array();
     return fetch('https://play.dhis2.org/demo/api/interpretations.json?page='+ page + '&pageSize=10', header)
         .then(( response ) => response.json())
@@ -106,6 +113,7 @@ export default class Interpretation extends React.Component {
   }
 
   loadMore() {
+    console.log('Inside loadMore');
     page++;
     this.fetchInterpretations();
   }
@@ -114,6 +122,7 @@ export default class Interpretation extends React.Component {
     return (
         <View style={styles.container}>
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
+            <View style={styles.button}><Button onPress={() => this.loadMore()}>Load More</Button></View>
             {console.log(this.state.interpretations)}
             {this.state.interpretations.map(( interpretation, index ) => {
               return (
