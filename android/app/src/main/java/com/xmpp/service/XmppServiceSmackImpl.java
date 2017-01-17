@@ -34,7 +34,8 @@ import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jivesoftware.smackx.muc.RoomInfo;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
 //import org.jivesoftware.smackx.muc.ParticipantStatusListener;
-//import org.jivesoftware.smack.MessageListener;
+import org.jivesoftware.smack.MessageListener;
+import org.jivesoftware.smackx.delay.packet.DelayInformation;
 import org.jivesoftware.smack.*;
 
 import android.os.AsyncTask;
@@ -52,14 +53,14 @@ import com.facebook.react.bridge.Arguments;
 //import com.project.rnxmpp.ssl.DisabledSSLContext;
 import com.xmpp.ssl.UnsafeSSLContext;
 import com.xmpp.utils.Parser;
-//, ParticipantStatusListener, MessageListener
+//, ParticipantStatusListener,
 
 /**
  * Created by Kristian Frølund on 7/19/16.
  * Copyright (c) 2016. Teletronics. All rights reserved
  */
 
-public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener, RosterListener, InvitationListener{
+public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener, RosterListener, InvitationListener, MessageListener{
     XmppServiceListener xmppServiceListener;
     Logger logger = Logger.getLogger(XmppServiceSmackImpl.class.getName());
 
@@ -284,6 +285,19 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         this.xmppServiceListener.onMessage(message);
     }
 
+    @Override
+    public void processMessage(Message message){
+        String date = null;
+        DelayInformation extraInfo = message.getExtension( "delay", "urn:xmpp:delay" );
+        try
+        {
+            date = extraInfo.getStamp().toString();
+        }catch(NullPointerException e){
+            logger.info("No stamp available");
+        }
+        this.xmppServiceListener.onMucMessage(message.getBody(),message.getFrom(), date );
+    }
+
 
     @Override
     public void onRosterLoaded(Roster roster) {
@@ -410,6 +424,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         try
         {
             Collection<HostedRoom> hostedRooms = MultiUserChatManager.getInstanceFor( connection ).getHostedRooms("conference.yj-dev.dhis2.org");
+
             WritableArray rooms = Arguments.createArray();
             if(!hostedRooms.isEmpty()){
                 logger.info("HostedRooms is not emptyy");
@@ -444,40 +459,51 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     @Override
     public void joinMuc(String roomId){
         MultiUserChat muc = MultiUserChatManager.getInstanceFor( connection ).getMultiUserChat(roomId);
-        DiscussionHistory dh = new DiscussionHistory();
-        dh.setMaxStanzas(35);
+        if(!muc.isJoined())
+        {
+            muc.addMessageListener( this );
 
-        try {
-            String[] tmp = connection.getUser().split("/");
-            String jid = tmp[0];
-            muc.join(jid,null, dh, connection.getPacketReplyTimeout());
+            try
+            {
+                String[] tmp = connection.getUser().split( "/" );
+                String jid = tmp[0];
+                muc.join( jid, null, null, connection.getPacketReplyTimeout() );
 
-            WritableArray occupants = Arguments.createArray();
-            List<String> participants = muc.getOccupants();
-            for (String nick : participants)
-                occupants.pushString(nick);
+                WritableArray occupants = Arguments.createArray();
+                List<String> participants = muc.getOccupants();
+                for ( String nick : participants )
+                    occupants.pushString( nick );
 
+                this.xmppServiceListener.onJoinedMessage( occupants, null );
 
-            WritableArray messages = Arguments.createArray();
-            while(true){
-                Message message = muc.nextMessage();
-                if (message == null)
-                    break;
-                else { messages.pushString(message.getBody());
-                        messages.pushString(message.getFrom());
-                }
             }
+            catch ( SmackException.NoResponseException e )
+            {
+                logger.info( "No response from chat server.." + e );
+            }
+            catch ( XMPPException.XMPPErrorException e )
+            {
+                logger.info( "XMPP Error" + e );
+            }
+            catch ( SmackException e )
+            {
+                logger.info( "Something wrong with chat server.." + e );
+            }
+            catch ( Exception e )
+            {
+                logger.info( "Something went wrong.." + e );
+            }
+        }
+    }
 
-            this.xmppServiceListener.onJoinedMessage(occupants, messages);
-
-        } catch (SmackException.NoResponseException e) {
-            logger.info("No response from chat server.." + e);
-        } catch (XMPPException.XMPPErrorException e) {
-            logger.info( "XMPP Error" + e);
-        } catch (SmackException e) {
-            logger.info("Something wrong with chat server.." + e);
-        } catch (Exception e) {
-            logger.info("Something went wrong.." + e);
+    @Override
+    public void sendMessage(String text, String groupChatId){
+        MultiUserChat muc = MultiUserChatManager.getInstanceFor( connection ).getMultiUserChat(groupChatId);
+        try
+        {
+            muc.sendMessage( text );
+        }catch (SmackException.NotConnectedException e) {
+            logger.info("Noe gikk galt: " + e);
         }
     }
 

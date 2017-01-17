@@ -6,6 +6,7 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import com.facebook.react.bridge.WritableArray;
 
+
 /**
  * Created by Kristian Frølund on 7/19/16.
  * Copyright (c) 2016. Teletronics. All rights reserved
@@ -26,5 +27,6 @@ public interface XmppServiceListener {
     void onAllMucFetced(WritableArray mucRooms);
     void onPresenceChanged(String user, String status);
     void onJoinedMessage(WritableArray occupants, WritableArray messages);
+    void onMucMessage(String body, String from, String time);
 
 }

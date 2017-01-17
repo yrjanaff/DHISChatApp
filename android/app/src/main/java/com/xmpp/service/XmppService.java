@@ -44,5 +44,8 @@ public interface XmppService
     @ReactMethod
     void joinMuc(String roomId);
 
+    @ReactMethod
+    void sendMessage(String text, String groupChat);
+
 }
 
