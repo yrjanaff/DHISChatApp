@@ -90,4 +90,8 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
     @Override
     @ReactMethod
     public void joinMuc(String roomId){ this.xmppService.joinMuc(roomId);}
+
+    @Override
+    @ReactMethod
+    public void sendMessage(String text, String groupChat){this.xmppService.sendMessage(text, groupChat);}
 }

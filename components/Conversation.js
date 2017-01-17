@@ -15,7 +15,9 @@ class Conversation extends React.Component {
     }
     constructor(props) {
         super(props);
-        this.state = {height:0}
+        this.state = {height:0,
+        group: props.group};
+
     }
     componentWillMount () {
         Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
@@ -38,9 +40,14 @@ class Conversation extends React.Component {
 
     render() {
       let dataSource = ds.cloneWithRows([],[]);
-      if( xmpp.conversation[xmpp.remote] ){
+
+      if( !xmpp.group && xmpp.conversation[xmpp.remote] ){
         dataSource = ds.cloneWithRows(xmpp.conversation[xmpp.remote].chat.map(x => x));
       }
+      if( xmpp.group && xmpp.mucConversation[xmpp.remote] ){
+        dataSource = ds.cloneWithRows(xmpp.mucConversation[xmpp.remote].chat.map(x => x));
+      }
+
         return (
             <View style={styles.container}>
                 <View style={{flex:1}}>
@@ -61,7 +68,7 @@ class Conversation extends React.Component {
                                    style={styles.message} placeholder="Enter message..."/>
                     </View>
                     <View style={styles.sendButton}>
-                        <Button onPress={()=>{xmpp.sendMessage(this.state.message);this.setState({message:''})}} disabled={!this.state.message || !this.state.message.trim()}>Send</Button>
+                        <Button onPress={()=>{xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}} disabled={!this.state.message || !this.state.message.trim()}>Send</Button>
                     </View>
                 </View>
                 <View style={{height:this.state.height}}></View>

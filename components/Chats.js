@@ -28,7 +28,6 @@ export default class Chats extends React.Component {
   }
 
   setUp(props){
-    console.log(props)
     let tempmessages = {};
     let tempPeople = [];
 
@@ -62,7 +61,7 @@ export default class Chats extends React.Component {
             {
            this.state.people.map((remote) => {
                   return (
-                        <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={remote} onPress={() => {Actions.conversation({remote: this.prettifyUsername(remote)}); xmpp.setRemote(remote)}}>
+                        <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={remote} onPress={() => {Actions.conversation(); xmpp.setRemote(remote, false)}}>
                           <View>
                             <Text style={styles.bold}>{this.prettifyUsername(remote)}</Text>
                             {

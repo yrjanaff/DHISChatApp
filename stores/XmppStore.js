@@ -16,6 +16,9 @@ class XmppStore {
     @observable roster = [];
     @observable multiUserChat = [];
     @observable remote = '';
+    @observable mucConversation = [];
+    @observable group = false;
+    @observable mucRemote = '';
 
     constructor() {
         XMPP.on('loginError', this.onLoginError);
@@ -26,9 +29,10 @@ class XmppStore {
         XMPP.on('roster', this.onFetchedRoster);
         XMPP.on('presenceChanged', this.onPresenceChanged)
         XMPP.on('allMucs',this.onAllMucsFetched);
-        XMPP.on('joinedRoom', this.onRoomJoined);
+        XMPP.on('mucMessage',this.onMucMessage);
+        XMPP.on('mucInvitation', this.MucInvitationReceived);
         // default values
-        this.usename = '';
+        this.username = '';
         this.password = '';
         this.remote = '';
         this.mucUsername = '';
@@ -46,36 +50,42 @@ class XmppStore {
         return name + '@' + DOMAIN;
     }
 
-    setRemote(remote){
+    setRemote(remote, group, fullMucRemote){
         this.remote = remote;
+        this.group = group;
+        this.mucRemote = fullMucRemote;
     }
 
     createConversationObject(remote, own, message) {
         this.conversation = Object.assign({}, this.conversation, {[remote]: {chat: [{own:own, text:message, date: new Date()}]}});
     }
-    sendMessage(message){
-        if (!this.remote || !this.remote.trim()){
+
+
+    sendMessage(message, group){
+        if(!group) {
+          if( !this.remote || !this.remote.trim() ) {
             console.error("No remote username is defined");
-        }
-        if (!message || !message.trim()){
+          }
+          if( !message || !message.trim() ) {
             return false;
+          }
+          if( !this.conversation[this.remote] ) {
+            this.createConversationObject(this.remote, true, message);
+          } else {
+            this.conversation[this.remote].chat.unshift({own: true, text: message, date: new Date()})
+          }
+          // empty sent message
+          this.error = null;
+          // send to XMPP server
+          XMPP.message(message.trim(), this.remote)
+          AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
         }
-        if( !this.conversation[this.remote] ) {
-          this.createConversationObject(this.remote, true, message);
-        }else{
-            this.conversation[this.remote].chat.unshift({own:true, text:message, date: new Date()})
+        else{
+          XMPP.sendMucMessage(message, this.mucRemote);
         }
-        // empty sent message
-        this.error = null;
-        // send to XMPP server
-        XMPP.message(message.trim(), this.remote)
-        AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
-
-
     }
 
     onReceiveMessage({from, body}){
-        // extract username from XMPP UID
         if (!from || !body){
             return;
         }
@@ -113,8 +123,9 @@ class XmppStore {
         this.loading = false;
         this.loginError = null;
         this.logged = true;
-        //this.conversation = {};
+        this.getAllJoinedMucs(this.mucUsername);
     }
+
 
     login({username, password}){
         this.username = username;
@@ -127,7 +138,7 @@ class XmppStore {
         } else {
             this.loginError = null;
 
-            XMPP.trustHosts(['1x-193-157-182-210.uio.no', '1x-193-157-200-122.uio.no', 'yj-dev.dhis2.org'])
+            XMPP.trustHosts(['1x-193-157-251-127.uio.no', '1x-193-157-200-122.uio.no', 'yj-dev.dhis2.org'])
             // try to login to test domain with the same password as username
             XMPP.connect(this._userForName(this.username),this.password, "", DOMAIN, 5222);
             this.loading = true;
@@ -161,13 +172,35 @@ class XmppStore {
       this.multiUserChat = allMucs;
     }
 
+    MucInvitationReceived(props){
+      console.log("invitationReceived");
+      console.log(props)
+    }
+
     joinMuc(roomId){
+      console.log("skal joine")
         XMPP.joinMuc(roomId);
     }
 
-    onRoomJoined(props){
-      console.log(props);
+    onMucMessage({time,from, message}){
+
+      if (!from || !message){
+        return;
+      }
+      let date = time !== null ? time : new Date();
+      let muc = from.split("@")[0];
+      let from_name = from.split("/")[1];
+
+      let own = from_name === this._userForName(this.username);
+
+      if(!this.mucConversation[muc]){
+        this.mucConversation = Object.assign({}, this.mucConversation, {[muc]: {chat: [{own:own, text: message, from: from_name, date: date}]}});
+      }
+
+      this.mucConversation[muc].chat.unshift({own:own, text: message, from: from_name, date: date});
+
     }
+
 
 
 }

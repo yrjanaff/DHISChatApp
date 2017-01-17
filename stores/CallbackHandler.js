@@ -16,7 +16,8 @@ var map = {
   'mucInvitation': 'XMPPMucInvitation',
   'allMucs': 'XMPPAllMucRooms',
   'presenceChanged': 'XMPPPresenceChanced',
-  'joinedRoom': 'XMPPRoomJoined'
+  'joinedRoom': 'XMPPRoomJoined',
+  'mucMessage': 'XMPPMucMessage'
 }
 
 const LOG = (message) => {
@@ -36,11 +37,8 @@ class XMPP{
         NativeAppEventEmitter.addListener(map.error, this.onError.bind(this)),
         NativeAppEventEmitter.addListener(map.loginError, this.onLoginError.bind(this)),
         NativeAppEventEmitter.addListener(map.login, this.onLogin.bind(this)),
-        NativeAppEventEmitter.addListener(map.roster, this.onFetchedRoster.bind(this)),
-        NativeAppEventEmitter.addListener(map.mucInvitation, this.onMucInvitationReceived.bind(this)),
-        NativeAppEventEmitter.addListener(map.allMucs, this.onAllMucsFetched.bind(this)),
         NativeAppEventEmitter.addListener(map.presenceChanged, this.onPresenceChanged.bind(this)),
-        NativeAppEventEmitter.addListener(map.joinedRoom, this.onRoomJoined.bind(this)),
+
     ];
   }
 
@@ -51,8 +49,6 @@ class XMPP{
 
   onLogin(props){
     AsyncStorage.setItem("userCredentials", JSON.stringify(props));
-    LOG("Login");
-    console.log(props);
     this.isLogged = true;
   }
 
@@ -69,10 +65,6 @@ class XMPP{
   onLoginError(text){
     this.isLogged = false;
     LOG("LoginError: "+text);
-  }
-
-  onFetchedRoster(props){
-    console.log(props);
   }
 
   on(type, callback){
@@ -148,19 +140,8 @@ class XMPP{
     XMPPModule.createConference(chatName, subject, description, participants, from);
   }
 
-  onMucInvitationReceived(props) {
-    console.log("inne i onReveieved MUC");
-    console.log(props);
-  }
-
   getAllJoinedMucs(username){
     XMPPModule.getAllJoinedMucs(username);
-  }
-
-  onAllMucsFetched(props){
-    console.log('allMucsFetced');
-    console.log(props);
-
   }
 
   onPresenceChanged(props){
@@ -171,8 +152,8 @@ class XMPP{
     XMPPModule.joinMuc(roomId);
   }
 
-  onRoomJoined(props){
-    console.log(props);
+  sendMucMessage(message, to){
+    XMPPModule.sendMessage(message, to);
   }
 }
 

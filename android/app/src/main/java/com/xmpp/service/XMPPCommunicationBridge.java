@@ -40,6 +40,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     public static final String RNXMPP_ALLMUCS = "XMPPAllMucRooms";
     public static final String RNXMPP_PRESENCECHANGE = "XMPPPresenceChanced";
     public static final String RXMPP_ROOMJOINED = "XMPPRoomJoined";
+    public static final String RXMPP_MucMessage = "XMPPMucMessage";
     ReactContext reactContext;
 
     public XMPPCommunicationBridge(ReactContext reactContext) {
@@ -166,11 +167,22 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
 
     @Override
     public void onJoinedMessage(WritableArray occupants, WritableArray messages){
+        Log.d("comBride","logger5");
         WritableMap params = Arguments.createMap();
         params.putArray("occupants",occupants);
         params.putArray("messages",messages);
+        Log.d("comBride","logger6");
         sendEvent(reactContext, RXMPP_ROOMJOINED, params);
 
+    }
+
+    @Override
+    public void onMucMessage(String body, String from, String time){
+        WritableMap params = Arguments.createMap();
+        params.putString("message",body);
+        params.putString("from",from);
+        params.putString("time",time);
+        sendEvent(reactContext, RXMPP_MucMessage, params);
     }
 
     void sendEvent(ReactContext reactContext, String eventName, @Nullable Object params) {
