@@ -16,10 +16,12 @@ class XmppStore {
     @observable roster = [];
     @observable multiUserChat = [];
     @observable remote = '';
+    @observable currentInterpretation = '';
     @observable mucConversation = [];
     @observable group = false;
     @observable mucRemote = '';
     @observable newMucParticipants = [];
+
 
     constructor() {
         XMPP.on('loginError', this.onLoginError);
@@ -37,6 +39,7 @@ class XmppStore {
         this.password = '';
         this.remote = '';
         this.mucUsername = '';
+        this.currentInterpretation = '';
 
         AsyncStorage.getItem("conversation").then((value) => {
             if(value != null) {
@@ -51,6 +54,10 @@ class XmppStore {
         return name + '@' + DOMAIN;
     }
 
+    setCurrentInterpretation(interpretation){
+        this.currentInterpretation = interpretation;
+    }
+    
     setRemote(remote, group, fullMucRemote){
         this.remote = remote;
         this.group = group;

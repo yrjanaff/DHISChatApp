@@ -12,7 +12,14 @@ var styles = StyleSheet.create({
     containerNoTabs: {
       flex:1,
       paddingTop: 70,
-      backgroundColor: '#F7F7F7',
+      backgroundColor: '#F7F7F7'
+    },
+    centercontainer: {
+        flex:1,
+        paddingTop: 70,
+        backgroundColor: '#F7F7F7',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     row: {
         flexDirection: 'row',
