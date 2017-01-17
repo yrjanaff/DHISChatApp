@@ -6,6 +6,7 @@ var styles = StyleSheet.create({
         flex:1,
         paddingTop: 70,
         backgroundColor: '#F7F7F7',
+        paddingBottom:50
 
     },
     row: {

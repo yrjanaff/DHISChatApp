@@ -160,11 +160,11 @@ class XmppStore {
 
     createConference(chatName, subject, description, participants, from) {
         console.log('conference is being created');
-        XMPP.createConference(chatName, subject, description, participants, from)
+        this.multiUserChat = this.multiUserChat.concat([[chatName, chatName+'@conference.' +DOMAIN, subject, participants.length]]);
+        XMPP.createConference(chatName, subject, description, participants, from);
     }
 
     getAllJoinedMucs(username){
-        console.log(username);
         XMPP.getAllJoinedMucs(username);
     }
 
@@ -173,12 +173,11 @@ class XmppStore {
     }
 
     MucInvitationReceived(props){
-      console.log("invitationReceived");
-      console.log(props)
+      let name = props.from.split("@")[0];
+      this.multiUserChat = this.multiUserChat.concat([[name, props.from, props.subject, props.occupants.length]]);
     }
 
     joinMuc(roomId){
-      console.log("skal joine")
         XMPP.joinMuc(roomId);
     }
 
@@ -196,8 +195,9 @@ class XmppStore {
       if(!this.mucConversation[muc]){
         this.mucConversation = Object.assign({}, this.mucConversation, {[muc]: {chat: [{own:own, text: message, from: from_name, date: date}]}});
       }
-
-      this.mucConversation[muc].chat.unshift({own:own, text: message, from: from_name, date: date});
+      else {
+        this.mucConversation[muc].chat.unshift({own: own, text: message, from: from_name, date: date});
+      }
 
     }
 

@@ -49,7 +49,7 @@ export default class MucCreater extends React.Component {
                 value={this.state.participants}
             />
           </View>
-          <Button onPress={()=> {xmpp.createConference(this.state.name, this.state.topic, this.state.description, this.state.participants, this.state.username); Actions.group()} }>Create conference</Button>
+          <Button onPress={()=> {xmpp.createConference(this.state.name, this.state.topic, this.state.description, this.state.participants, this.state.username); this.setState({topic:'', name:'', description:''}); Actions.group()} }>Create conference</Button>
 
         </View>
     );

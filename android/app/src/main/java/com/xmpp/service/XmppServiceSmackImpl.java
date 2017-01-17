@@ -459,28 +459,40 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     @Override
     public void joinMuc(String roomId){
         MultiUserChat muc = MultiUserChatManager.getInstanceFor( connection ).getMultiUserChat(roomId);
-        muc.addMessageListener(this);
+        if(!muc.isJoined())
+        {
+            muc.addMessageListener( this );
 
-        try {
-            String[] tmp = connection.getUser().split("/");
-            String jid = tmp[0];
-            muc.join(jid,null, null, connection.getPacketReplyTimeout());
+            try
+            {
+                String[] tmp = connection.getUser().split( "/" );
+                String jid = tmp[0];
+                muc.join( jid, null, null, connection.getPacketReplyTimeout() );
 
-            WritableArray occupants = Arguments.createArray();
-            List<String> participants = muc.getOccupants();
-            for (String nick : participants)
-                occupants.pushString(nick);
+                WritableArray occupants = Arguments.createArray();
+                List<String> participants = muc.getOccupants();
+                for ( String nick : participants )
+                    occupants.pushString( nick );
 
-            this.xmppServiceListener.onJoinedMessage(occupants, null);
+                this.xmppServiceListener.onJoinedMessage( occupants, null );
 
-        } catch (SmackException.NoResponseException e) {
-            logger.info("No response from chat server.." + e);
-        } catch (XMPPException.XMPPErrorException e) {
-            logger.info( "XMPP Error" + e);
-        } catch (SmackException e) {
-            logger.info("Something wrong with chat server.." + e);
-        } catch (Exception e) {
-            logger.info("Something went wrong.." + e);
+            }
+            catch ( SmackException.NoResponseException e )
+            {
+                logger.info( "No response from chat server.." + e );
+            }
+            catch ( XMPPException.XMPPErrorException e )
+            {
+                logger.info( "XMPP Error" + e );
+            }
+            catch ( SmackException e )
+            {
+                logger.info( "Something wrong with chat server.." + e );
+            }
+            catch ( Exception e )
+            {
+                logger.info( "Something went wrong.." + e );
+            }
         }
     }
 
