@@ -10,7 +10,7 @@ import ChatCreater from './components/ChatCreater';
 import MucCreater from './components/MucCreater';
 import Groups from './components/Groups';
 import TabIcon from './components/TabIcon';
-import Interpretation from './components/Interpretation';
+import InterpretationList from './components/InterpretationList';
 import xmpp from './stores/XmppStore';
 // Define all routes of the app
 var XmppDemo = React.createClass({
@@ -28,7 +28,7 @@ var XmppDemo = React.createClass({
                 <Scene key="group" title="Groups" icon={TabIcon} component={Groups}  hideBackImage onBack={() => console.log("tried to go back")}
                        onRight={() => Actions.newMuc()}
                        rightTitle="new"/>
-                <Scene key="interpretation" title="Interpretations" icon={TabIcon} component={Interpretation} hideBackImage onBack={() => console.log("tried to go back")}/>
+                <Scene key="interpretation" title="Interpretations" icon={TabIcon} component={InterpretationList} hideBackImage onBack={() => console.log("tried to go back")}/>
                 <Scene key="newChat" component={ChatCreater} hideTabBar duration={1} title="Create a new chat" onLeft={() => Actions.chat()} leftTitle="back" />
                 <Scene key="newMuc" component={MucCreater} hideTabBar duration={1} title="Create a new conference" onLeft={() => Actions.group()} leftTitle="back"/>
                 <Scene key="conversation" component={Conversation} hideTabBar duration={1} onLeft={() => xmpp.group ? Actions.group() : Actions.chat()} leftTitle="back"/>
