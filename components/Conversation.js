@@ -49,7 +49,7 @@ class Conversation extends React.Component {
       }
 
         return (
-            <View style={styles.container}>
+            <View style={styles.containerNoTabs}>
                 <View style={{flex:1}}>
                     <ListView enableEmptySections
                         ref="messages"
@@ -71,6 +71,7 @@ class Conversation extends React.Component {
                         <Button onPress={()=>{xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}} disabled={!this.state.message || !this.state.message.trim()}>Send</Button>
                     </View>
                 </View>
+              {console.log(this.state.height)}
                 <View style={{height:this.state.height}}></View>
             </View>
         )

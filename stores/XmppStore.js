@@ -19,6 +19,7 @@ class XmppStore {
     @observable mucConversation = [];
     @observable group = false;
     @observable mucRemote = '';
+    @observable newMucParticipants = [];
 
     constructor() {
         XMPP.on('loginError', this.onLoginError);
@@ -116,7 +117,7 @@ class XmppStore {
 
     onDisconnect(message){
         this.logged = false;
-        this.loginError = message;
+        console.log("logger uut")
     }
 
     onLogin(){

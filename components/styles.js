@@ -9,6 +9,11 @@ var styles = StyleSheet.create({
         paddingBottom:50
 
     },
+    containerNoTabs: {
+      flex:1,
+      paddingTop: 70,
+      backgroundColor: '#F7F7F7',
+    },
     row: {
         flexDirection: 'row',
         backgroundColor:'white',

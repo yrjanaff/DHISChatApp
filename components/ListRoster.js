@@ -24,11 +24,15 @@ export default class ListRoster extends React.Component {
 
   constructor( props ) {
     super(props);
-    this.state = {roster: this.sortAlphabetically(props.roster)};
+    this.state = {roster: this.sortAlphabetically(props.roster),
+      click: null
+    };
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({roster: nextProps.roster})
+    this.setState({roster: nextProps.roster,
+      click: nextProps.clicked
+    })
   }
 
   getAvailableIcon(status) {
@@ -42,6 +46,15 @@ export default class ListRoster extends React.Component {
     }
   }
 
+  onClickedRow(row){
+    if(xmpp.group){
+     return this.state.click(row.username);
+    }else{
+       xmpp.setRemote(row.username)
+      Actions.conversation({remote: row.displayName});
+    }
+  }
+
   render() {
     const data = this.sortAlphabetically(this.state.roster)
     const dataSource = ds.cloneWithRows(data.map(x=>x));
@@ -51,7 +64,7 @@ export default class ListRoster extends React.Component {
                     renderScrollComponent={props => <ScrollView {...props} />}
                     dataSource={dataSource}
                     renderRow={(row) =>
-                        <TouchableHighlight onPress={() => {Actions.conversation({remote: row.displayName}); xmpp.setRemote(row.username)}}><View style={[{flex:1}, {flexDirection: 'row'},{marginTop: 10}]}><View style={[this.getAvailableIcon(row.presence), {justifyContent: 'flex-start'} ]}/><Text style={[{fontSize:16},{color: '#000000'}]}> {row.displayName}</Text></View></TouchableHighlight>}
+                        <TouchableHighlight onPress={() => this.onClickedRow(row)}><View style={[{flex:1}, {flexDirection: 'row'},{marginTop: 10}]}><View style={[this.getAvailableIcon(row.presence), {justifyContent: 'flex-start'} ]}/><Text style={[{fontSize:16},{color: '#000000'}]}> {row.displayName}</Text></View></TouchableHighlight>}
           />
     )
   }

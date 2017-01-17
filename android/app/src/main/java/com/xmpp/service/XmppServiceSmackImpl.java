@@ -219,6 +219,9 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             roster.reload();
         } catch (SmackException.NotLoggedInException | SmackException.NotConnectedException e) {
             logger.log(Level.WARNING, "Could not fetch roster", e);
+            if(e instanceof SmackException.NotLoggedInException){
+                this.xmppServiceListener.onDisconnect(e);
+            }
         }
     }
 
@@ -459,7 +462,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     @Override
     public void joinMuc(String roomId){
         MultiUserChat muc = MultiUserChatManager.getInstanceFor( connection ).getMultiUserChat(roomId);
-        if(!muc.isJoined())
+        if(muc.isJoined())
         {
             muc.addMessageListener( this );
 
