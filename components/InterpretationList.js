@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableHighlight, ScrollView}  from 'react-native';
+import {View, Text, TouchableHighlight, ScrollView, TextInput}  from 'react-native';
 import Button from 'react-native-button';
 import {Actions} from 'react-native-mobx';
 import styles from './styles';
@@ -34,7 +34,8 @@ export default class InterpretationList extends React.Component {
     super(props);
 
     this.state = {
-      interpretations: []
+      interpretations: [],
+      search: ''
     };
 
     this.getInterpretations = this.getInterpretations.bind(this);
@@ -45,7 +46,8 @@ export default class InterpretationList extends React.Component {
   }
 
   getInterpretations() {
-    this.fetchInterpretations();
+    this.fetchInterpretations('fields=*,!dataSet,!period,!organisationUnit,!lastUpdated,!created,!name,!displayName,!externalAccess,' +
+        '!likes,!likedBy,!publicAccess,!translations,!userGroupAccesses,!attributeValues,!comments,user[name]', true);
   }
 
   setInterpret( list ) {
@@ -59,55 +61,50 @@ export default class InterpretationList extends React.Component {
     console.log('satte state i setInterpret');
   }
 
-  fetchInterpretations() {
+  fetchInterpretations(args, concat) {
     console.log('Inni fetch interpretations');
     let interpretations = new Array();
-    return fetch('https://play.dhis2.org/demo/api/interpretations.json?page=' + page + '&pageSize=10', header)
+    return fetch('https://play.dhis2.org/demo/api/interpretations.json?page=' + page + '&pageSize=10&' + args, header)
         .then(( response ) => response.json())
         .then(( responseJson ) => {
 
           for( let i = 0; i < responseJson.interpretations.length; i++ ) {
-            fetch('https://play.dhis2.org/demo/api/interpretations/' + responseJson.interpretations[i].id +
-                '?fields=*,!lastUpdated,!created,!name,!displayName,!userGroupAccesses,!attributeValues,!publicAccess,!externalAccess,!likes,!likedBy,!translations,!comments,user[name]', header)
-                .then(( intResponse ) => intResponse.json())
-                .then(( intResponseJson ) => {
+            let interpretation = responseJson.interpretations[i];
                   console.log('inni siste fetch');
-                  console.log(intResponseJson);
-                  let type = intResponseJson.type.toLowerCase();
+                  console.log(interpretation);
+                  let type = interpretation.type.toLowerCase();
                   let typeId = '';
 
                   if( type === 'chart' ) {
-                    typeId = intResponseJson.chart.id;
+                    typeId = interpretation.chart.id;
                   }
                   else if( type === 'map' ) {
-                    typeId = intResponseJson.map.id;
+                    typeId = interpretation.map.id;
                   }
                   else if( type === 'report_table' ) {
-                    typeId = intResponseJson.reportTable.id;
+                    typeId = interpretation.reportTable.id;
                     type = 'reportTables';
                   }
                   else if( type === 'event_chart' ) {
-                    typeId = intResponseJson.eventChart.id;
+                    typeId = interpretation.eventChart.id;
                     type = 'eventChart';
                   }
 
                   if( type != 'reportTables' && type != 'dataset_report' ) {
-                    interpretations.push(new InterpretationMeta(intResponseJson.id, intResponseJson.user.name, intResponseJson.text, type, typeId));
+                    interpretations.push(new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text, type, typeId));
                   }
 
                   if( i + 1 == responseJson.interpretations.length ) {
                     //this.setInterpret(interpretations);
-                    if( this.state.interpretations === [] ) {
+                    if( this.state.interpretations === [] || !concat) {
                       this.setState({interpretations: interpretations});
                     }
                     else {
                       this.setState({interpretations: this.state.interpretations.concat(interpretations)});
                     }
+
                   }
-                })
-          }
-          return interpretations;
-        })
+        }})
         .catch(( error ) => {
           console.error(error);
         });
@@ -116,19 +113,49 @@ export default class InterpretationList extends React.Component {
   loadMore() {
     console.log('Inside loadMore');
     page++;
-    this.fetchInterpretations(page);
+    this.getInterpretations();
+  }
+
+  search(search){
+    console.log('inni search!');
+    console.log(search);
+    page = 1;
+
+    this.fetchInterpretations('filter=text:ilike:' + search +
+        '&fields=*,!dataSet,!period,!organisationUnit,!lastUpdated,!created,!name,!displayName,!externalAccess,' +
+        '!likes,!likedBy,!publicAccess,!translations,!userGroupAccesses,!attributeValues,!comments,user[name]', false);
+  }
+
+  reset(){
+    page = 1;
+    this.fetchInterpretations('fields=*,!dataSet,!period,!organisationUnit,!lastUpdated,!created,!name,!displayName,!externalAccess,' +
+        '!likes,!likedBy,!publicAccess,!translations,!userGroupAccesses,!attributeValues,!comments,user[name]', false);
   }
 
   render() {
     return (
         <View style={styles.container}>
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
+            <View style={styles.messageBar}>
+              <View style={{flex:1}}>
+                <TextInput ref='newComment'
+                           value={this.state.search}
+                           onChangeText={(search)=>this.setState({search})}
+                           style={styles.message} placeholder="Search interpretation"/>
+              </View>
+              <View style={styles.sendButton}>
+                <Button onPress={()=>{this.search(this.state.search);this.setState({search:''})}}
+                        disabled={!this.state.search || !this.state.search.trim()}>Submit</Button>
+              </View>
+              </View>
+            <View style={styles.button}><Button onPress={() => this.reset()}>Reset</Button></View>
             <View style={styles.button}><Button onPress={() => this.loadMore()}>Load More</Button></View>
             {console.log(this.state.interpretations)}
             {this.state.interpretations.map(( interpretation, index ) => {
               return (
                   <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={index}
-                                      onPress={() => {Actions.interpretation({interpretation: interpretation}); xmpp.setCurrentInterpretation(interpretation)}}>
+                                      onPress={() => {Actions.interpretation({interpretation: interpretation});
+                                      xmpp.setCurrentInterpretation(interpretation)}}>
                     <View key={index}>
                       <Text style={styles.bold}>{interpretation.name}</Text>
                       <Text>
