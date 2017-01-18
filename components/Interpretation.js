@@ -52,7 +52,9 @@ export default class Interpretation extends React.Component {
     })
         .then((response) => response.json())
         .then((responseJson) => {
+          console.log(responseJson);
           if( responseJson.httpStatusCode === 201){
+            console.log(responseJson);
             this.getComments();
           }
         })
@@ -82,7 +84,7 @@ export default class Interpretation extends React.Component {
     }
     
     return (
-        <View style={styles.centercontainer}>
+        <View style={styles.containerNoTabs}>
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
             <Text style={styles.bold}>{xmpp.currentInterpretation.name}</Text>
             <Text>{xmpp.currentInterpretation.text}</Text>
