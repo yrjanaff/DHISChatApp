@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, AsyncStorage}  from 'react-native';
+import {View, Text}  from 'react-native';
 import styles from './styles';
 import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';

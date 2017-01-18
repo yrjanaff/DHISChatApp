@@ -5,6 +5,7 @@ const DOMAIN = "yj-dev.dhis2.org";
 import {observable} from 'mobx';
 import autobind from 'autobind';
 import {AsyncStorage} from 'react-native';
+import { Actions } from 'react-native-mobx';
 
 @autobind
 class XmppStore {
@@ -40,14 +41,21 @@ class XmppStore {
         this.remote = '';
         this.mucUsername = '';
         this.currentInterpretation = '';
+        this.savedData = {};
+    }
 
-        AsyncStorage.getItem("conversation").then((value) => {
-            if(value != null) {
-              this.conversation = JSON.parse(value);
-            }else {
-              this.conversation = {};
-            }
-        });
+    getSavedData(){
+      AsyncStorage.getItem(this._userForName(this.username)).then((value) => {
+        console.log(this._userForName(this.username))
+        console.log("inne " + value)
+        if(value != null) {
+          this.savedData = JSON.parse(value);
+          console.log(JSON.parse(value))
+          this.conversation = JSON.parse(value).conversation;
+        }else {
+          this.conversation = {};
+        }
+      });
     }
 
     _userForName(name){
@@ -57,7 +65,7 @@ class XmppStore {
     setCurrentInterpretation(interpretation){
         this.currentInterpretation = interpretation;
     }
-    
+
     setRemote(remote, group, fullMucRemote){
         this.remote = remote;
         this.group = group;
@@ -86,7 +94,8 @@ class XmppStore {
           this.error = null;
           // send to XMPP server
           XMPP.message(message.trim(), this.remote)
-          AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
+          console.log(this._userForName(this.username))
+          AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
         }
         else{
           XMPP.sendMucMessage(message, this.mucRemote);
@@ -105,7 +114,8 @@ class XmppStore {
         }else{
           this.conversation[from_name].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
         }
-        AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
+      console.log(this._userForName(this.username))
+      AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     }
 
 
@@ -123,7 +133,7 @@ class XmppStore {
     }
 
     onDisconnect(message){
-        this.logged = false;
+        Actions.chat()
         console.log("logger uut")
     }
 
@@ -136,6 +146,7 @@ class XmppStore {
 
 
     login({username, password}){
+      console.log("hva kommer først")
         this.username = username;
         this.mucUsername = this._userForName(username) + "/DHISCHAT";
         this.password = password;
@@ -149,7 +160,9 @@ class XmppStore {
             XMPP.trustHosts(['1x-193-157-251-127.uio.no', '1x-193-157-200-122.uio.no', 'yj-dev.dhis2.org'])
             // try to login to test domain with the same password as username
             XMPP.connect(this._userForName(this.username),this.password, "", DOMAIN, 5222);
-            this.loading = true;
+            this.loading = true
+
+            this.getSavedData()
         }
 
     }
@@ -164,6 +177,7 @@ class XmppStore {
 
     disconnect() {
         XMPP.disconnect();
+        this.logged = false;
     }
 
     createConference(chatName, subject, description, participants, from) {
