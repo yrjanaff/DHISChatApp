@@ -5,6 +5,7 @@ const DOMAIN = "yj-dev.dhis2.org";
 import {observable} from 'mobx';
 import autobind from 'autobind';
 import {AsyncStorage} from 'react-native';
+import { Actions } from 'react-native-mobx';
 
 @autobind
 class XmppStore {
@@ -31,8 +32,8 @@ class XmppStore {
     XMPP.on('message', this.onReceiveMessage);
     XMPP.on('roster', this.onFetchedRoster);
     XMPP.on('presenceChanged', this.onPresenceChanged)
-    XMPP.on('allMucs', this.onAllMucsFetched);
-    XMPP.on('mucMessage', this.onMucMessage);
+    XMPP.on('allMucs',this.onAllMucsFetched);
+    XMPP.on('mucMessage',this.onMucMessage);
     XMPP.on('mucInvitation', this.MucInvitationReceived);
     // default values
     this.username = '';
@@ -40,40 +41,44 @@ class XmppStore {
     this.remote = '';
     this.mucUsername = '';
     this.currentInterpretation = '';
+    this.savedData = {};
+  }
 
-    AsyncStorage.getItem("conversation").then(( value ) => {
-      if( value != null ) {
-        this.conversation = JSON.parse(value);
-      } else {
+  getSavedData(){
+    AsyncStorage.getItem(this._userForName(this.username)).then((value) => {
+      console.log(this._userForName(this.username))
+      console.log("inne " + value)
+      if(value != null) {
+        this.savedData = JSON.parse(value);
+        console.log(JSON.parse(value))
+        this.conversation = JSON.parse(value).conversation;
+      }else {
         this.conversation = {};
       }
     });
   }
 
-  _userForName( name ) {
+  _userForName(name){
     return name + '@' + DOMAIN;
   }
 
-  setCurrentInterpretation( interpretation ) {
+  setCurrentInterpretation(interpretation){
     this.currentInterpretation = interpretation;
   }
 
-  setRemote( remote, group, fullMucRemote ) {
+  setRemote(remote, group, fullMucRemote){
     this.remote = remote;
     this.group = group;
     this.mucRemote = fullMucRemote;
   }
 
-  createConversationObject( remote, own, message ) {
-    this.conversation = Object.assign({}, this.conversation, {[remote]: {chat: [{own: own, text: message, date: new Date()}]}});
+  createConversationObject(remote, own, message) {
+    this.conversation = Object.assign({}, this.conversation, {[remote]: {chat: [{own:own, text:message, date: new Date()}]}});
   }
 
-  fileTransfer() {
-    XMPP.fileTransfer();
-  }
 
-  sendMessage( message, group ) {
-    if( !group ) {
+  sendMessage(message, group){
+    if(!group) {
       if( !this.remote || !this.remote.trim() ) {
         console.error("No remote username is defined");
       }
@@ -89,15 +94,16 @@ class XmppStore {
       this.error = null;
       // send to XMPP server
       XMPP.message(message.trim(), this.remote)
-      AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
+      console.log(this._userForName(this.username))
+      AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     }
-    else {
+    else{
       XMPP.sendMucMessage(message, this.mucRemote);
     }
   }
 
-  onReceiveMessage( {from, body} ) {
-    if( !from || !body ) {
+  onReceiveMessage({from, body}){
+    if (!from || !body){
       return;
     }
 
@@ -105,32 +111,33 @@ class XmppStore {
 
     if( !this.conversation[from_name] ) {
       this.createConversationObject(from_name, false, body);
-    } else {
-      this.conversation[from_name].chat.unshift({own: false, text: body, date: new Date()}) //Date er en foreløpig løsning..
+    }else{
+      this.conversation[from_name].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
     }
-    AsyncStorage.setItem("conversation", JSON.stringify(this.conversation));
+    console.log(this._userForName(this.username))
+    AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
   }
 
 
-  onLoginError() {
+  onLoginError(){
     this.loading = false;
     this.loginError = "Cannot authenticate, please use correct local username";
   }
 
-  onFetchedRoster( rosterList ) {
-    this.roster = rosterList;
+  onFetchedRoster(rosterList){
+    this.roster =  rosterList;
   }
 
-  onError( message ) {
+  onError(message){
     this.error = message;
   }
 
-  onDisconnect( message ) {
-    this.logged = false;
+  onDisconnect(message){
+    Actions.chat()
     console.log("logger uut")
   }
 
-  onLogin() {
+  onLogin(){
     this.loading = false;
     this.loginError = null;
     this.logged = true;
@@ -138,26 +145,29 @@ class XmppStore {
   }
 
 
-  login( {username, password} ) {
+  login({username, password}){
+    console.log("hva kommer først")
     this.username = username;
     this.mucUsername = this._userForName(username) + "/DHISCHAT";
     this.password = password;
-    if( !username || !username.trim() ) {
+    if (!username || !username.trim()){
       this.loginError = "Username should not be empty";
-    } else if( !password || !password.trim() ) {
+    } else if (!password || !password.trim()){
       this.loginError = "Password should not be empty";
     } else {
       this.loginError = null;
 
       XMPP.trustHosts(['1x-193-157-251-127.uio.no', '1x-193-157-200-122.uio.no', 'yj-dev.dhis2.org'])
       // try to login to test domain with the same password as username
-      XMPP.connect(this._userForName(this.username), this.password, "", DOMAIN, 5222);
-      this.loading = true;
+      XMPP.connect(this._userForName(this.username),this.password, "", DOMAIN, 5222);
+      this.loading = true
+
+      this.getSavedData()
     }
 
   }
 
-  getAllMuc() {
+  getAllMuc(){
     XMPP.getAllMuc()
   }
 
@@ -167,34 +177,35 @@ class XmppStore {
 
   disconnect() {
     XMPP.disconnect();
+    this.logged = false;
   }
 
-  createConference( chatName, subject, description, participants, from ) {
+  createConference(chatName, subject, description, participants, from) {
     console.log('conference is being created');
-    this.multiUserChat = this.multiUserChat.concat([[chatName, chatName + '@conference.' + DOMAIN, subject, participants.length]]);
+    this.multiUserChat = this.multiUserChat.concat([[chatName, chatName+'@conference.' +DOMAIN, subject, participants.length]]);
     XMPP.createConference(chatName, subject, description, participants, from);
   }
 
-  getAllJoinedMucs( username ) {
+  getAllJoinedMucs(username){
     XMPP.getAllJoinedMucs(username);
   }
 
-  onAllMucsFetched( allMucs ) {
+  onAllMucsFetched(allMucs){
     this.multiUserChat = allMucs;
   }
 
-  MucInvitationReceived( props ) {
+  MucInvitationReceived(props){
     let name = props.from.split("@")[0];
     this.multiUserChat = this.multiUserChat.concat([[name, props.from, props.subject, props.occupants.length]]);
   }
 
-  joinMuc( roomId ) {
+  joinMuc(roomId){
     XMPP.joinMuc(roomId);
   }
 
-  onMucMessage( {time, from, message} ) {
+  onMucMessage({time,from, message}){
 
-    if( !from || !message ) {
+    if (!from || !message){
       return;
     }
     let date = time !== null ? time : new Date();
@@ -203,23 +214,17 @@ class XmppStore {
 
     let own = from_name === this._userForName(this.username);
 
-    if( !this.mucConversation[muc] ) {
-      this.mucConversation = Object.assign({}, this.mucConversation, {
-        [muc]: {
-          chat: [{
-            own: own,
-            text: message,
-            from: from_name,
-            date: date
-          }]
-        }
-      });
+    if(!this.mucConversation[muc]){
+      this.mucConversation = Object.assign({}, this.mucConversation, {[muc]: {chat: [{own:own, text: message, from: from_name, date: date}]}});
     }
     else {
       this.mucConversation[muc].chat.unshift({own: own, text: message, from: from_name, date: date});
     }
 
   }
+
+  fileTransfer() {   XMPP.fileTransfer(); }
+
 
 
 }

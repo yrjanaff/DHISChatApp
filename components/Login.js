@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ScrollView, TextInput, ListView, Dimensions, AsyncStorage}  from 'react-native';
+import {View, Text, ScrollView, TextInput, ListView, Dimensions}  from 'react-native';
 import styles from './styles';
 import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';

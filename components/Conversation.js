@@ -15,27 +15,9 @@ class Conversation extends React.Component {
     }
     constructor(props) {
         super(props);
-        this.state = {height:0,
+        this.state = {
         group: props.group};
 
-    }
-    componentWillMount () {
-        Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
-        Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this));
-        this.mounted = true;
-    }
-
-    componentWillUnmount(){
-        this.mounted = false;
-        Keyboard.removeListener('keyboardWillShow');
-        Keyboard.removeListener('keyboardWillHide');
-    }
-    keyboardWillShow (e) {
-        if (this.mounted) this.setState({height: e.endCoordinates.height});
-    }
-
-    keyboardWillHide (e) {
-        if (this.mounted) this.setState({height: 0});
     }
 
     render() {
@@ -73,8 +55,6 @@ class Conversation extends React.Component {
                         <Button onPress={()=> xmpp.fileTransfer() }>Send</Button>
                     </View>
                 </View>
-              {console.log(this.state.height)}
-                <View style={{height:this.state.height}}></View>
             </View>
         )
     }
