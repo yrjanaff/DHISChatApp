@@ -61,7 +61,7 @@ export default class InterpretationList extends React.Component {
     console.log('satte state i setInterpret');
   }
 
-  fetchInterpretations(args, concat) {
+  fetchInterpretations( args, concat ) {
     console.log('Inni fetch interpretations');
     let interpretations = new Array();
     return fetch('https://play.dhis2.org/demo/api/interpretations.json?page=' + page + '&pageSize=10&' + args, header)
@@ -70,41 +70,42 @@ export default class InterpretationList extends React.Component {
 
           for( let i = 0; i < responseJson.interpretations.length; i++ ) {
             let interpretation = responseJson.interpretations[i];
-                  console.log('inni siste fetch');
-                  console.log(interpretation);
-                  let type = interpretation.type.toLowerCase();
-                  let typeId = '';
+            console.log('inni siste fetch');
+            console.log(interpretation);
+            let type = interpretation.type.toLowerCase();
+            let typeId = '';
 
-                  if( type === 'chart' ) {
-                    typeId = interpretation.chart.id;
-                  }
-                  else if( type === 'map' ) {
-                    typeId = interpretation.map.id;
-                  }
-                  else if( type === 'report_table' ) {
-                    typeId = interpretation.reportTable.id;
-                    type = 'reportTables';
-                  }
-                  else if( type === 'event_chart' ) {
-                    typeId = interpretation.eventChart.id;
-                    type = 'eventChart';
-                  }
+            if( type === 'chart' ) {
+              typeId = interpretation.chart.id;
+            }
+            else if( type === 'map' ) {
+              typeId = interpretation.map.id;
+            }
+            else if( type === 'report_table' ) {
+              typeId = interpretation.reportTable.id;
+              type = 'reportTables';
+            }
+            else if( type === 'event_chart' ) {
+              typeId = interpretation.eventChart.id;
+              type = 'eventChart';
+            }
 
-                  if( type != 'reportTables' && type != 'dataset_report' ) {
-                    interpretations.push(new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text, type, typeId));
-                  }
+            if( type != 'reportTables' && type != 'dataset_report' ) {
+              interpretations.push(new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text, type, typeId));
+            }
 
-                  if( i + 1 == responseJson.interpretations.length ) {
-                    //this.setInterpret(interpretations);
-                    if( this.state.interpretations === [] || !concat) {
-                      this.setState({interpretations: interpretations});
-                    }
-                    else {
-                      this.setState({interpretations: this.state.interpretations.concat(interpretations)});
-                    }
+            if( i + 1 == responseJson.interpretations.length ) {
+              //this.setInterpret(interpretations);
+              if( this.state.interpretations === [] || !concat ) {
+                this.setState({interpretations: interpretations});
+              }
+              else {
+                this.setState({interpretations: this.state.interpretations.concat(interpretations)});
+              }
 
-                  }
-        }})
+            }
+          }
+        })
         .catch(( error ) => {
           console.error(error);
         });
@@ -116,7 +117,7 @@ export default class InterpretationList extends React.Component {
     this.getInterpretations();
   }
 
-  search(search){
+  search( search ) {
     console.log('inni search!');
     console.log(search);
     page = 1;
@@ -126,7 +127,7 @@ export default class InterpretationList extends React.Component {
         '!likes,!likedBy,!publicAccess,!translations,!userGroupAccesses,!attributeValues,!comments,user[name]', false);
   }
 
-  reset(){
+  reset() {
     page = 1;
     this.fetchInterpretations('fields=*,!dataSet,!period,!organisationUnit,!lastUpdated,!created,!name,!displayName,!externalAccess,' +
         '!likes,!likedBy,!publicAccess,!translations,!userGroupAccesses,!attributeValues,!comments,user[name]', false);
@@ -147,7 +148,7 @@ export default class InterpretationList extends React.Component {
                 <Button onPress={()=>{this.search(this.state.search);this.setState({search:''})}}
                         disabled={!this.state.search || !this.state.search.trim()}>Submit</Button>
               </View>
-              </View>
+            </View>
             <View style={styles.button}><Button onPress={() => this.reset()}>Reset</Button></View>
             <View style={styles.button}><Button onPress={() => this.loadMore()}>Load More</Button></View>
             {console.log(this.state.interpretations)}

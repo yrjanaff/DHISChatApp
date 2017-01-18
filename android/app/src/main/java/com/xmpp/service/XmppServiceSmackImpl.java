@@ -17,6 +17,7 @@ import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Stanza;
+import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterLoadedListener;
@@ -25,6 +26,8 @@ import org.jivesoftware.smack.sasl.SASLErrorException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.XmlStringBuilder;
+import org.jivesoftware.smackx.filetransfer.FileTransferManager;
+import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jivesoftware.smackx.xdata.Form;
@@ -37,16 +40,26 @@ import org.jivesoftware.smackx.muc.DiscussionHistory;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smackx.delay.packet.DelayInformation;
 import org.jivesoftware.smack.*;
+import org.jivesoftware.smackx.bytestreams.socks5.provider.BytestreamsProvider;
+import org.jivesoftware.smackx.disco.provider.DiscoverItemsProvider;
+import org.jivesoftware.smackx.disco.provider.DiscoverInfoProvider;
 
 import android.os.AsyncTask;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Collection;
+import org.jivesoftware.smackx.filetransfer.FileTransfer.Status;
+import org.jivesoftware.smackx.filetransfer.FileTransferNegotiator;
+import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
+import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
+import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import android.util.Log;
+import android.os.Environment;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.Arguments;
 
@@ -60,10 +73,14 @@ import com.xmpp.utils.Parser;
  * Copyright (c) 2016. Teletronics. All rights reserved
  */
 
-public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener, RosterListener, InvitationListener, MessageListener{
+public class XmppServiceSmackImpl implements XmppService, FileTransferListener, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener, RosterListener, InvitationListener, MessageListener{
     XmppServiceListener xmppServiceListener;
     Logger logger = Logger.getLogger(XmppServiceSmackImpl.class.getName());
 
+    /*ProviderManager.addIQProvider("query", "http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
+    ProviderManager.addIQProvider("query", "http://jabber.org/protocol/disco#items", new DiscoverItemsProvider());
+    ProviderManager.addIQProvider("query", "http://jabber.org/protocol/disco#info", new DiscoverInfoProvider());
+*/
     XMPPTCPConnection connection;
     Roster roster;
     List<String> trustedHosts = new ArrayList<>();
@@ -80,6 +97,102 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             this.trustedHosts.add(trustedHosts.getString(i));
         }
     }
+
+    @Override
+    public void fileTransfer(){
+        FileTransferManager manager = FileTransferManager.getInstanceFor(connection);
+        //FileTransferNegotiator.setServiceEnabled(connection, true);
+        OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer("admin@yj-dev.dhis2.org/Spark");
+        File mf = Environment.getExternalStorageDirectory();
+        File file = new File(mf.getAbsoluteFile()+"/DCIM/Camera/IMG_20170118_143600.jpg");
+        try {
+            transfer.sendFile(file, "test_file");
+        } /*catch (XMPPException e) {
+            logger.info(e.toString());
+            e.printStackTrace();
+        }*/ catch (SmackException e) {
+            logger.info(e.toString());
+        }
+        while(!transfer.isDone()) {
+            if(transfer.getStatus().equals(Status.error)) {
+                logger.info("ERROR!!! " + transfer.getError());
+                System.out.println("ERROR!!! " + transfer.getError());
+            } else if (transfer.getStatus().equals(Status.cancelled)
+                || transfer.getStatus().equals(Status.refused)) {
+                logger.info("Cancelled!!! " + transfer.getError());
+                System.out.println("Cancelled!!! " + transfer.getError());
+            }
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                logger.info(e.toString());
+                e.printStackTrace();
+            }
+        }
+        if(transfer.getStatus().equals(Status.refused) || transfer.getStatus().equals(Status.error)
+            || transfer.getStatus().equals(Status.cancelled)){
+            logger.info("refused cancelled error " + transfer.getError());
+            System.out.println("refused cancelled error " + transfer.getError());
+        } else {
+            logger.info("File Transfer Sucsess!!! Jippi!");
+            System.out.println("Success");
+        }
+    }
+
+    @Override
+    public void fileTransferRequest( final FileTransferRequest request )
+    {
+        System.out.println("Inni filetrasfer!!!!!");
+        new Thread()
+        {
+            @Override
+            public void run()
+            {
+                System.out.println("Inni run!!!!!");
+                IncomingFileTransfer transfer = request.accept();
+                File mf = Environment.getExternalStorageDirectory();
+                File file = new File( mf.getAbsoluteFile() + "/DCIM/Camera/" + transfer.getFileName() );
+               System.out.println(file.toString());
+                try
+                {
+
+                    transfer.recieveFile( file );
+                    while ( !transfer.isDone() )
+                    {
+                        try
+                        {
+                            System.out.println(transfer);
+
+                            Thread.sleep( 1000L );
+                        }
+                        catch ( Exception e )
+                        {
+                            Log.e( "", e.getMessage() );
+                        }
+                        if ( transfer.getStatus().equals( Status.error ) )
+                        {
+                            Log.e( "ERROR!!! ", transfer.getError() + "" );
+                        }
+                        if ( transfer.getException() != null )
+                        {
+                            transfer.getException().printStackTrace();
+                        }
+                    }
+                    if(transfer.isDone()){
+                        System.out.println(file.toString());
+                    }
+                }
+                catch ( Exception e )
+                {
+                    Log.e( "", e.getMessage() );
+                }
+            }
+
+            ;
+        }.start();
+    }
+
+
 
     @Override
     public void connect(String jid, String password, String authMethod, String hostname, Integer port) {
@@ -133,6 +246,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
         MultiUserChatManager.getInstanceFor(connection).addInvitationListener(this);
 
+        FileTransferManager.getInstanceFor(connection).addFileTransferListener(this);
 
         roster = Roster.getInstanceFor(connection);
         roster.addRosterLoadedListener(this);

@@ -39,6 +39,7 @@ class Conversation extends React.Component {
     }
 
     render() {
+      //xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}} disabled={!this.state.message || !this.state.message.trim()
       let dataSource = ds.cloneWithRows([],[]);
 
       if( !xmpp.group && xmpp.conversation[xmpp.remote] ){
@@ -65,10 +66,11 @@ class Conversation extends React.Component {
                         <TextInput ref='message'
                                    value={this.state.message}
                                    onChangeText={(message)=>this.setState({message})}
-                                   style={styles.message} placeholder="Enter message..."/>
+                                   style={styles.message} placeholder="Enter message..."
+                                   onSubmitEditing={() => {xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}} disabled={!this.state.message || !this.state.message.trim()}/>
                     </View>
                     <View style={styles.sendButton}>
-                        <Button onPress={()=>{xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}} disabled={!this.state.message || !this.state.message.trim()}>Send</Button>
+                        <Button onPress={()=> xmpp.fileTransfer() }>Send</Button>
                     </View>
                 </View>
               {console.log(this.state.height)}

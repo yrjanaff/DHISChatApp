@@ -47,5 +47,8 @@ public interface XmppService
     @ReactMethod
     void sendMessage(String text, String groupChat);
 
+    @ReactMethod
+    void fileTransfer();
+
 }
 

@@ -30,19 +30,19 @@ export default class Interpretation extends React.Component {
     };
   }
 
-  componentWillMount () {
+  componentWillMount() {
     this.getComments();
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     console.log('component will unmount!!');
   }
 
-  submitComment(comment){
+  submitComment( comment ) {
     console.log('inni submitComment!');
     console.log(comment);
-    
-    return fetch('https://play.dhis2.org/demo/api//interpretations/'+ xmpp.currentInterpretation.id +'/comments', {
+
+    return fetch('https://play.dhis2.org/demo/api//interpretations/' + xmpp.currentInterpretation.id + '/comments', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${btoa('admin:district')}`,
@@ -50,39 +50,39 @@ export default class Interpretation extends React.Component {
       },
       body: comment
     })
-        .then((response) => response.json())
-        .then((responseJson) => {
+        .then(( response ) => response.json())
+        .then(( responseJson ) => {
           console.log(responseJson);
-          if( responseJson.httpStatusCode === 201){
+          if( responseJson.httpStatusCode === 201 ) {
             console.log(responseJson);
             this.getComments();
           }
         })
-        .catch((error) => {
+        .catch(( error ) => {
           console.error(error);
         });
   }
 
-  getComments(){
+  getComments() {
     console.log('inni getComments!!!');
-    return fetch('https://play.dhis2.org/demo/api/interpretations/'+ xmpp.currentInterpretation.id +'/comments?fields=text,user[name]', header)
-        .then((response) => response.json())
-        .then((responseJson) => {
+    return fetch('https://play.dhis2.org/demo/api/interpretations/' + xmpp.currentInterpretation.id + '/comments?fields=text,user[name]', header)
+        .then(( response ) => response.json())
+        .then(( responseJson ) => {
           console.log(responseJson.comments);
           this.setState({comments: responseJson.comments});
         })
-        .catch((error) => {
+        .catch(( error ) => {
           console.error(error);
         });
   }
 
   render() {
     console.log(xmpp.currentInterpretation);
-    if(intId != xmpp.currentInterpretation.id){
+    if( intId != xmpp.currentInterpretation.id ) {
       intId = xmpp.currentInterpretation.id;
       this.getComments();
     }
-    
+
     return (
         <View style={styles.containerNoTabs}>
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
@@ -117,7 +117,8 @@ export default class Interpretation extends React.Component {
                            style={styles.message} placeholder="Enter comment..."/>
               </View>
               <View style={styles.sendButton}>
-                <Button onPress={()=>{this.submitComment(this.state.newComment);this.setState({newComment:''})}} disabled={!this.state.newComment || !this.state.newComment.trim()}>Submit</Button>
+                <Button onPress={()=>{this.submitComment(this.state.newComment);this.setState({newComment:''})}}
+                        disabled={!this.state.newComment || !this.state.newComment.trim()}>Submit</Button>
               </View>
             </View>
           </ScrollView>

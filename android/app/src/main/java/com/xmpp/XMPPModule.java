@@ -25,6 +25,14 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
     }
 
     @Override
+    @ReactMethod
+    public void fileTransfer() { this.xmppService.fileTransfer(); }
+
+    /*@Override
+    @ReactMethod
+    public void fileRecieve() { this.xmppService.fileRecieve(); }*/
+
+    @Override
     public String getName() {
         return MODULE_NAME;
     }

@@ -42,6 +42,10 @@ class XMPP{
     ];
   }
 
+  fileTransfer() {
+    XMPPModule.fileTransfer();
+  }
+
   onConnected(){
     LOG("Connected");
     this.isConnected = true;
