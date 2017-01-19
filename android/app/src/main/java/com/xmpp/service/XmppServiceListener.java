@@ -28,5 +28,6 @@ public interface XmppServiceListener {
     void onPresenceChanged(String user, String status);
     void onJoinedMessage(WritableArray occupants, WritableArray messages);
     void onMucMessage(String body, String from, String time);
-
+    void onFileTransfer(String message);
+    void onFileRecieved(String uri, String jid );
 }

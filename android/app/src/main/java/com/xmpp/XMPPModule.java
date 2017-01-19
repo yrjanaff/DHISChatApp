@@ -21,12 +21,12 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
 
     public XMPPModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        xmppService = new XmppServiceSmackImpl(new XMPPCommunicationBridge(reactContext));
+        xmppService = new XmppServiceSmackImpl(reactContext, new XMPPCommunicationBridge(reactContext));
     }
 
     @Override
     @ReactMethod
-    public void fileTransfer() { this.xmppService.fileTransfer(); }
+    public void fileTransfer(String uri, String to) { this.xmppService.fileTransfer(uri, to); }
 
     /*@Override
     @ReactMethod

@@ -41,6 +41,8 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     public static final String RNXMPP_PRESENCECHANGE = "XMPPPresenceChanced";
     public static final String RXMPP_ROOMJOINED = "XMPPRoomJoined";
     public static final String RXMPP_MucMessage = "XMPPMucMessage";
+    public static final String RNXMPP_FILETRANSFER = "XMPPFileTransfer";
+    public static final String RNXMPP_FILERECEIVED = "XMPPFileReceived";
     ReactContext reactContext;
 
     public XMPPCommunicationBridge(ReactContext reactContext) {
@@ -183,6 +185,19 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
         params.putString("from",from);
         params.putString("time",time);
         sendEvent(reactContext, RXMPP_MucMessage, params);
+    }
+
+    @Override
+    public void onFileTransfer(String message){
+        sendEvent(reactContext, RNXMPP_FILETRANSFER, message);
+    }
+
+    @Override
+    public void onFileRecieved(String uri, String jid){
+        WritableMap params = Arguments.createMap();
+        params.putString("uri",uri);
+        params.putString("from",jid);
+        sendEvent( reactContext, RNXMPP_FILERECEIVED, params);
     }
 
     void sendEvent(ReactContext reactContext, String eventName, @Nullable Object params) {

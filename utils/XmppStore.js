@@ -24,6 +24,8 @@ class XmppStore {
     @observable mucRemote = '';
     @observable newMucParticipants = [];
     @observable activeApp  = true;
+    @observable sendFileError = null;
+    @observable currentFileSent = true;
 
 
     constructor() {
@@ -37,6 +39,8 @@ class XmppStore {
         XMPP.on('allMucs',this.onAllMucsFetched);
         XMPP.on('mucMessage',this.onMucMessage);
         XMPP.on('mucInvitation', this.MucInvitationReceived);
+        XMPP.on('fileTransfer', this.fileTransferMessage);
+        XMPP.on('fileReceived', this.fileReceived);
 
         AppState.addEventListener('change', this.isAppActive.bind(this));
 
@@ -48,7 +52,42 @@ class XmppStore {
         this.mucUsername = '';
         this.currentInterpretation = '';
         this.savedData = {};
+        
     }
+  
+  
+  fileTransferMessage(message){
+    if(message === 'SUCCESS'){
+      console.log("SETTER TIL TRUE");
+      this.currentFileSent = true;
+      this.sendFileError = null;
+      AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
+    }
+    else{
+      this.currentFileSent = false;
+      this.sendFileError = message;
+    }
+  }
+  
+  fileReceived({from, uri}){
+    const from_name = from.split("/")[0];
+    console.log(from);
+    if( !this.conversation[from_name] ) {
+      this.conversation = Object.assign({}, this.conversation, {[from_name]: {chat: [{own:false, text:uri, date: new Date(), image: true}]}});
+    } else {
+      this.conversation[from_name].chat.unshift({own: false, text: uri, date: new Date(), image: true})
+    }
+    AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
+  }
+  
+  sentFileinChat(image){
+    if( !this.conversation[this.remote] ) {
+      this.conversation = Object.assign({}, this.conversation, {[this.remote]: {chat: [{own:true, text:image, date: new Date(), image: true}]}});
+    } else {
+      this.conversation[this.remote].chat.unshift({own: true, text: image, date: new Date(), image: true})
+    }
+    
+  }
 
     isAppActive(appSate){
       console.log("nå skifter jeg, går i" + appSate)
@@ -56,7 +95,6 @@ class XmppStore {
         this.activeApp = false;
       }
     }
-
     getSavedData(){
       AsyncStorage.getItem(this._userForName(this.username)).then((value) => {
         if(value != null) {
@@ -85,7 +123,7 @@ class XmppStore {
   }
 
   createConversationObject(remote, own, message) {
-    this.conversation = Object.assign({}, this.conversation, {[remote]: {chat: [{own:own, text:message, date: new Date()}]}});
+    this.conversation = Object.assign({}, this.conversation, {[remote]: {chat: [{own:own, text:message, date: new Date() }]}});
   }
 
 
@@ -236,7 +274,7 @@ class XmppStore {
 
   }
 
-  fileTransfer() {   XMPP.fileTransfer(); }
+  fileTransfer(uri) {   console.log(XMPP.fileTransfer(uri, this.remote)); }
 
 
 

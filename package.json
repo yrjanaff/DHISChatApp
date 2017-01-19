@@ -16,6 +16,7 @@
     "react-native": "^0.30.0",
     "react-native-button": "^1.2.1",
     "react-native-camera-roll-picker": "^1.1.9",
+    "react-native-get-real-path": "git+https://github.com/Wraptime/react-native-get-real-path.git",
     "react-native-invertible-scroll-view": "^1.0.0",
     "react-native-material-design": "^0.3.7",
     "react-native-mobx": "^0.2.1",

@@ -17,7 +17,9 @@ var map = {
   'allMucs': 'XMPPAllMucRooms',
   'presenceChanged': 'XMPPPresenceChanced',
   'joinedRoom': 'XMPPRoomJoined',
-  'mucMessage': 'XMPPMucMessage'
+  'mucMessage': 'XMPPMucMessage',
+  'fileTransfer': 'XMPPFileTransfer',
+  'fileReceived': 'XMPPFileReceived'
 }
 
 const LOG = (message) => {
@@ -42,8 +44,8 @@ class XMPP{
     ];
   }
 
-  fileTransfer() {
-    XMPPModule.fileTransfer();
+  fileTransfer(uri, remote) {
+    XMPPModule.fileTransfer(uri, remote);
   }
 
   onConnected(){
