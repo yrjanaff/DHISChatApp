@@ -28,7 +28,8 @@ export default class Chats extends React.Component {
     this.setUp(props);
   }
 
-  setUp(props){
+
+      setUp(props){
     let tempmessages = {};
     let tempPeople = [];
 
@@ -37,7 +38,8 @@ export default class Chats extends React.Component {
 
     this.state = {
       messages: tempmessages,
-      people: tempPeople
+      people: tempPeople,
+      selectedImage: ''
     };
   }
 
@@ -56,8 +58,10 @@ export default class Chats extends React.Component {
 
   render() {
     this.setUp(this.state);
+    {console.log(this.state.selectedImage)}
     return (
         <View style={styles.container}>
+
           <ScrollView  automaticallyAdjustContentInsets={true} horizontal={false} >
             {
            this.state.people.map((remote) => {
