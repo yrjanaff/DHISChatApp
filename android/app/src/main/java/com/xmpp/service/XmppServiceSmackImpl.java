@@ -524,7 +524,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
             String[] tmp = connection.getUser().split("/");
             String jid = tmp[0];
             room.join(jid);
-
+            room.addMessageListener( this );
             logger.info(room.toString());
             List<String> participants = room.getOccupants();
             String[] temp = new String[participants.size()];
@@ -569,7 +569,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
             muc.join(from);
             logger.info("is adding invitationRejected");
 
-
+            muc.addMessageListener( this );
             for(int i = 0; i< participants.size(); i++)
             {
                 logger.info("inviting participant: " + participants.getString(i));

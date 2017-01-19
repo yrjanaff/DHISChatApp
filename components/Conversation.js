@@ -53,7 +53,6 @@ class Conversation extends React.Component {
     let isSent = xmpp.currentFileSent;
     return (
         <View style={styles.containerNoTabs}>
-          
           <View style={{flex:1}}>
             <ListView enableEmptySections
                       ref="messages"

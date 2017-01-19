@@ -19,7 +19,7 @@ var DhisChat = React.createClass({
 
   render: function() {
     return (
-        <Router xmpp={xmpp}>
+        <Router>
           <Scene key="main" component={Switch} tabs selector={()=>!xmpp.logged ? 'login' : 'content'}>
             <Scene key="login" component={Login} title="Login"/>
             <Scene key="content" >
