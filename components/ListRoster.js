@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, ListView, ScrollView, TouchableHighlight}  from 'react-native';
-import xmpp from '../stores/XmppStore';
+import xmpp from '../utils/XmppStore';
 import { Actions } from 'react-native-mobx'
 import styles from './styles';
 

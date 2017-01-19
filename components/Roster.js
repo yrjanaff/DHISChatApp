@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text}  from 'react-native';
 import ListRoster from './ListRoster';
 import styles from './styles';
-import xmpp from '../stores/XmppStore';
+import xmpp from '../utils/XmppStore';
 
 export default class Roster extends React.Component {
   constructor( props ) {

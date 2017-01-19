@@ -3,7 +3,7 @@ import {View, Text, TouchableHighlight, ScrollView, TextInput}  from 'react-nati
 import Button from 'react-native-button';
 import {Actions} from 'react-native-mobx';
 import styles from './styles';
-import xmpp from '../stores/XmppStore';
+import xmpp from '../utils/XmppStore';
 var btoa = require('Base64').btoa;
 
 

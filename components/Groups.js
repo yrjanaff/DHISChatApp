@@ -1,7 +1,7 @@
 import React from 'react';
 import {View,Text, TouchableHighlight, ScrollView}  from 'react-native';
 import styles from './styles';
-import xmpp from '../stores/XmppStore';
+import xmpp from '../utils/XmppStore';
 import { Actions } from 'react-native-mobx';
 
 export default class Groups extends React.Component {

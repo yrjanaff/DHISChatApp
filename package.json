@@ -1,5 +1,5 @@
 {
-  "name": "XmppDemo",
+  "name": "DhisChat",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -8,13 +8,17 @@
   "dependencies": {
     "Base64": "^1.0.0",
     "autobind": "^1.0.3",
+    "material-design-icons": "^3.0.1",
     "mobx": "^2.4.0",
     "mobx-react": "^3.5.1",
-    "react": "15.2.1",
+    "native": "^0.2.0",
+    "react": "^15.2.1",
     "react-native": "^0.30.0",
     "react-native-button": "^1.2.1",
     "react-native-invertible-scroll-view": "^1.0.0",
+    "react-native-material-design": "^0.3.7",
     "react-native-mobx": "^0.2.1",
+    "react-native-push-notification": "^2.2.1",
     "react-native-router-flux": "^3.31.0",
     "react-native-xmpp": "^0.2.1"
   },

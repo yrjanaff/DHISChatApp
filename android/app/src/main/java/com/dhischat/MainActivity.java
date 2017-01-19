@@ -1,4 +1,4 @@
-package com.xmppdemo;
+package com.dhischat;
 
 import com.facebook.react.ReactActivity;
 import rnxmpp.RNXMPPPackage;
@@ -11,6 +11,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "XmppDemo";
+        return "DhisChat";
     }
 }

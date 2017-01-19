@@ -6,7 +6,7 @@ import React from 'react';
 import {View, Text, TouchableHighlight, ScrollView, Image, TextInput}  from 'react-native';
 import Button from 'react-native-button';
 import styles from './styles';
-import xmpp from '../stores/XmppStore';
+import xmpp from '../utils/XmppStore';
 var btoa = require('Base64').btoa;
 
 let header = {
@@ -41,7 +41,7 @@ export default class Interpretation extends React.Component {
   submitComment(comment){
     console.log('inni submitComment!');
     console.log(comment);
-    
+
     return fetch('https://play.dhis2.org/demo/api//interpretations/'+ xmpp.currentInterpretation.id +'/comments', {
       method: 'POST',
       headers: {
@@ -82,7 +82,7 @@ export default class Interpretation extends React.Component {
       intId = xmpp.currentInterpretation.id;
       this.getComments();
     }
-    
+
     return (
         <View style={styles.containerNoTabs}>
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>

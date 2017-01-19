@@ -13,18 +13,17 @@ import TabIcon from './components/TabIcon';
 import InterpretationList from './components/InterpretationList';
 import Settings from './components/Settings';
 import Interpretation from './components/Interpretation';
-import xmpp from './stores/XmppStore';
+import xmpp from './utils/XmppStore';
 // Define all routes of the app
-var XmppDemo = React.createClass({
+var DhisChat = React.createClass({
 
   render: function() {
       return (
           <Router xmpp={xmpp}>
-            <Scene key="main" component={Switch} tabs selector={()=>!xmpp.logged ? 'login' : 'content'}>
+            <Scene key="main" component={Switch} tabs selector={()=>!xmpp.logged ? 'login' : 'tabs'}>
               <Scene key="login" component={Login} title="Login"/>
-              <Scene key="content" title="her er det en tittel">
               <Scene key="tabs" tabs={true} hideNavBar>
-                <Scene key="chat" title="Chat" icon={TabIcon} component={Chats} initial={true} hideBackImage onBack={() => console.log("tried to go back")}
+                <Scene key="chat" title="Chats" icon={TabIcon} component={Chats} initial={true} hideBackImage onBack={() => console.log("tried to go back")}
                        onRight={() => Actions.newChat()} rightTitle="new"/>
                 <Scene key="contacts" title="Contacts" icon={TabIcon} component={Roster}  hideBackImage onBack={() => console.log("tried to go back")}/>
                 <Scene key="group" title="Groups" icon={TabIcon} component={Groups} hideBackImage onBack={() => console.log("tried to go back")}
@@ -38,14 +37,13 @@ var XmppDemo = React.createClass({
                 <Scene key="conversation" component={Conversation} hideTabBar duration={1} onLeft={() => xmpp.group ? Actions.group() : Actions.chat()} leftTitle="back"/>
               </Scene>
               </Scene>
-            </Scene>
           </Router>
       );
   }
 });
 
 
-AppRegistry.registerComponent('XmppDemo', () => XmppDemo);
+AppRegistry.registerComponent('DhisChat', () => DhisChat);
 
 
 

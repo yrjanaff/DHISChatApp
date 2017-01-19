@@ -4,8 +4,9 @@ const DOMAIN = "yj-dev.dhis2.org";
 
 import {observable} from 'mobx';
 import autobind from 'autobind';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, AppState} from 'react-native';
 import { Actions } from 'react-native-mobx';
+import { sendPush } from '../utils/PushNotification/PushUtils'
 
 @autobind
 class XmppStore {
@@ -22,6 +23,7 @@ class XmppStore {
     @observable group = false;
     @observable mucRemote = '';
     @observable newMucParticipants = [];
+    @observable activeApp  = true;
 
 
     constructor() {
@@ -35,6 +37,10 @@ class XmppStore {
         XMPP.on('allMucs',this.onAllMucsFetched);
         XMPP.on('mucMessage',this.onMucMessage);
         XMPP.on('mucInvitation', this.MucInvitationReceived);
+
+        AppState.addEventListener('change', this.isAppActive.bind(this));
+
+
         // default values
         this.username = '';
         this.password = '';
@@ -44,10 +50,14 @@ class XmppStore {
         this.savedData = {};
     }
 
+    isAppActive(appSate){
+      if(appSate === 'background'){
+        this.activeApp = false;
+      }
+    }
+
     getSavedData(){
       AsyncStorage.getItem(this._userForName(this.username)).then((value) => {
-        console.log(this._userForName(this.username))
-        console.log("inne " + value)
         if(value != null) {
           this.savedData = JSON.parse(value);
           console.log(JSON.parse(value))
@@ -104,7 +114,7 @@ class XmppStore {
 
     onReceiveMessage({from, body}){
         if (!from || !body){
-            return;
+            return ;
         }
 
         const from_name = from.split("/")[0];
@@ -114,8 +124,10 @@ class XmppStore {
         }else{
           this.conversation[from_name].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
         }
-      console.log(this._userForName(this.username))
       AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
+        if(!this.activeApp){
+          sendPush("Skjedde dette ?");
+        }
     }
 
 
