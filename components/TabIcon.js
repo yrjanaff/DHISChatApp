@@ -8,6 +8,8 @@ const propTypes = {
 
 const TabIcon = (props) => (
 
+
+
     <View style={{flex:1, flexDirection: 'column'}}>
       <Icon
           name={getIcon(props.title, props.selected)}
