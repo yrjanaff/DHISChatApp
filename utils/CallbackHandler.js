@@ -38,7 +38,6 @@ class XMPP{
         NativeAppEventEmitter.addListener(map.loginError, this.onLoginError.bind(this)),
         NativeAppEventEmitter.addListener(map.login, this.onLogin.bind(this)),
         NativeAppEventEmitter.addListener(map.presenceChanged, this.onPresenceChanged.bind(this)),
-
     ];
   }
 

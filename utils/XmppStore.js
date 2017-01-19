@@ -6,7 +6,7 @@ import {observable} from 'mobx';
 import autobind from 'autobind';
 import {AsyncStorage, AppState} from 'react-native';
 import { Actions } from 'react-native-mobx';
-import { sendPush } from '../utils/PushNotification/PushUtils'
+import { sendPush } from './PushUtils'
 
 @autobind
 class XmppStore {
@@ -50,10 +50,13 @@ class XmppStore {
         this.savedData = {};
     }
 
-    isAppActive(appSate){
-      console.log("nå skifter jeg, går i" + appSate)
-      if(appSate === 'background'){
+    isAppActive(appState){
+      console.log("nå skifter jeg, går i" + appState)
+      if(appState === 'background'){
         this.activeApp = false;
+      }
+      if(appState === 'active'){
+        this.activeApp = true;
       }
     }
 
@@ -61,7 +64,6 @@ class XmppStore {
       AsyncStorage.getItem(this._userForName(this.username)).then((value) => {
         if(value != null) {
           this.savedData = JSON.parse(value);
-          console.log(JSON.parse(value))
           this.conversation = JSON.parse(value).conversation;
         }else {
           this.conversation = {};
@@ -120,16 +122,16 @@ class XmppStore {
 
     const from_name = from.split("/")[0];
 
+
     if( !this.conversation[from_name] ) {
       this.createConversationObject(from_name, false, body);
     }else{
       this.conversation[from_name].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
     }
-    console.log(this._userForName(this.username))
+
     AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     if(!this.activeApp){
-      console.log(this.activeApp)
-      sendPush("Skjedde dette ?");
+      sendPush('Chat',from.split("@")[0], body, from_name );
     }
   }
 
@@ -148,7 +150,6 @@ class XmppStore {
 
   onDisconnect(message){
     Actions.chat()
-    console.log("logger uut")
   }
 
   onLogin(){
@@ -210,6 +211,9 @@ class XmppStore {
   MucInvitationReceived(props){
     let name = props.from.split("@")[0];
     this.multiUserChat = this.multiUserChat.concat([[name, props.from, props.subject, props.occupants.length]]);
+    if(!this.activeApp){
+      sendPush('Conference - invite', name, 'You have been added to a conference called: ' + name, props.from);
+    }
   }
 
   joinMuc(roomId){
@@ -217,7 +221,6 @@ class XmppStore {
   }
 
   onMucMessage({time,from, message}){
-
     if (!from || !message){
       return;
     }
@@ -232,6 +235,9 @@ class XmppStore {
     }
     else {
       this.mucConversation[muc].chat.unshift({own: own, text: message, from: from_name, date: date});
+    }
+    if(!this.activeApp){
+      sendPush('Conference', from_name, message, from);
     }
 
   }

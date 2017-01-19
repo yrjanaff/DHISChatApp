@@ -47,15 +47,6 @@ class Conversation extends React.Component {
 
     return (
         <View style={styles.containerNoTabs}>
-          <Image source={{
-                          uri: this.state.selectedImage
-                        }}
-                 style={{
-                          width: 200,
-                          height: 300,
-                          alignSelf: 'center'
-                 }}
-          />
           <View style={{flex:1}}>
             <ListView enableEmptySections
                       ref="messages"
