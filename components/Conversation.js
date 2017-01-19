@@ -76,7 +76,7 @@ class Conversation extends React.Component {
                 // callback={this.setState({selectedImage: this.getSelectedImages})}
                 callback={this.getImage}
                 maximum={1}
-                selected={null}
+                selected={[]}
                 assetType='All'
 
             />
