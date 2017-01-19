@@ -51,6 +51,7 @@ class XmppStore {
     }
 
     isAppActive(appSate){
+      console.log("nå skifter jeg, går i" + appSate)
       if(appSate === 'background'){
         this.activeApp = false;
       }
@@ -127,6 +128,7 @@ class XmppStore {
     console.log(this._userForName(this.username))
     AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     if(!this.activeApp){
+      console.log(this.activeApp)
       sendPush("Skjedde dette ?");
     }
   }

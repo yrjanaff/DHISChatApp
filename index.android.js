@@ -18,10 +18,11 @@ import xmpp from './utils/XmppStore';
 var DhisChat = React.createClass({
 
   render: function() {
-      return (
-          <Router xmpp={xmpp}>
-            <Scene key="main" component={Switch} tabs selector={()=>!xmpp.logged ? 'login' : 'tabs'}>
-              <Scene key="login" component={Login} title="Login"/>
+    return (
+        <Router xmpp={xmpp}>
+          <Scene key="main" component={Switch} tabs selector={()=>!xmpp.logged ? 'login' : 'content'}>
+            <Scene key="login" component={Login} title="Login"/>
+            <Scene key="content" >
               <Scene key="tabs" tabs={true} hideNavBar>
                 <Scene key="chat" title="Chats" icon={TabIcon} component={Chats} initial={true} hideBackImage onBack={() => console.log("tried to go back")}
                        onRight={() => Actions.newChat()} rightTitle="new"/>
@@ -36,15 +37,15 @@ var DhisChat = React.createClass({
                 <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={1} onLeft={() => Actions.interpretationList()} leftTitle="back"/>
                 <Scene key="conversation" component={Conversation} hideTabBar duration={1} onLeft={() => xmpp.group ? Actions.group() : Actions.chat()} leftTitle="back"/>
               </Scene>
-              </Scene>
-          </Router>
-      );
+            </Scene>
+          </Scene>
+        </Router>
+    );
   }
 });
 
 
 AppRegistry.registerComponent('DhisChat', () => DhisChat);
-
 
 
 
