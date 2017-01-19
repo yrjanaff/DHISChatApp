@@ -2,7 +2,7 @@ import React from 'react';
 import {Text,View, TextInput}  from 'react-native';
 import ListRoster from './ListRoster';
 import styles from './styles';
-import xmpp from '../stores/XmppStore';
+import xmpp from '../utils/XmppStore';
 
 export default class ChatCreater extends React.Component {
   constructor( props ) {

@@ -4,59 +4,70 @@ const DOMAIN = "yj-dev.dhis2.org";
 
 import {observable} from 'mobx';
 import autobind from 'autobind';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, AppState} from 'react-native';
 import { Actions } from 'react-native-mobx';
+import { sendPush } from '../utils/PushNotification/PushUtils'
 
 @autobind
 class XmppStore {
-  @observable logged = false;
-  @observable loading = false;
-  @observable loginError = null;
-  @observable error = null;
-  @observable conversation = {};
-  @observable roster = [];
-  @observable multiUserChat = [];
-  @observable remote = '';
-  @observable currentInterpretation = '';
-  @observable mucConversation = [];
-  @observable group = false;
-  @observable mucRemote = '';
-  @observable newMucParticipants = [];
+    @observable logged = false;
+    @observable loading = false;
+    @observable loginError = null;
+    @observable error = null;
+    @observable conversation = {};
+    @observable roster = [];
+    @observable multiUserChat = [];
+    @observable remote = '';
+    @observable currentInterpretation = '';
+    @observable mucConversation = [];
+    @observable group = false;
+    @observable mucRemote = '';
+    @observable newMucParticipants = [];
+    @observable activeApp  = true;
 
 
-  constructor() {
-    XMPP.on('loginError', this.onLoginError);
-    XMPP.on('error', this.onError);
-    XMPP.on('disconnect', this.onDisconnect);
-    XMPP.on('login', this.onLogin);
-    XMPP.on('message', this.onReceiveMessage);
-    XMPP.on('roster', this.onFetchedRoster);
-    XMPP.on('presenceChanged', this.onPresenceChanged)
-    XMPP.on('allMucs',this.onAllMucsFetched);
-    XMPP.on('mucMessage',this.onMucMessage);
-    XMPP.on('mucInvitation', this.MucInvitationReceived);
-    // default values
-    this.username = '';
-    this.password = '';
-    this.remote = '';
-    this.mucUsername = '';
-    this.currentInterpretation = '';
-    this.savedData = {};
-  }
+    constructor() {
+        XMPP.on('loginError', this.onLoginError);
+        XMPP.on('error', this.onError);
+        XMPP.on('disconnect', this.onDisconnect);
+        XMPP.on('login', this.onLogin);
+        XMPP.on('message', this.onReceiveMessage);
+        XMPP.on('roster', this.onFetchedRoster);
+        XMPP.on('presenceChanged', this.onPresenceChanged)
+        XMPP.on('allMucs',this.onAllMucsFetched);
+        XMPP.on('mucMessage',this.onMucMessage);
+        XMPP.on('mucInvitation', this.MucInvitationReceived);
 
-  getSavedData(){
-    AsyncStorage.getItem(this._userForName(this.username)).then((value) => {
-      console.log(this._userForName(this.username))
-      console.log("inne " + value)
-      if(value != null) {
-        this.savedData = JSON.parse(value);
-        console.log(JSON.parse(value))
-        this.conversation = JSON.parse(value).conversation;
-      }else {
-        this.conversation = {};
+        AppState.addEventListener('change', this.isAppActive.bind(this));
+
+
+        // default values
+        this.username = '';
+        this.password = '';
+        this.remote = '';
+        this.mucUsername = '';
+        this.currentInterpretation = '';
+        this.savedData = {};
+    }
+
+    isAppActive(appSate){
+      if(appSate === 'background'){
+        this.activeApp = false;
       }
-    });
-  }
+    }
+
+    getSavedData(){
+      AsyncStorage.getItem(this._userForName(this.username)).then((value) => {
+        if(value != null) {
+          this.savedData = JSON.parse(value);
+          console.log(JSON.parse(value))
+          this.conversation = JSON.parse(value).conversation;
+        }else {
+          this.conversation = {};
+        }
+      });
+    }
+
 
   _userForName(name){
     return name + '@' + DOMAIN;
@@ -94,7 +105,6 @@ class XmppStore {
       this.error = null;
       // send to XMPP server
       XMPP.message(message.trim(), this.remote)
-      console.log(this._userForName(this.username))
       AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     }
     else{
@@ -116,8 +126,10 @@ class XmppStore {
     }
     console.log(this._userForName(this.username))
     AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
+    if(!this.activeApp){
+      sendPush("Skjedde dette ?");
+    }
   }
-
 
   onLoginError(){
     this.loading = false;
@@ -146,7 +158,6 @@ class XmppStore {
 
 
   login({username, password}){
-    console.log("hva kommer først")
     this.username = username;
     this.mucUsername = this._userForName(username) + "/DHISCHAT";
     this.password = password;

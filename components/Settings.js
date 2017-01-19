@@ -3,7 +3,7 @@ import {View, Text}  from 'react-native';
 import styles from './styles';
 import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';
-import xmpp from '../stores/XmppStore';
+import xmpp from '../utils/XmppStore';
 
 export default class Settings extends React.Component {
   constructor(props){

@@ -5,9 +5,9 @@ const height = Dimensions.get('window').height;
 import Button from 'react-native-button';
 import {Actions} from 'react-native-mobx';
 var InvertibleScrollView = require('react-native-invertible-scroll-view');
-import xmpp from '../stores/XmppStore';
-const ds = new ListView.DataSource({rowHasChanged: ( r1, r2 ) => r1 !== r2});
 import CameraRollPicker from 'react-native-camera-roll-picker';
+import xmpp from '../utils/XmppStore';
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 class Conversation extends React.Component {
   static title( props ) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text,View, TextInput,ScrollView, findNodeHandle, Keyboard}  from 'react-native';
 import styles from './styles';
-import xmpp from '../stores/XmppStore';
+import xmpp from '../utils/XmppStore';
 import Button from 'react-native-button';
 import { Actions } from 'react-native-mobx';
 import ListRoster from './ListRoster';
