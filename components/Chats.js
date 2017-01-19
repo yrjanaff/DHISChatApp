@@ -43,7 +43,10 @@ export default class Chats extends React.Component {
     };
   }
 
-  prevMessage(message) {
+  prevMessage(message, image) {
+    if(image){
+      return <Text>Sent a picture</Text>
+    }
      if(message.length > 40){
       	const out = message.slice(0,37).concat('...');
         return <Text>{out}</Text>;
@@ -70,7 +73,7 @@ export default class Chats extends React.Component {
                           <View>
                             <Text style={styles.bold}>{this.prettifyUsername(remote)}</Text>
                             {
-                              this.prevMessage(xmpp.conversation[remote].chat[0].text)
+                              this.prevMessage(xmpp.conversation[remote].chat[0].text, xmpp.conversation[remote].chat[0].image)
                             }
                             <Text style={styles.dateColor}>{dateFormat(xmpp.conversation[remote].chat[0].date, "dd.mm.yyyy h:MM:ss TT")}</Text>
                           </View>
