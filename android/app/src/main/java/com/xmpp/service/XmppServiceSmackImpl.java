@@ -547,6 +547,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                 logger.info("HostedRooms is not emptyy");
                 for (HostedRoom j : hostedRooms)
                 {
+
                     WritableArray room = Arguments.createArray();
                     RoomInfo roomInfo = MultiUserChatManager.getInstanceFor( connection ).getRoomInfo( j.getJid() );
                     room.pushString( roomInfo.getName());
@@ -576,7 +577,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     @Override
     public void joinMuc(String roomId){
         MultiUserChat muc = MultiUserChatManager.getInstanceFor( connection ).getMultiUserChat(roomId);
-        if(muc.isJoined())
+        if(!muc.isJoined())
         {
             muc.addMessageListener( this );
 
