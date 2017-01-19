@@ -129,7 +129,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         logger.info(to);
         FileTransferManager manager = FileTransferManager.getInstanceFor(connection);
         //FileTransferNegotiator.setServiceEnabled(connection, true);
-        OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer( to + "/Spark");
+        OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer( to + "/DHISCHAT");
         File mf = Environment.getExternalStorageDirectory();
         String[] splitURI = uri.split("\\/0");
         try {
