@@ -159,27 +159,26 @@ var styles = StyleSheet.create({
       width: 10,
       height: 10,
       backgroundColor:"#ffea00"
-    }
-
-  /* badge: {
-      position: 'relative'
+    },
+    badgeView: {
+      alignSelf: 'center',
+      position:'absolute',
+      top:0,
+      right:-9,
+      backgroundColor:'#CC0000',
+      width:15,
+      height:15,
+      borderRadius:100,
+    },
+    badge: {
+      fontSize: 10,
+      color:'white',
+      textAlign:'center',
+      fontWeight: 'bold',
+      lineHeight:15,
     },
 
-    badge1[data-badge]:after : {
-      content:attr(data-badge),
-      position:'absolute',
-      top:-10,
-      right:-10,
-      fontSize: 7,
-      background:'green',
-      color:'white',
-      width:18,
-      height:18,
-      textAlign:'center',
-      lineHeight:18,
-      borderRadius:50,
 
-    }*/
 });
 
 

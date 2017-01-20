@@ -26,6 +26,8 @@ class XmppStore {
     @observable activeApp  = true;
     @observable sendFileError = null;
     @observable currentFileSent = true;
+    @observable unSeenNotifications = {Chats: [],Groups: [],Interpretations: []};
+
 
 
     constructor() {
@@ -41,9 +43,10 @@ class XmppStore {
         XMPP.on('mucInvitation', this.MucInvitationReceived);
         XMPP.on('fileTransfer', this.fileTransferMessage);
         XMPP.on('fileReceived', this.fileReceived);
+        XMPP.on('joinedRoom', this.roomJoined);
 
         AppState.addEventListener('change', this.isAppActive.bind(this));
-      
+
         // default values
         this.username = '';
         this.password = '';
@@ -52,9 +55,11 @@ class XmppStore {
         this.currentInterpretation = '';
         this.savedData = {};
         this.retryPicture = null;
-      
+
     }
-  
+
+  roomJoined(){console.log("SETTER TIL NULL"); this.joiningMuc = '';}
+
   fileTransferMessage(message){
     if(message === 'SUCCESS'){
       console.log("SETTER TIL TRUE");
@@ -82,7 +87,7 @@ class XmppStore {
 
     }
   }
-  
+
   fileReceived({from, uri}){
     const from_name = from.split("/")[0];
     console.log(from);
@@ -96,14 +101,14 @@ class XmppStore {
       sendPush('Chat',from.split("@")[0], "Sent you a picture", from_name, uri);
     }
   }
-  
+
   sentFileinChat(image){
     if( !this.conversation[this.remote] ) {
       this.conversation = Object.assign({}, this.conversation, {[this.remote]: {chat: [{own:true, text:image, date: new Date(), image: true, sent: false}]}});
     } else {
       this.conversation[this.remote].chat.unshift({own: true, text: image, date: new Date(), image: true, sent:false})
     }
-    
+
   }
 
     isAppActive(appState){
@@ -139,6 +144,8 @@ class XmppStore {
     this.remote = remote;
     this.group = group;
     this.mucRemote = fullMucRemote;
+
+
   }
 
   createConversationObject(remote, own, message) {
@@ -187,6 +194,9 @@ class XmppStore {
     AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     if(!this.activeApp){
       sendPush('Chat',from.split("@")[0], body, from_name );
+    }else{
+      this.unSeenNotifications.Chats.push(from_name);
+      console.log(this.unSeenNotifications);
     }
   }
 
@@ -269,6 +279,9 @@ class XmppStore {
     if(!this.activeApp){
       sendPush('Conference - invite', name, 'You have been added to a conference called: ' + name, props.from);
     }
+    else{
+      this.unSeenNotifications.Groups.push(props.from);
+    }
   }
 
   joinMuc(roomId){
@@ -294,6 +307,13 @@ class XmppStore {
     if(!this.activeApp){
       sendPush('Conference', from_name, message, from);
     }
+    console.log(this.remote);
+    console.log(this.joiningMuc);
+    console.log(from_name);
+    if(this.remote !== muc){
+      this.unSeenNotifications.Groups.push(muc);
+    }
+
 
   }
 

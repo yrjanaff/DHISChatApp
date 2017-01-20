@@ -59,9 +59,14 @@ export default class Chats extends React.Component {
     return tmp[0];
   }
 
+  onClick(remote){
+    xmpp.setRemote(remote, false);
+    xmpp.unSeenNotifications.Chats = xmpp.unSeenNotifications.Chats.filter( notification => notification !== remote);
+    Actions.conversation();
+  }
+
   render() {
     this.setUp(this.state);
-    {console.log(this.state.selectedImage)}
     return (
         <View style={styles.container}>
 
@@ -69,9 +74,9 @@ export default class Chats extends React.Component {
             {
            this.state.people.map((remote) => {
                   return (
-                        <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={remote} onPress={() => {Actions.conversation(); xmpp.setRemote(remote, false)}}>
+                        <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={remote} onPress={() => this.onClick(remote)}>
                           <View>
-                            <Text style={styles.bold}>{this.prettifyUsername(remote)}</Text>
+                            <Text style={[{fontSize: 20},{fontWeight: xmpp.unSeenNotifications.Chats.indexOf(remote) > -1 ? 'bold': 'normal' }]}>{this.prettifyUsername(remote)}</Text>
                             {
                               this.prevMessage(xmpp.conversation[remote].chat[0].text, xmpp.conversation[remote].chat[0].image)
                             }
