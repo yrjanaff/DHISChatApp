@@ -26,6 +26,7 @@ class XmppStore {
     @observable activeApp  = true;
     @observable sendFileError = null;
     @observable currentFileSent = true;
+    @observable remoteOnline = false;
 
 
     constructor() {
@@ -139,6 +140,7 @@ class XmppStore {
     this.remote = remote;
     this.group = group;
     this.mucRemote = fullMucRemote;
+    this.isRemoteOnline();
   }
 
   createConversationObject(remote, own, message) {
@@ -197,6 +199,22 @@ class XmppStore {
 
   onFetchedRoster(rosterList){
     this.roster =  rosterList;
+    this.isRemoteOnline();
+  }
+
+  isRemoteOnline(){
+    if(this.remote !== ''){
+      this.roster.map((person) => {
+        if(person.username === this.remote){
+          if(person.presence === 'Online' || person.presence === 'available'){
+            this.remoteOnline = true;
+          }
+          else{
+            this.remoteOnline = false;
+          }
+        }
+      })
+    }
   }
 
   onError(message){
