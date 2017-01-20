@@ -99,14 +99,14 @@ class Conversation extends React.Component {
             {
               xmpp.group ? null :
                   <View style={styles.sendButton}>
-                    <Button onPress={()=> this.setState({showImagePicker: this.state.showImagePicker ? false : true}) }>Image</Button>
+                    <Button onPress={()=> this.setState({showImagePicker: this.state.showImagePicker ? false : true}) }
+                            disabled={!xmpp.remoteOnline}>Image</Button>
                   </View>
             }
           </View>
           {
             this.state.showImagePicker
                 ? <CameraRollPicker
-                // callback={this.setState({selectedImage: this.getSelectedImages})}
                 callback={this.getImage}
                 maximum={1}
                 selected={[]}
