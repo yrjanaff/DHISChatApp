@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ScrollView, TextInput, Keyboard, ListView, Dimensions, Image}  from 'react-native';
+import {View, Text, ScrollView, TextInput, Keyboard, ListView, Dimensions, Image, TouchableHighlight}  from 'react-native';
 import styles from './styles';
 const height = Dimensions.get('window').height;
 import Button from 'react-native-button';
@@ -7,7 +7,7 @@ import {Actions} from 'react-native-mobx';
 var InvertibleScrollView = require('react-native-invertible-scroll-view');
 import CameraRollPicker from 'react-native-camera-roll-picker';
 import xmpp from '../utils/XmppStore';
-const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+const ds = new ListView.DataSource({rowHasChanged: ( r1, r2 ) => r1 !== r2});
 
 var RNGRP = require('react-native-get-real-path');
 
@@ -27,21 +27,26 @@ class Conversation extends React.Component {
     this.getImage = this.getImage.bind(this);
   }
 
-  getImage(props){
+  getImage( props ) {
     this.setState({showImagePicker: false});
-    console.log("inni vår egen metode");
-    console.log(props);
     this.setState({selectedImage: props[0].uri});
     xmpp.currentFileSent = false;
- 
+
     RNGRP.getRealPathFromURI(props[0].uri).then(filePath =>
         xmpp.fileTransfer(filePath)
-    )
+    );
     xmpp.sentFileinChat(props[0].uri);
   }
 
+  retrySendImage( uri ) {
+    xmpp.currentFileSent = false;
+    xmpp.retryPicture = uri;
+    RNGRP.getRealPathFromURI(uri).then(filePath =>
+        xmpp.fileTransfer(filePath)
+    );
+  }
+
   render() {
-    //xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}} disabled={!this.state.message || !this.state.message.trim()
     let dataSource = ds.cloneWithRows([], []);
 
     if( !xmpp.group && xmpp.conversation[xmpp.remote] ) {
@@ -58,21 +63,28 @@ class Conversation extends React.Component {
                       ref="messages"
                       renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
                       dataSource={dataSource}
-                      renderRow={(row) =>
-                            !row.image ? <Text style={[styles.messageItem, {textAlign:row.own ? 'right':'left' }]}>{row.text}</Text> :
-                            <Image source={{
-                              uri: row.text
-                             }}
-                             style={{
-                                      width: 200,
-                                      height: 300,
-                                      alignSelf: row.own ? 'flex-end':'flex-start',
-                                      opacity: !isSent && row.text === this.state.selectedImage ? 0.4: 1
-                             }}
-                              />
-                       }
+                      renderRow={(row) => {
+                            return !row.image ? <Text style={[styles.messageItem, {textAlign:row.own ? 'right':'left' }]}>{row.text}</Text> :
+
+                            <TouchableHighlight style={styles.touch} underlayColor={'#ffffff'} key={row.text}
+                                      onPress={isSent && row.text === this.state.selectedImage || row.sent ? () => null : () => { this.retrySendImage(row.text); this.setState({selectedImage: row.text});}}>
+
+                               <Image source={{
+                                  uri: row.text
+                                 }}
+                                 style={{
+                                          width: 200,
+                                          height: 300,
+                                          alignSelf: row.own ? 'flex-end':'flex-start',
+                                          opacity: isSent && row.text === this.state.selectedImage || row.sent ?  1 : 0.4
+
+                                 }}
+                               />
+                            </TouchableHighlight>
+                       }}
             />
-            { xmpp.sendFileError ? <Text style={[{color: 'red', textAlign:'right'}]}>{xmpp.sendFileError}</Text>: null}
+            { xmpp.sendFileError ? <Text style={[{color: 'red', textAlign:'right'}]}>{xmpp.sendFileError}</Text> : null}
+
           </View>
 
           <View style={styles.messageBar}>
@@ -85,10 +97,10 @@ class Conversation extends React.Component {
                          disabled={!this.state.message || !this.state.message.trim()}/>
             </View>
             {
-                xmpp.group ? null :
-              <View style={styles.sendButton}>
-                <Button onPress={()=> this.setState({showImagePicker: this.state.showImagePicker ? false : true}) }>Image</Button>
-              </View>
+              xmpp.group ? null :
+                  <View style={styles.sendButton}>
+                    <Button onPress={()=> this.setState({showImagePicker: this.state.showImagePicker ? false : true}) }>Image</Button>
+                  </View>
             }
           </View>
           {

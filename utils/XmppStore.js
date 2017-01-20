@@ -43,8 +43,7 @@ class XmppStore {
         XMPP.on('fileReceived', this.fileReceived);
 
         AppState.addEventListener('change', this.isAppActive.bind(this));
-
-
+      
         // default values
         this.username = '';
         this.password = '';
@@ -52,20 +51,35 @@ class XmppStore {
         this.mucUsername = '';
         this.currentInterpretation = '';
         this.savedData = {};
-        
+        this.retryPicture = null;
+      
     }
-  
   
   fileTransferMessage(message){
     if(message === 'SUCCESS'){
       console.log("SETTER TIL TRUE");
       this.currentFileSent = true;
       this.sendFileError = null;
+
+      if(!this.retryPicture){
+        this.conversation[this.remote].chat[0].sent = true;
+      }else{
+          let chatArray = this.conversation[this.remote].chat;
+        for(let i = 0; i < chatArray.length; i++){
+          if(chatArray[i].text === this.retryPicture){
+            this.conversation[this.remote].chat[i].sent = true;
+            this.retryPicture = null;
+            break;
+          }
+        }
+      }
       AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     }
     else{
+      this.retryPicture = null;
       this.currentFileSent = false;
       this.sendFileError = message;
+
     }
   }
   
@@ -73,18 +87,21 @@ class XmppStore {
     const from_name = from.split("/")[0];
     console.log(from);
     if( !this.conversation[from_name] ) {
-      this.conversation = Object.assign({}, this.conversation, {[from_name]: {chat: [{own:false, text:uri, date: new Date(), image: true}]}});
+      this.conversation = Object.assign({}, this.conversation, {[from_name]: {chat: [{own:false, text:uri, date: new Date(), image: true, sent: true}]}});
     } else {
-      this.conversation[from_name].chat.unshift({own: false, text: uri, date: new Date(), image: true})
+      this.conversation[from_name].chat.unshift({own: false, text: uri, date: new Date(), image: true, sent:true})
     }
     AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
+    if(!this.activeApp){
+      sendPush('Chat',from.split("@")[0], "Sent you a picture", from_name, uri);
+    }
   }
   
   sentFileinChat(image){
     if( !this.conversation[this.remote] ) {
-      this.conversation = Object.assign({}, this.conversation, {[this.remote]: {chat: [{own:true, text:image, date: new Date(), image: true}]}});
+      this.conversation = Object.assign({}, this.conversation, {[this.remote]: {chat: [{own:true, text:image, date: new Date(), image: true, sent: false}]}});
     } else {
-      this.conversation[this.remote].chat.unshift({own: true, text: image, date: new Date(), image: true})
+      this.conversation[this.remote].chat.unshift({own: true, text: image, date: new Date(), image: true, sent:false})
     }
     
   }
@@ -280,7 +297,9 @@ class XmppStore {
 
   }
 
-  fileTransfer(uri) {   console.log(XMPP.fileTransfer(uri, this.remote)); }
+  fileTransfer(uri) { 
+    XMPP.fileTransfer(uri, this.remote);
+   }
 
 
 
