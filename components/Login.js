@@ -6,40 +6,47 @@ import ActivityIndicator from './ActivityIndicator';
 import xmpp from '../utils/XmppStore';
 
 export default class Login extends React.Component {
-  constructor(props){
+  constructor( props ) {
     super(props);
     this.state = {};
   }
 
-  render(){
+  render() {
     return (
-      <View style={[styles.container,{alignItems:'center'}]}>
-        {xmpp.loginError && <Text style={{color:'red'}}>{xmpp.loginError}</Text>}
-        <Text style={styles.categoryLabel}>Please enter username and password</Text>
-        <View style={styles.row}>
-          <TextInput style={styles.rowInput}
-                     autoCorrect={false}
-                     autoCapitalize="none"
-                     autoFocus={true}
-                     placeholder="Username"
-                     value={this.state.username}
-                     onChangeText={(username)=>this.setState({username})}
-          />
-        </View>
-        <View style={styles.lastRow}>
-          <TextInput style={styles.rowInput}
-                     secureTextEntry={true}
-                     autoCorrect={false}
-                     autoCapitalize="none"
-                     placeholder="Password"
-                     value={this.state.password}
-                     onChangeText={(password)=>this.setState({password})}
-          />
-        </View>
-        <View style={styles.button}><Button onPress={()=>xmpp.login(this.state)}>Login</Button></View>
-        <ActivityIndicator active={xmpp.loading}/>
+        <View style={[styles.container,{alignItems:'center'}]}>
+          {xmpp.loginError && <Text style={{color:'red'}}>{xmpp.loginError}</Text>}
+          <Text style={styles.categoryLabel}>Please enter username and password</Text>
+          <View style={styles.row}>
+            <TextInput style={styles.rowInput}
+                       autoCorrect={false}
+                       autoCapitalize="none"
+                       autoFocus={true}
+                       placeholder="Username"
+                       value={this.state.username}
+                       onChangeText={(username)=>this.setState({username})}
+                       onSubmitEditing={(event) => {
+                        this.refs.Password.focus();
+                     }}
+                       blurOnSubmit={false}
+            />
+          </View>
+          <View style={styles.lastRow}>
+            <TextInput style={styles.rowInput}
+                       ref='Password'
+                       secureTextEntry={true}
+                       autoCorrect={false}
+                       autoCapitalize="none"
+                       placeholder="Password"
+                       value={this.state.password}
+                       onChangeText={(password)=>this.setState({password})}
+                       blurOnSubmit={true}
+                       onSubmitEditing={() => xmpp.login(this.state)}
+            />
+          </View>
+          <View style={styles.button}><Button onPress={()=>xmpp.login(this.state)}>Login</Button></View>
+          <ActivityIndicator active={xmpp.loading}/>
 
-      </View>
+        </View>
     )
   }
 }

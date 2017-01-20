@@ -142,11 +142,12 @@ export default class InterpretationList extends React.Component {
                 <TextInput ref='newComment'
                            value={this.state.search}
                            onChangeText={(search)=>this.setState({search})}
-                           style={styles.message} placeholder="Search interpretation"/>
-              </View>
-              <View style={styles.sendButton}>
-                <Button onPress={()=>{this.search(this.state.search);this.setState({search:''})}}
-                        disabled={!this.state.search || !this.state.search.trim()}>Submit</Button>
+                           style={styles.message} placeholder="Search interpretation"
+                           onSubmitEditing={()=>{
+                              if(this.state.search !== '')
+                                this.search(this.state.search);this.setState({search:''})}
+                           }
+                />
               </View>
             </View>
             <View style={styles.button}><Button onPress={() => this.reset()}>Reset</Button></View>

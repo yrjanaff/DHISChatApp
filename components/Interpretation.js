@@ -114,11 +114,12 @@ export default class Interpretation extends React.Component {
                 <TextInput ref='newComment'
                            value={this.state.newComment}
                            onChangeText={(newComment)=>this.setState({newComment})}
-                           style={styles.message} placeholder="Enter comment..."/>
-              </View>
-              <View style={styles.sendButton}>
-                <Button onPress={()=>{this.submitComment(this.state.newComment);this.setState({newComment:''})}}
-                        disabled={!this.state.newComment || !this.state.newComment.trim()}>Submit</Button>
+                           style={styles.message} placeholder="Enter comment..."
+                           onSubmitEditing={()=>{
+                           if( this.state.newComment !== '')
+                              this.submitComment(this.state.newComment);this.setState({newComment:''})}
+                           }
+                />
               </View>
             </View>
           </ScrollView>
