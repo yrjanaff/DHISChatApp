@@ -35,7 +35,7 @@ export default class Groups extends React.Component {
           xmpp.multiUserChat.map((current) => {
             return (
                 <TouchableHighlight style={styles.touch} underlayColor={'#ffffff'} key={current[0]} onPress={() => this.onClick(current)}>
-                  <View style={{flexDirection: 'row', backgroundColor: "yellow"}}>
+                  <View style={{flexDirection: 'row'}}>
                     <Text style={[{fontSize: 20},{justifyContent: 'flex-start'},{fontWeight: xmpp.unSeenNotifications.Groups.indexOf(current[0]) > -1 ? 'bold': 'normal' }]}>{current[0]}</Text>
                     {current[2] ?
                         <Icon name="insert-chart" style={{justifyContent: 'flex-end'}} color="#5E5E5E"/>
