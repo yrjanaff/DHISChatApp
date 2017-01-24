@@ -94,13 +94,13 @@ class Conversation extends React.Component {
                          onChangeText={(message)=>this.setState({message})}
                          style={styles.message} placeholder="Enter message..."
                          onSubmitEditing={() => {xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}}
-                         disabled={!this.state.message || !this.state.message.trim()}/>
+                         disabled={!this.state.message || !this.state.message.trim() && xmpp.offlineMode}/>
             </View>
             {
               xmpp.group ? null :
                   <View style={styles.sendButton}>
                     <Button onPress={()=> this.setState({showImagePicker: this.state.showImagePicker ? false : true}) }
-                            disabled={!xmpp.remoteOnline}>Image</Button>
+                            disabled={!xmpp.remoteOnline && xmpp.offlineMode}>Image</Button>
                   </View>
             }
           </View>

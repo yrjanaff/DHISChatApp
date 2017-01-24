@@ -1,5 +1,4 @@
 import XMPP from './CallbackHandler';
-//const DOMAIN = "1x-193-157-182-210.uio.no";
 const DOMAIN = "yj-dev.dhis2.org";
 
 import {observable} from 'mobx';
@@ -28,6 +27,7 @@ class XmppStore {
     @observable currentFileSent = true;
     @observable unSeenNotifications = {Chats: [],Groups: [],Interpretations: []};
     @observable remoteOnline = false;
+    @observable offlineMode = false;
 
     constructor() {
         XMPP.on('loginError', this.onLoginError);
@@ -36,13 +36,11 @@ class XmppStore {
         XMPP.on('login', this.onLogin);
         XMPP.on('message', this.onReceiveMessage);
         XMPP.on('roster', this.onFetchedRoster);
-        XMPP.on('presenceChanged', this.onPresenceChanged)
         XMPP.on('allMucs',this.onAllMucsFetched);
         XMPP.on('mucMessage',this.onMucMessage);
         XMPP.on('mucInvitation', this.MucInvitationReceived);
         XMPP.on('fileTransfer', this.fileTransferMessage);
         XMPP.on('fileReceived', this.fileReceived);
-        XMPP.on('joinedRoom', this.roomJoined);
 
         AppState.addEventListener('change', this.isAppActive.bind(this));
 
@@ -86,7 +84,6 @@ class XmppStore {
 
   fileReceived({from, uri}){
     const from_name = from.split("/")[0];
-    console.log(from);
     if( !this.conversation[from_name] ) {
       this.conversation = Object.assign({}, this.conversation, {[from_name]: {chat: [{own:false, text:uri, date: new Date(), image: true, sent: true}]}});
     } else {
@@ -190,7 +187,7 @@ class XmppStore {
       sendPush('Chat',from.split("@")[0], body, from_name );
     }else{
       this.unSeenNotifications.Chats.push(from_name);
-      console.log(this.unSeenNotifications);
+
     }
   }
 
@@ -270,9 +267,8 @@ class XmppStore {
   }
 
   createConference(chatName, subject, description, participants, from) {
-    console.log('conference is being created');
-    this.multiUserChat = this.multiUserChat.concat([[chatName, chatName+'@conference.' +DOMAIN, subject, participants.length]]);
-    XMPP.createConference(chatName, subject, description, participants, from);
+    this.multiUserChat = this.multiUserChat.concat([[chatName.toLowerCase(), chatName+'@conference.' +DOMAIN, subject, participants.length]]);
+    XMPP.createConference(chatName.toLowerCase(), subject, description, participants, from);
   }
 
   getAllJoinedMucs(username){
@@ -306,7 +302,7 @@ class XmppStore {
     let muc = from.split("@")[0];
     let from_name = from.split("/")[1];
 
-    let own = from_name === this._userForName(this.username);
+    let own = from_name === this.username || from_name === this._userForName(this.username);
 
     if(!this.mucConversation[muc]){
       this.mucConversation = Object.assign({}, this.mucConversation, {[muc]: {chat: [{own:own, text: message, from: from_name, date: date}]}});
@@ -314,6 +310,7 @@ class XmppStore {
     else {
       this.mucConversation[muc].chat.unshift({own: own, text: message, from: from_name, date: date});
     }
+
     if(!this.activeApp){
       sendPush('Conference', from_name, message, from);
     }
@@ -327,6 +324,14 @@ class XmppStore {
   fileTransfer(uri) { 
     XMPP.fileTransfer(uri, this.remote);
    }
+
+  settingOfflineMode(isOffline){
+    this.offlineMode = isOffline;
+
+    isOffline ? XMPP.goOffline() : XMPP.goOnline();
+
+  }
+
 
 
 

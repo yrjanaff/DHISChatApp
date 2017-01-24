@@ -80,8 +80,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
         WritableArray rosterResponse = Arguments.createArray();
         for (RosterEntry rosterEntry : roster.getEntries()) {
             WritableMap rosterProps = Arguments.createMap();
-            Log.d("ComBridge", "RosterProps");
-            Log.d("ComBridge", rosterEntry.toString());
+
             rosterProps.putString("username", rosterEntry.getUser());
             rosterProps.putString("displayName", rosterEntry.getName());
             Presence presence = roster.getPresence(rosterEntry.getUser());
@@ -104,7 +103,6 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
 
     @Override
     public void onIQ(IQ iq) {
-        Log.d("ComBridge", iq.toString());
         sendEvent(reactContext, RNXMPP_IQ, Parser.parse(iq.toString()));
     }
 
@@ -147,7 +145,6 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
         WritableArray participants = Arguments.createArray();
         for (String occupant : occupants) {
             participants.pushString(occupant);
-            Log.d("occupants",occupant);
         }
         params.putArray("occupants", participants);
         sendEvent(reactContext, RNXMPP_MUCINVITATION, params);
@@ -169,11 +166,9 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
 
     @Override
     public void onJoinedMessage(WritableArray occupants, WritableArray messages){
-        Log.d("comBride","logger5");
         WritableMap params = Arguments.createMap();
         params.putArray("occupants",occupants);
         params.putArray("messages",messages);
-        Log.d("comBride","logger6");
         sendEvent(reactContext, RXMPP_ROOMJOINED, params);
 
     }

@@ -50,5 +50,11 @@ public interface XmppService
     @ReactMethod
     void fileTransfer(String uri, String to);
 
+    @ReactMethod
+    void goOffline();
+
+    @ReactMethod
+    void goOnline();
+
 }
 
