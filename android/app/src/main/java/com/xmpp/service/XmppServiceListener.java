@@ -23,7 +23,7 @@ public interface XmppServiceListener {
     void onConnnect(String username, String password);
     void onDisconnect(Exception e);
     void onLogin(String username, String password);
-    void onMucInvotationRecevied(String room, String inviter, Message message, String[] occupants);
+    void onMucInvotationRecevied(String room, String inviter, Message message, String[] occupants, String reason);
     void onAllMucFetced(WritableArray mucRooms);
     void onPresenceChanged(String user, String status);
     void onJoinedMessage(WritableArray occupants, WritableArray messages);

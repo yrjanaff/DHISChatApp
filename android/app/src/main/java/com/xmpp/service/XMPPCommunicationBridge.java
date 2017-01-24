@@ -135,10 +135,10 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     }
 
     @Override
-    public void onMucInvotationRecevied(String room, String inviter, Message message, String[] occupants){
+    public void onMucInvotationRecevied(String room, String inviter, Message message, String[] occupants, String reason){
         WritableMap params = Arguments.createMap();
         params.putString("thread", message.getThread());
-        params.putString("subject", message.getSubject());
+        params.putString("subject", reason);
         params.putString("body", message.getBody());
         params.putString("from", message.getFrom());
         params.putString("src", message.toXML().toString());

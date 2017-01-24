@@ -20,9 +20,7 @@ export default class MucCreater extends React.Component {
       roster: xmpp.roster,
       dataSource: [],
       participants: '',
-      topic: '',
       username: username[0],
-      description:'',
       name:'',
     };
     this.updateParticipants = this.updateParticipants.bind(this);
@@ -72,7 +70,18 @@ export default class MucCreater extends React.Component {
 
   }
 
+  setMucFill(){
+    if(xmpp.createInterpretationMuc) {
+      xmpp.mucSubject = xmpp.currentInterpretation.url;
+    } else{
+      xmpp.mucSubject = null;
+    }
+    console.log(xmpp.mucSubject);
+  }
+
   render() {
+    this.setMucFill();
+
     let val = xmpp.newMucParticipants.length > 0 ? xmpp.newMucParticipants.join(', ') + this.state.participants: this.state.participants
     return(
         <View style={styles.container}>
@@ -93,7 +102,7 @@ export default class MucCreater extends React.Component {
           <View style={{flex:1}}>
             <ListRoster roster={this.state.dataSource} clicked={this.updateParticipants}/>
           </View>
-          <Button onPress={()=> {xmpp.createConference(this.state.name, this.state.topic, this.state.description, xmpp.newMucParticipants, this.state.username); this.setState({topic:'', name:'', description:''}); Actions.group()} }>Create conference</Button>
+          <Button onPress={()=> {{xmpp.createInterpretationMuc = false} xmpp.createConference(this.state.name, xmpp.mucSubject, xmpp.newMucParticipants, this.state.username); this.setState({topic:'', name:'', description:''}); Actions.group()} }>Create conference</Button>
           <View style={{height:this.state.height}}/>
         </View>
     );

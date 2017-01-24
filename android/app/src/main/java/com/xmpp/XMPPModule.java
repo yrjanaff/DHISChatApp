@@ -87,8 +87,8 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
 
     @Override
     @ReactMethod
-    public void createConference(String name, String subject, String description, ReadableArray participants, String from) {
-        this.xmppService.createConference(name, subject, description, participants, from);
+    public void createConference(String name, String subject, ReadableArray participants, String from) {
+        this.xmppService.createConference(name, subject, participants, from);
     }
 
     @Override

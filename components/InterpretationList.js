@@ -5,6 +5,7 @@ import {Actions} from 'react-native-mobx';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
 var btoa = require('Base64').btoa;
+import InterpretationMeta from '../utils/InterpretationMeta';
 
 
 let header = {
@@ -16,17 +17,6 @@ let header = {
 };
 
 let page = 1;
-
-class InterpretationMeta {
-
-  constructor( id, name, text, type, typeId, comments ) {
-    this.id = id;
-    this.name = name;
-    this.text = text;
-    this.type = type;
-    this.typeId = typeId;
-  }
-}
 
 export default class InterpretationList extends React.Component {
 
@@ -91,7 +81,11 @@ export default class InterpretationList extends React.Component {
             }
 
             if( type != 'reportTables' && type != 'dataset_report' ) {
-              interpretations.push(new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text, type, typeId));
+              let tempInterpret = new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text,'https://play.dhis2.org/demo/api/interpretations/' + interpretation.id,
+                  'https://play.dhis2.org/demo/api/' + type + 's/' + typeId + '/data', null)
+              interpretations.push(tempInterpret);
+              console.log('skal save xmppInterpretations')
+              xmpp.saveInterpretation(tempInterpret);
             }
 
             if( i + 1 == responseJson.interpretations.length ) {

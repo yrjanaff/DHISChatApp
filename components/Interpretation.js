@@ -5,6 +5,7 @@
 import React from 'react';
 import {View, Text, TouchableHighlight, ScrollView, Image, TextInput}  from 'react-native';
 import Button from 'react-native-button';
+import {Actions} from 'react-native-mobx';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
 var btoa = require('Base64').btoa;
@@ -17,7 +18,15 @@ let header = {
   }
 };
 
-let intId = '';
+let imageHeader = {
+  method: 'GET',
+  headers: {
+    'Authorization': `Basic ${btoa('admin:district')}`,
+    'Content-Type': 'image/png;charset=UTF-8'
+  }
+};
+
+let intId = null;
 
 export default class Interpretation extends React.Component {
 
@@ -31,17 +40,11 @@ export default class Interpretation extends React.Component {
   }
 
   componentWillMount() {
+
     this.getComments();
   }
 
-  componentWillUnmount() {
-    console.log('component will unmount!!');
-  }
-
   submitComment( comment ) {
-    console.log('inni submitComment!');
-    console.log(comment);
-
     return fetch('https://play.dhis2.org/demo/api/interpretations/' + xmpp.currentInterpretation.id + '/comments', {
       method: 'POST',
       headers: {
@@ -65,10 +68,12 @@ export default class Interpretation extends React.Component {
 
   getComments() {
     console.log('inni getComments!!!');
-    return fetch('https://play.dhis2.org/demo/api/interpretations/' + xmpp.currentInterpretation.id + '/comments?fields=text,user[name]', header)
+    let url = 'https://play.dhis2.org/demo/api/interpretations/' + xmpp.currentInterpretation.id + '/comments?fields=text,user[name]';
+    return fetch(url, header)
         .then(( response ) => response.json())
         .then(( responseJson ) => {
-          console.log(responseJson.comments);
+          xmpp.updateInterpretationComments(responseJson.comments, xmpp.currentInterpretation.url);
+          
           this.setState({comments: responseJson.comments});
         })
         .catch(( error ) => {
@@ -77,7 +82,6 @@ export default class Interpretation extends React.Component {
   }
 
   render() {
-    console.log(xmpp.currentInterpretation);
     if( intId != xmpp.currentInterpretation.id ) {
       intId = xmpp.currentInterpretation.id;
       this.getComments();
@@ -90,7 +94,7 @@ export default class Interpretation extends React.Component {
             <Text>{xmpp.currentInterpretation.text}</Text>
             <Image
                 source={{
-                          uri: 'https://play.dhis2.org/demo/api/' + xmpp.currentInterpretation.type + 's/' + xmpp.currentInterpretation.typeId + '/data',
+                          uri: xmpp.currentInterpretation.imageURL,
                           headers: header
                         }}
                 style={{
@@ -99,16 +103,16 @@ export default class Interpretation extends React.Component {
                           alignSelf: 'center'
                  }}
             />
-            <View style={styles.button}><Button>Chat about this!</Button></View>
+            <View style={styles.button}><Button onPress={() => {xmpp.createInterpretationMuc = true; Actions.newMuc()}}>Chat about this!</Button></View>
             <Text style={styles.bold}>Comments:</Text>
-            {this.state.comments.map(( comment, index ) => {
+            {this.state.comments ? this.state.comments.map(( comment, index ) => {
               return (
                   <View key={index}>
                     <Text style={styles.bold}>{comment.user.name}</Text>
                     <Text>{comment.text}</Text>
                   </View>
               );
-            })}
+            }) : null}
             <View style={styles.messageBar}>
               <View style={{flex:1}}>
                 <TextInput ref='newComment'

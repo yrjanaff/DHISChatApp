@@ -33,7 +33,14 @@ var DhisChat = React.createClass({
                 <Scene key="interpretationList" title="Interpretations" icon={TabIcon} component={InterpretationList} hideBackImage onBack={() => console.log("tried to go back")}/>
                 <Scene key="setting" title="Settings" icon={TabIcon} component={Settings} hideBackImage onBack={() => console.log("tried to go back")}/>
                 <Scene key="newChat" component={ChatCreater} hideTabBar duration={1} title="Create a new chat" onLeft={() => Actions.chat()} leftTitle="back" />
-                <Scene key="newMuc" component={MucCreater} hideTabBar duration={1} title="Create a new conference" onLeft={() => Actions.group()} leftTitle="back"/>
+                <Scene key="newMuc" component={MucCreater} hideTabBar duration={1} title="Create a new conference" leftTitle="back" onLeft={() => {
+                  if(xmpp.createInterpretationMuc){
+                    xmpp.createInterpretationMuc = false;
+                    Actions.interpretation();
+                  }
+                  else{ Actions.group()}
+
+                }}/>
                 <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={1} onLeft={() => Actions.interpretationList()} leftTitle="back"/>
                 <Scene key="conversation" component={Conversation} hideTabBar duration={1} onLeft={() => {xmpp.remote = ''; xmpp.group ? Actions.group() : Actions.chat()}} leftTitle="back"/>
               </Scene>
