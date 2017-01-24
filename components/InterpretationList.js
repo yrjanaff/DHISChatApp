@@ -5,6 +5,7 @@ import {Actions} from 'react-native-mobx';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
 var btoa = require('Base64').btoa;
+import InterpretationMeta from '../utils/InterpretationMeta';
 
 
 let header = {
@@ -16,17 +17,6 @@ let header = {
 };
 
 let page = 1;
-
-class InterpretationMeta {
-
-  constructor( id, name, text, type, typeId, comments ) {
-    this.id = id;
-    this.name = name;
-    this.text = text;
-    this.type = type;
-    this.typeId = typeId;
-  }
-}
 
 export default class InterpretationList extends React.Component {
 
@@ -70,8 +60,6 @@ export default class InterpretationList extends React.Component {
 
           for( let i = 0; i < responseJson.interpretations.length; i++ ) {
             let interpretation = responseJson.interpretations[i];
-            console.log('inni siste fetch');
-            console.log(interpretation);
             let type = interpretation.type.toLowerCase();
             let typeId = '';
 
@@ -91,7 +79,10 @@ export default class InterpretationList extends React.Component {
             }
 
             if( type != 'reportTables' && type != 'dataset_report' ) {
-              interpretations.push(new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text, type, typeId));
+              let tempInterpret = new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text,'https://play.dhis2.org/demo/api/interpretations/' + interpretation.id,
+                  'https://play.dhis2.org/demo/api/' + type + 's/' + typeId + '/data', null)
+              interpretations.push(tempInterpret);
+              xmpp.saveInterpretation(tempInterpret);
             }
 
             if( i + 1 == responseJson.interpretations.length ) {
@@ -118,8 +109,6 @@ export default class InterpretationList extends React.Component {
   }
 
   search( search ) {
-    console.log('inni search!');
-    console.log(search);
     page = 1;
 
     this.fetchInterpretations('filter=text:ilike:' + search +
@@ -152,7 +141,6 @@ export default class InterpretationList extends React.Component {
             </View>
             <View style={styles.button}><Button onPress={() => this.reset()}>Reset</Button></View>
             <View style={styles.button}><Button onPress={() => this.loadMore()}>Load More</Button></View>
-            {console.log(this.state.interpretations)}
             {this.state.interpretations.map(( interpretation, index ) => {
               return (
                   <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={index}

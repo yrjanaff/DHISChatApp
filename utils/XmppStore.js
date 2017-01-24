@@ -6,6 +6,8 @@ import autobind from 'autobind';
 import {AsyncStorage, AppState} from 'react-native';
 import { Actions } from 'react-native-mobx';
 import { sendPush } from './PushUtils'
+import { fetchInterpretation } from './DhisUtils';
+var btoa = require('Base64').btoa;
 
 @autobind
 class XmppStore {
@@ -28,6 +30,8 @@ class XmppStore {
     @observable unSeenNotifications = {Chats: [],Groups: [],Interpretations: []};
     @observable remoteOnline = false;
     @observable offlineMode = false;
+    @observable interpretations = {};
+
 
     constructor() {
         XMPP.on('loginError', this.onLoginError);
@@ -52,8 +56,24 @@ class XmppStore {
         this.currentInterpretation = '';
         this.savedData = {};
         this.retryPicture = null;
-
+        this.createInterpretationMuc = false;
+        this.mucSubject = null;
     }
+
+  saveInterpretation(interpretation){
+    if( !this.interpretations[interpretation.url] ){
+      this.interpretations = Object.assign({}, this.interpretations, {[interpretation.url]: {id: interpretation.id, name: interpretation.name,
+        text: interpretation.text, comments: [], imageURL: interpretation.imageURL, conversationName: interpretation.conversationName}});
+    }
+  }
+
+  updateInterpretationComments(comments, url) {
+    console.log(comments);
+    console.log(this.interpretations[url]);
+    if(this.interpretations[url]) {
+      this.interpretations[url].comments = this.interpretations[url].comments.concat(comments);
+    }
+  }
 
   fileTransferMessage(message){
     if(message === 'SUCCESS'){
@@ -130,6 +150,11 @@ class XmppStore {
 
   setCurrentInterpretation(interpretation){
     this.currentInterpretation = interpretation;
+  }
+
+  fetchInterpretationForMuc(url, conversation){
+    this.setCurrentInterpretation('');
+    fetchInterpretation(url, conversation);
   }
 
   setRemote(remote, group, fullMucRemote){
@@ -269,6 +294,9 @@ class XmppStore {
   createConference(chatName, subject, description, participants, from) {
     this.multiUserChat = this.multiUserChat.concat([[chatName.toLowerCase(), chatName+'@conference.' +DOMAIN, subject, participants.length]]);
     XMPP.createConference(chatName.toLowerCase(), subject, description, participants, from);
+    if(subject){
+      this.interpretations[subject].conversationName = chatName;
+    }
   }
 
   getAllJoinedMucs(username){
@@ -277,6 +305,11 @@ class XmppStore {
 
   onAllMucsFetched(allMucs){
     this.multiUserChat = allMucs;
+
+    this.multiUserChat.map((current) => {
+      if(current[2])
+        this.fetchInterpretationForMuc(current[2], current[0]);
+    });
   }
 
   MucInvitationReceived(props){
@@ -288,6 +321,11 @@ class XmppStore {
     else{
       this.unSeenNotifications.Groups.push(props.from);
     }
+
+    this.multiUserChat.map((current) => {
+      if(current[2])
+        this.fetchInterpretationForMuc(current[2], current[0]);
+    });
   }
 
   joinMuc(roomId){

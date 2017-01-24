@@ -140,8 +140,8 @@ class XMPP{
     }
   }
 
-  createConference(chatName, subject, description, participants, from) {
-    XMPPModule.createConference(chatName, subject, description, participants, from);
+  createConference(chatName, subject, participants, from) {
+    XMPPModule.createConference(chatName, subject, participants, from);
   }
 
   getAllJoinedMucs(username){

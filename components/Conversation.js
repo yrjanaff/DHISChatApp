@@ -8,6 +8,7 @@ var InvertibleScrollView = require('react-native-invertible-scroll-view');
 import CameraRollPicker from 'react-native-camera-roll-picker';
 import xmpp from '../utils/XmppStore';
 const ds = new ListView.DataSource({rowHasChanged: ( r1, r2 ) => r1 !== r2});
+import InterpretationPreview from './InterpretationPreview';
 
 var RNGRP = require('react-native-get-real-path');
 
@@ -53,11 +54,16 @@ class Conversation extends React.Component {
       dataSource = ds.cloneWithRows(xmpp.conversation[xmpp.remote].chat.map(x => x));
     }
     if( xmpp.group && xmpp.mucConversation[xmpp.remote] ) {
+ 
       dataSource = ds.cloneWithRows(xmpp.mucConversation[xmpp.remote].chat.map(x => x));
     }
+    console.log(xmpp.mucConversation)
+    console.log(xmpp.multiUserChat)
+    console.log(xmpp.multiUserChat.indexOf(xmpp.remote))
     let isSent = xmpp.currentFileSent;
     return (
         <View style={styles.containerNoTabs}>
+         <InterpretationPreview />
           <View style={{flex:1}}>
             <ListView enableEmptySections
                       ref="messages"
@@ -81,12 +87,12 @@ class Conversation extends React.Component {
                                  }}
                                />
                             </TouchableHighlight>
+
                        }}
             />
             { xmpp.sendFileError ? <Text style={[{color: 'red', textAlign:'right'}]}>{xmpp.sendFileError}</Text> : null}
 
           </View>
-
           <View style={styles.messageBar}>
             <View style={{flex:1}}>
               <TextInput ref='message'

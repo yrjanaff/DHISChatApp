@@ -128,8 +128,8 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     @Override
     public void fileTransfer(String uri, String to){
         FileTransferManager manager = FileTransferManager.getInstanceFor(connection);
-        OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer( to + "/DHISCHAT");
         File mf = Environment.getExternalStorageDirectory();
+        OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer( to + "/DHISCHAT");
         String[] splitURI = uri.split("\\/0");
         try {
             File file = new File(mf.getAbsoluteFile() + new URI(splitURI[1]).toString());
@@ -521,7 +521,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
             }
 
 
-            this.xmppServiceListener.onMucInvotationRecevied(room.toString(), inviter, message, temp);
+            this.xmppServiceListener.onMucInvotationRecevied(room.toString(), inviter, message, temp, reason);
 
         } catch (SmackException.NoResponseException e) {
             logger.info("No response from chat server.." + e);
@@ -536,7 +536,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
     // NY KODE
     @Override
-    public void createConference(String name, String subject, String description, ReadableArray participants, String from) {
+    public void createConference(String name, String subject, ReadableArray participants, String from) {
       MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
       MultiUserChat muc = manager.getMultiUserChat(name + "@conference." + connection.getServiceName());
         try {
@@ -551,7 +551,6 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
             submitForm.setAnswer("muc#roomconfig_membersonly", true);
             submitForm.setAnswer("muc#roomconfig_persistentroom", true);
             submitForm.setAnswer("muc#roomconfig_enablelogging", true);
-            submitForm.setAnswer("muc#roomconfig_roomdesc", description);
             muc.sendConfigurationForm(submitForm);
 
             muc.join(from);
@@ -563,7 +562,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
             muc.addMessageListener( this );
             for(int i = 0; i< participants.size(); i++)
             {
-                muc.invite(participants.getString(i), "Join us in a chat on " + subject);
+                muc.invite(participants.getString(i), subject);
             }
 
         } catch (SmackException.NoResponseException e) {

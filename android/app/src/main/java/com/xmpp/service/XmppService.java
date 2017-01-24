@@ -36,7 +36,7 @@ public interface XmppService
     void sendStanza( String stanza );
 
     @ReactMethod
-    void createConference( String name, String subject, String description, ReadableArray participants, String from );
+    void createConference( String name, String subject, ReadableArray participants, String from );
 
     @ReactMethod
     void getAllJoinedMucs(String username);
