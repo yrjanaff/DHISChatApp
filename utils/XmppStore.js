@@ -3,7 +3,7 @@ const DOMAIN = "yj-dev.dhis2.org";
 
 import {observable} from 'mobx';
 import autobind from 'autobind';
-import {AsyncStorage, AppState} from 'react-native';
+import {AsyncStorage, AppState, Vibration} from 'react-native';
 import { Actions } from 'react-native-mobx';
 import { sendPush } from './PushUtils'
 import { fetchInterpretation } from './DhisUtils';
@@ -114,6 +114,11 @@ class XmppStore {
     AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     if(!this.activeApp){
       sendPush('Chat',from.split("@")[0], "Sent you a picture", from_name, uri);
+      Vibration.vibrate([0, 500, 200, 500], false);
+    }else{
+      this.unSeenNotifications.Chats.push(from_name);
+      console.log(this.unSeenNotifications);
+      Vibration.vibrate([0, 200, 0, 0], false);
     }
   }
 
@@ -218,12 +223,14 @@ class XmppStore {
     }
 
     AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
-    if(!this.activeApp) {
-      sendPush('Chat', from.split("@")[0], body, from_name);
-    }
-    if(this.remote !== from_name){
-      this.unSeenNotifications.Chats.push(from_name);
 
+    if(!this.activeApp){
+      sendPush('Chat',from.split("@")[0], body, from_name );
+      Vibration.vibrate([0, 500, 200, 500], false);
+    }else{
+      this.unSeenNotifications.Chats.push(from_name);
+      console.log(this.unSeenNotifications);
+      Vibration.vibrate([0, 200, 0, 0], false);
     }
   }
 
@@ -333,9 +340,11 @@ class XmppStore {
     this.multiUserChat = this.multiUserChat.concat([[name, props.from, props.subject, props.occupants.length]]);
     if(!this.activeApp){
       sendPush('Conference - invite', name, 'You have been added to a conference called: ' + name, props.from);
+      Vibration.vibrate([0, 500, 200, 500], false);
     }
     else{
       this.unSeenNotifications.Groups.push(props.from);
+      Vibration.vibrate([0, 200, 0, 0], false);
     }
 
     this.multiUserChat.map((current) => {
@@ -368,12 +377,14 @@ class XmppStore {
 
     if(!this.activeApp){
       sendPush('Conference', from_name, message, from);
+      Vibration.vibrate([0, 500, 200, 500], false);
     }
 
     let timeDate = Date.parse(time);
 
     if(this.remote !== muc && (Date.parse(time) > Date.parse(this.lastActive) || time === null)){
       this.unSeenNotifications.Groups.push(muc);
+      Vibration.vibrate([0, 200, 0, 0], false);
     }
 
 
