@@ -54,12 +54,9 @@ class Conversation extends React.Component {
       dataSource = ds.cloneWithRows(xmpp.conversation[xmpp.remote].chat.map(x => x));
     }
     if( xmpp.group && xmpp.mucConversation[xmpp.remote] ) {
- 
+
       dataSource = ds.cloneWithRows(xmpp.mucConversation[xmpp.remote].chat.map(x => x));
     }
-    console.log(xmpp.mucConversation)
-    console.log(xmpp.multiUserChat)
-    console.log(xmpp.multiUserChat.indexOf(xmpp.remote))
     let isSent = xmpp.currentFileSent;
     return (
         <View style={styles.containerNoTabs}>
@@ -70,7 +67,7 @@ class Conversation extends React.Component {
                       renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
                       dataSource={dataSource}
                       renderRow={(row) => {
-                            return !row.image ? <Text style={[styles.messageItem, {textAlign:row.own ? 'right':'left' }]}>{row.text}</Text> :
+                        return !row.image ? <View style={{flexDirection: 'column', alignSelf:row.own ? 'flex-end':'flex-start' }}><Text style={[styles.messageItem, {textAlign:row.own ? 'right':'left' }]}>{row.text}</Text><Text style={{fontSize: 10, textAlign:row.own ? 'right':'left' }}>{row.from ? row.from.split('@')[0]:null}</Text></View>:
 
                             <TouchableHighlight style={styles.touch} underlayColor={'#ffffff'} key={row.text}
                                       onPress={isSent && row.text === this.state.selectedImage || row.sent ? () => null : () => { this.retrySendImage(row.text); this.setState({selectedImage: row.text});}}>
@@ -91,7 +88,6 @@ class Conversation extends React.Component {
                        }}
             />
             { xmpp.sendFileError ? <Text style={[{color: 'red', textAlign:'right'}]}>{xmpp.sendFileError}</Text> : null}
-
           </View>
           <View style={styles.messageBar}>
             <View style={{flex:1}}>

@@ -60,7 +60,8 @@ var styles = StyleSheet.create({
         height:(Platform.OS=='ios') ? 30 : 50
     },
     messageItem: {
-        padding:10,
+        paddingTop:10,
+        paddingBottom:0,
         paddingRight:20,
         fontSize:15
     },

@@ -543,8 +543,12 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
             String[] tmp = connection.getUser().split("/");
             String jid = tmp[0];
             muc.create(jid);
-            logger.info("vreated: " + jid);
-            muc.changeSubject(subject);
+
+            if(subject != null)
+            {
+                muc.changeSubject( subject );
+            }
+
             Form submitForm = muc.getConfigurationForm().createAnswerForm();
 
             submitForm.setAnswer("muc#roomconfig_publicroom", false);
@@ -552,13 +556,9 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
             submitForm.setAnswer("muc#roomconfig_persistentroom", true);
             submitForm.setAnswer("muc#roomconfig_enablelogging", true);
             muc.sendConfigurationForm(submitForm);
-
             muc.join(from);
 
 
-            if(!MUCs.contains(muc)){
-                MUCs.add(muc);
-            }
             muc.addMessageListener( this );
             for(int i = 0; i< participants.size(); i++)
             {
@@ -581,7 +581,11 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     public void getAllJoinedMucs(String username){
         try
         {
-            Collection<HostedRoom> hostedRooms = MultiUserChatManager.getInstanceFor( connection ).getHostedRooms("conference.yj-dev.dhis2.org");
+            MultiUserChatManager userChatManager = MultiUserChatManager.getInstanceFor( connection );
+            Collection<HostedRoom> hostedRooms = userChatManager.getHostedRooms("conference.yj-dev.dhis2.org");
+
+            String[] tmp = connection.getUser().split( "/" );
+            String jid = tmp[0];
 
             WritableArray rooms = Arguments.createArray();
             if(!hostedRooms.isEmpty()){
@@ -596,6 +600,10 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                     room.pushString( Integer.toString(roomInfo.getOccupantsCount()));
 
                     rooms.pushArray(room);
+
+                    MultiUserChat muc = userChatManager.getMultiUserChat(j.getJid());
+                    muc.join(jid);
+                    muc.addMessageListener( this );
                 }
             }
             this.xmppServiceListener.onAllMucFetced(rooms);

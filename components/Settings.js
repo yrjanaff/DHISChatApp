@@ -14,8 +14,8 @@ export default class Settings extends React.Component {
   render(){
     return (
         <View style={styles.container}>
-          <View style={{flexDirection: 'row', paddingLeft: 20, backgroundColor: 'yellow'}}>
-            <Text style={{justifyContent: 'space-around'}}>Offline mode: </Text>
+          <View style={{flexDirection: 'row', paddingLeft: 20,justifyContent: 'space-between'}}>
+            <Text>Offline mode: </Text>
           <Switch
               onValueChange={(value) => xmpp.settingOfflineMode(value)}
               style={{marginBottom: 10}}

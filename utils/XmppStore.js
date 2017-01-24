@@ -31,9 +31,10 @@ class XmppStore {
     @observable remoteOnline = false;
     @observable offlineMode = false;
     @observable interpretations = {};
+    @observable lastActive = null;
 
 
-    constructor() {
+  constructor() {
         XMPP.on('loginError', this.onLoginError);
         XMPP.on('error', this.onError);
         XMPP.on('disconnect', this.onDisconnect);
@@ -45,6 +46,7 @@ class XmppStore {
         XMPP.on('mucInvitation', this.MucInvitationReceived);
         XMPP.on('fileTransfer', this.fileTransferMessage);
         XMPP.on('fileReceived', this.fileReceived);
+
 
         AppState.addEventListener('change', this.isAppActive.bind(this));
 
@@ -126,10 +128,14 @@ class XmppStore {
 
     isAppActive(appState){
       if(appState === 'background'){
-        this.activeApp = false;
+        this.activeApp = false
+        AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {lastActive: new Date()})));
       }
       if(appState === 'active'){
         this.activeApp = true;
+        AsyncStorage.getItem(this._userForName(this.username)).then((value) => {
+          if(value !== null)this.lastActive = JSON.parse(value).lastActive;
+        }).catch((error) => {console.log(error)});
       }
     }
     getSavedData(){
@@ -137,8 +143,10 @@ class XmppStore {
         if(value != null) {
           this.savedData = JSON.parse(value);
           this.conversation = JSON.parse(value).conversation;
+          this.lastActive = JSON.parse(value).lastActive;
         }else {
           this.conversation = {};
+          this.lastActive = new date()
         }
       });
     }
@@ -170,6 +178,7 @@ class XmppStore {
 
 
   sendMessage(message, group){
+    console.log(group);
     if(!group) {
       if( !this.remote || !this.remote.trim() ) {
         console.error("No remote username is defined");
@@ -189,6 +198,7 @@ class XmppStore {
       AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     }
     else{
+      console.log(this.mucRemote)
       XMPP.sendMucMessage(message, this.mucRemote);
     }
   }
@@ -208,9 +218,10 @@ class XmppStore {
     }
 
     AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
-    if(!this.activeApp){
-      sendPush('Chat',from.split("@")[0], body, from_name );
-    }else{
+    if(!this.activeApp) {
+      sendPush('Chat', from.split("@")[0], body, from_name);
+    }
+    if(this.remote !== from_name){
       this.unSeenNotifications.Chats.push(from_name);
 
     }
@@ -289,11 +300,15 @@ class XmppStore {
   disconnect() {
     XMPP.disconnect();
     this.logged = false;
+    AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {lastActive: new Date()})));
   }
 
-  createConference(chatName, subject, description, participants, from) {
+  createConference(chatName, subject, participants, from) {
+
+    this.setRemote(chatName.toLowerCase(),true,chatName+'@conference.' +DOMAIN)
     this.multiUserChat = this.multiUserChat.concat([[chatName.toLowerCase(), chatName+'@conference.' +DOMAIN, subject, participants.length]]);
-    XMPP.createConference(chatName.toLowerCase(), subject, description, participants, from);
+    XMPP.createConference(chatName.toLowerCase(), subject, participants, from);
+    console.log('created')
     if(subject){
       this.interpretations[subject].conversationName = chatName;
     }
@@ -313,6 +328,7 @@ class XmppStore {
   }
 
   MucInvitationReceived(props){
+    console.log("fikk en mucInvitation");
     let name = props.from.split("@")[0];
     this.multiUserChat = this.multiUserChat.concat([[name, props.from, props.subject, props.occupants.length]]);
     if(!this.activeApp){
@@ -336,6 +352,7 @@ class XmppStore {
     if (!from || !message){
       return;
     }
+
     let date = time !== null ? time : new Date();
     let muc = from.split("@")[0];
     let from_name = from.split("/")[1];
@@ -352,12 +369,16 @@ class XmppStore {
     if(!this.activeApp){
       sendPush('Conference', from_name, message, from);
     }
-    if(this.remote !== muc){
+
+    let timeDate = Date.parse(time);
+
+    if(this.remote !== muc && (Date.parse(time) > Date.parse(this.lastActive) || time === null)){
       this.unSeenNotifications.Groups.push(muc);
     }
 
 
   }
+
 
   fileTransfer(uri) { 
     XMPP.fileTransfer(uri, this.remote);
@@ -365,6 +386,7 @@ class XmppStore {
 
   settingOfflineMode(isOffline){
     this.offlineMode = isOffline;
+    AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {lastActive: new Date()})));
 
     isOffline ? XMPP.goOffline() : XMPP.goOnline();
 
