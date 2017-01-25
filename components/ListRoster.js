@@ -51,7 +51,7 @@ export default class ListRoster extends React.Component {
      return this.state.click(row.username);
     }else{
        xmpp.setRemote(row.username)
-      Actions.conversation({remote: row.displayName});
+      Actions.contactsConversation({remote: row.displayName});
     }
   }
 

@@ -33,8 +33,11 @@ var DhisChat = React.createClass({
                 <Scene key="conversation" component={Conversation} hideTabBar duration={1} onBack={() => {Actions.chat({type:ActionConst.RESET})}}/>
               </Scene>
 
-              <Scene key="contacts" title="Contacts" icon={TabIcon} component={Roster}  hideBackImage
-                     onBack={() => null}/>
+              <Scene key="contactsTab" title="Contacts" icon={TabIcon}>
+                <Scene key="contacts" title="Contacts" icon={TabIcon} component={Roster}  hideBackImage
+                       onBack={() => null}/>
+                <Scene key="contactsConversation" component={Conversation} hideTabBar duration={1} onBack={() => {Actions.contacts({type:ActionConst.RESET})}}/>
+              </Scene>
 
               <Scene key="groupTab" title="Groups" icon={TabIcon}>
                 <Scene key="group" title="Groups" icon={TabIcon} component={Groups} hideBackImage duration={1}
