@@ -70,8 +70,6 @@ class XmppStore {
   }
 
   updateInterpretationComments(comments, url) {
-    console.log(comments);
-    console.log(this.interpretations[url]);
     if(this.interpretations[url]) {
       this.interpretations[url].comments = this.interpretations[url].comments.concat(comments);
     }
@@ -117,7 +115,6 @@ class XmppStore {
       Vibration.vibrate([0, 500, 200, 500], false);
     }else{
       this.unSeenNotifications.Chats.push(from_name);
-      console.log(this.unSeenNotifications);
       Vibration.vibrate([0, 200, 0, 0], false);
     }
   }
@@ -183,7 +180,6 @@ class XmppStore {
 
 
   sendMessage(message, group){
-    console.log(group);
     if(!group) {
       if( !this.remote || !this.remote.trim() ) {
         console.error("No remote username is defined");
@@ -203,7 +199,6 @@ class XmppStore {
       AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     }
     else{
-      console.log(this.mucRemote)
       XMPP.sendMucMessage(message, this.mucRemote);
     }
   }
@@ -224,12 +219,12 @@ class XmppStore {
 
     AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
 
-    if(!this.activeApp){
-      sendPush('Chat',from.split("@")[0], body, from_name );
+    if(!this.activeApp) {
+      sendPush('Chat', from.split("@")[0], body, from_name);
       Vibration.vibrate([0, 500, 200, 500], false);
-    }else{
+    }
+    if(this.remote !== from_name){
       this.unSeenNotifications.Chats.push(from_name);
-      console.log(this.unSeenNotifications);
       Vibration.vibrate([0, 200, 0, 0], false);
     }
   }
@@ -268,7 +263,6 @@ class XmppStore {
   }
 
   onLogin(){
-    console.log("inni onLogin!!!");
     this.loading = false;
     this.loginError = null;
     this.logged = true;
@@ -318,13 +312,10 @@ class XmppStore {
     this.setRemote(chatName.toLowerCase(),true,chatName+'@conference.' +DOMAIN)
     this.multiUserChat = this.multiUserChat.concat([[chatName.toLowerCase(), chatName+'@conference.' +DOMAIN, subject, participants.length]]);
     XMPP.createConference(chatName.toLowerCase(), subject, participants, from);
-    console.log('created');
-    console.log(subject);
+    this.newMucParticipants = []
     if(subject){
-      console.log(this.interpretations[subject]);
       this.interpretations[subject].conversationName = chatName;
       this.setCurrentInterpretation(this.interpretations[subject]);
-      console.log(this.interpretations[subject])
     }
   }
 
@@ -342,7 +333,6 @@ class XmppStore {
   }
 
   MucInvitationReceived(props){
-    console.log("fikk en mucInvitation");
     let name = props.from.split("@")[0];
     this.multiUserChat = this.multiUserChat.concat([[name, props.from, props.subject, props.occupants.length]]);
     if(!this.activeApp){

@@ -103,7 +103,7 @@ export default class MucCreater extends React.Component {
           </View>
           <Button disabled={
             xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1
-          } onPress={()=> {{xmpp.createInterpretationMuc = false} {xmpp.newMucParticipants = []} xmpp.createConference(this.state.name, xmpp.mucSubject, xmpp.newMucParticipants, this.state.username); this.setState({topic:'', name:''}); Actions.groupTab(); Actions.groupConversation()} }>Create conference</Button>
+          } onPress={()=> {{xmpp.createInterpretationMuc = false} xmpp.createConference(this.state.name, xmpp.mucSubject, xmpp.newMucParticipants, this.state.username); this.setState({topic:'', name:''}); Actions.groupTab(); Actions.groupConversation()} }>Create conference</Button>
 
         </View>
     );

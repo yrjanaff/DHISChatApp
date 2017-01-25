@@ -43,6 +43,24 @@ export default class Chats extends React.Component {
     };
   }
 
+  formatDate(date){
+        let thisDate = new Date(date);
+        let today = new Date();
+
+        if( today.getFullYear() === thisDate.getFullYear() &&
+        today.getMonth() === thisDate.getMonth() &&
+        today.getDate() === thisDate.getDate()){
+          return dateFormat(thisDate, "HH:MM");
+        }
+        if( today.getFullYear() === thisDate.getFullYear() &&
+            today.getMonth() === thisDate.getMonth()){
+          return dateFormat(thisDate, "dd.mmm");
+        }
+        else {
+          return dateFormat(thisDate, "dd.mm.yyyy");
+        }
+  }
+
   prevMessage(message, image) {
     if(image){
       return <Text>Sent a picture</Text>
@@ -76,11 +94,13 @@ export default class Chats extends React.Component {
                   return (
                         <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={remote} onPress={() => this.onClick(remote)}>
                           <View>
+                          <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
                             <Text style={[{fontSize: 20},{fontWeight: xmpp.unSeenNotifications.Chats.indexOf(remote) > -1 ? 'bold': 'normal' }]}>{this.prettifyUsername(remote)}</Text>
+                            <Text style={styles.dateColor}>{this.formatDate(xmpp.conversation[remote].chat[0].date)}</Text>
+                          </View>
                             {
                               this.prevMessage(xmpp.conversation[remote].chat[0].text, xmpp.conversation[remote].chat[0].image)
                             }
-                            <Text style={styles.dateColor}>{dateFormat(xmpp.conversation[remote].chat[0].date, "dd.mm.yyyy h:MM:ss TT")}</Text>
                           </View>
                         </TouchableHighlight>
                   );
@@ -91,3 +111,4 @@ export default class Chats extends React.Component {
      )
   }
 }
+

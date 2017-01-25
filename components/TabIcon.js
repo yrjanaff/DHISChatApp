@@ -41,12 +41,12 @@ export default class TabIcon extends React.Component {
           <Icon
               name={this.getIcon(this.state.title)}
               style={{justifyContent: 'flex-start', padding: 0, alignSelf: 'center'}}
-              color={this.state.selected ? '#276696' : '#5E5E5E' }
+              color={this.state.selected ? '#1d5288' : '#5E5E5E' }
           />
           {
             view
           }
-          <Text style={{justifyContent: 'flex-end', fontSize: 10, color: this.state.selected ? '#276696' : 'black'}}>
+          <Text style={{justifyContent: 'flex-end', fontSize: 10, color: this.state.selected ? '#1d5288' : 'black'}}>
 
             {this.state.title}
           </Text>

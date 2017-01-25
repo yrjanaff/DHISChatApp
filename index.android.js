@@ -14,21 +14,29 @@ import InterpretationList from './components/InterpretationList';
 import Settings from './components/Settings';
 import Interpretation from './components/Interpretation';
 import xmpp from './utils/XmppStore';
+import {Icon } from 'react-native-material-design';
 // Define all routes of the app
 var DhisChat = React.createClass({
 
   render: function() {
-    console.log(xmpp.logged);
     return (
         <Router>
-          <Scene key="root" tabs selector={()=>!xmpp.logged ? 'login' : 'tabbar'}>
-            <Scene key="login" component={Login} title="Login"/>
+          <Scene key="root" component={Switch} type={ActionConst.RESET}  tabs selector={()=>!xmpp.logged ? 'login' : 'tabbar'}>
+            <Scene key="login" component={Login} title="Login" hideNavBar={true}/>
 
             <Scene key="tabbar" tabs={true} >
-
               <Scene key="chatTab" title="Chats" icon={TabIcon}>
-                <Scene key="chat" title="Chats" component={Chats} initial={true} hideBackImage onBack={() => null}
-                       onRight={() => Actions.newChat()} rightTitle="+" duration={0}/>
+                <Scene key="chat" title="Chats" icon={TabIcon} component={Chats} initial={true} hideBackImage onBack={() => null}
+                       onRight={() => Actions.newChat()} rightTitle={
+                  <Icon
+                      name='add-box'
+                      color='#ffffff'
+                  />
+                } duration={0}  titleStyle={{color: 'white', fontSize: 20}} navigationBarStyle={ {
+                  backgroundColor: '#1d5288',
+                  borderColor: '#4c4c4c',
+                  borderBottomWidth: 3,
+                }}/>
                 <Scene key="newChat" component={ChatCreater} hideTabBar duration={0} title="Create a new chat"/>
                 <Scene key="conversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.chat({type:ActionConst.RESET})}}/>
               </Scene>

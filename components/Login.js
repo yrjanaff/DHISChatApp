@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ScrollView, TextInput, ListView, Dimensions}  from 'react-native';
+import {View, Text, ScrollView, TextInput, ListView, Dimensions,Image}  from 'react-native';
 import styles from './styles';
 import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';
@@ -13,9 +13,17 @@ export default class Login extends React.Component {
 
   render() {
     return (
-        <View style={[styles.container,{alignItems:'center'}]}>
-          {xmpp.loginError && <Text style={{color:'red'}}>{xmpp.loginError}</Text>}
-          <Text style={styles.categoryLabel}>Please enter username and password</Text>
+        <View style={[styles.container,{alignItems:'center', backgroundColor: '#1d5288'}]}>
+          <Image
+              source={require('../image/logo_promo1.png')}
+              style={{
+                height: 100,
+                width:300,
+                alignSelf: 'center',
+                justifyContent: 'flex-start'
+              }}
+          />
+          {xmpp.loginError && <Text style={{color:'white'}}>{xmpp.loginError}</Text>}
           <View style={styles.row}>
             <TextInput style={styles.rowInput}
                        autoCorrect={false}
@@ -43,7 +51,7 @@ export default class Login extends React.Component {
                        onSubmitEditing={() => xmpp.login(this.state)}
             />
           </View>
-          <View style={styles.button}><Button onPress={()=>xmpp.login(this.state)}>Login</Button></View>
+          <View style={styles.button}><Button style={{color: 'white'}} onPress={()=>xmpp.login(this.state)}>Login</Button></View>
           <ActivityIndicator active={xmpp.loading}/>
 
         </View>

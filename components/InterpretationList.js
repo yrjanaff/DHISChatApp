@@ -118,7 +118,6 @@ export default class InterpretationList extends React.Component {
   }
 
   render() {
-    console.log(this.state.interpretations);
     return (
         <View style={styles.container}>
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
