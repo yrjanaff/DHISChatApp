@@ -315,6 +315,7 @@ class XmppStore {
     this.newMucParticipants = []
     if(subject){
       this.interpretations[subject].conversationName = chatName;
+      this.setCurrentInterpretation(this.interpretations[subject]);
     }
   }
 

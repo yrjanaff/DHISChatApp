@@ -84,6 +84,8 @@ export default class Interpretation extends React.Component {
       this.getComments();
     }
 
+    console.log(this.props);
+
     return (
         <View style={styles.containerNoTabs}>
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
@@ -100,7 +102,10 @@ export default class Interpretation extends React.Component {
                           alignSelf: 'center'
                  }}
             />
-            <View style={styles.button}><Button onPress={() => {xmpp.createInterpretationMuc = true; Actions.newInterpretationMuc()}}>Chat about this!</Button></View>
+            {this.props.isMuc ? null :
+                <View style={styles.button}><Button onPress={() => {xmpp.createInterpretationMuc = true; Actions.newInterpretationMuc()}}>Chat about this!</Button></View>
+            }
+
             <Text style={styles.bold}>Comments:</Text>
             {this.state.comments ? this.state.comments.map(( comment, index ) => {
               return (
