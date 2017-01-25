@@ -18,35 +18,48 @@ import xmpp from './utils/XmppStore';
 var DhisChat = React.createClass({
 
   render: function() {
+    console.log(xmpp.logged);
     return (
         <Router>
-          <Scene key="main" component={Switch} tabs selector={()=>!xmpp.logged ? 'login' : 'content'}>
+          <Scene key="root" tabs selector={()=>!xmpp.logged ? 'login' : 'tabbar'}>
             <Scene key="login" component={Login} title="Login"/>
-            <Scene key="content" >
-              <Scene key="tabs" tabs={true} hideNavBar>
-                <Scene key="chat" title="Chats" icon={TabIcon} component={Chats} initial={true} hideBackImage onBack={() => console.log("tried to go back")}
-                       onRight={() => Actions.newChat()} rightTitle="new"/>
-                <Scene key="contacts" title="Contacts" icon={TabIcon} component={Roster}  hideBackImage onBack={() => console.log("tried to go back")}/>
-                <Scene key="group" title="Groups" icon={TabIcon} component={Groups} hideBackImage onBack={() => console.log("tried to go back")}
+
+            <Scene key="tabbar" tabs={true} >
+
+              <Scene key="chatTab" title="Chats" icon={TabIcon}>
+                <Scene key="chat" title="Chats" icon={TabIcon} component={Chats} initial={true} hideBackImage onBack={() => null}
+                       onRight={() => Actions.newChat()} rightTitle="+" duration={1}/>
+                <Scene key="newChat" component={ChatCreater} hideTabBar duration={1} title="Create a new chat"/>
+                <Scene key="conversation" component={Conversation} hideTabBar duration={1} onBack={() => {Actions.chat({type:ActionConst.RESET})}}/>
+              </Scene>
+
+              <Scene key="contacts" title="Contacts" icon={TabIcon} component={Roster}  hideBackImage
+                     onBack={() => null}/>
+
+              <Scene key="groupTab" title="Groups" icon={TabIcon}>
+                <Scene key="group" title="Groups" icon={TabIcon} component={Groups} hideBackImage duration={1}
+                       onBack={() => null}
                        onRight={() => Actions.newMuc()}
                        rightTitle="new"/>
-                <Scene key="interpretationList" title="Interpretations" icon={TabIcon} component={InterpretationList} hideBackImage onBack={() => console.log("tried to go back")}/>
-                <Scene key="setting" title="Settings" icon={TabIcon} component={Settings} hideBackImage onBack={() => console.log("tried to go back")}/>
-                <Scene key="newChat" component={ChatCreater} hideTabBar duration={1} title="Create a new chat" onLeft={() => Actions.chat()} leftTitle="back" />
-                <Scene key="newMuc" component={MucCreater} hideTabBar duration={1} title="Create a new conference" leftTitle="back" onLeft={() => {
-                  if(xmpp.createInterpretationMuc){
-                    xmpp.createInterpretationMuc = false;
-                    Actions.interpretation();
-                  }
-                  else{ Actions.group()}
-
-                }}/>
-                <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={1} onLeft={() => Actions.interpretationList()} leftTitle="back"/>
-                <Scene key="conversation" component={Conversation} hideTabBar duration={1} onLeft={() => {xmpp.remote = ''; xmpp.group ? Actions.group() : Actions.chat()}} leftTitle="back"/>
+                <Scene key="newMuc" component={MucCreater} hideTabBar duration={1} title="Create a new conference"/>
+                <Scene key="groupConversation" component={Conversation} hideTabBar duration={1} onBack={() => {Actions.group({type:ActionConst.RESET})}}/>
               </Scene>
+
+              <Scene key="interpretationTab" title="Interpretations" icon={TabIcon}>
+                <Scene key="interpretationList" title="Interpretations" icon={TabIcon} duration={1} component={InterpretationList} hideBackImage onBack={() => null}/>
+                <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={1}/>
+                <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={1} title="Create a new conference" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}}/>
+              </Scene>
+
+              <Scene key="settings" title="Settings" component={Settings} icon={TabIcon} hideBackImage onBack={() => null}/>
+
             </Scene>
+
           </Scene>
         </Router>
+
+
+
     );
   }
 });

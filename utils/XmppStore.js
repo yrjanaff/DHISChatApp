@@ -268,10 +268,13 @@ class XmppStore {
   }
 
   onLogin(){
+    console.log("inni onLogin!!!");
     this.loading = false;
     this.loginError = null;
     this.logged = true;
     this.getAllJoinedMucs(this.mucUsername);
+
+    Actions.tabbar();
   }
 
 
@@ -315,9 +318,12 @@ class XmppStore {
     this.setRemote(chatName.toLowerCase(),true,chatName+'@conference.' +DOMAIN)
     this.multiUserChat = this.multiUserChat.concat([[chatName.toLowerCase(), chatName+'@conference.' +DOMAIN, subject, participants.length]]);
     XMPP.createConference(chatName.toLowerCase(), subject, participants, from);
-    console.log('created')
+    console.log('created');
+    console.log(subject);
     if(subject){
+      console.log(this.interpretations[subject]);
       this.interpretations[subject].conversationName = chatName;
+      console.log(this.interpretations[subject])
     }
   }
 

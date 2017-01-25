@@ -100,7 +100,7 @@ export default class Interpretation extends React.Component {
                           alignSelf: 'center'
                  }}
             />
-            <View style={styles.button}><Button onPress={() => {xmpp.createInterpretationMuc = true; Actions.newMuc()}}>Chat about this!</Button></View>
+            <View style={styles.button}><Button onPress={() => {xmpp.createInterpretationMuc = true; Actions.newInterpretationMuc()}}>Chat about this!</Button></View>
             <Text style={styles.bold}>Comments:</Text>
             {this.state.comments ? this.state.comments.map(( comment, index ) => {
               return (

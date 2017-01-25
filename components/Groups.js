@@ -21,7 +21,7 @@ export default class Groups extends React.Component {
       xmpp.setCurrentInterpretation(xmpp.interpretations[remote[2]]);
     }
 
-    Actions.conversation();
+    Actions.groupConversation();
   }
 
   render() {
