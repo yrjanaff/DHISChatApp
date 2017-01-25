@@ -21,7 +21,7 @@ var DhisChat = React.createClass({
     console.log(xmpp.logged);
     return (
         <Router>
-          <Scene key="root" type={ActionConst.RESET} tabs selector={()=>!xmpp.logged ? 'login' : 'tabbar'}>
+          <Scene key="root" tabs selector={()=>!xmpp.logged ? 'login' : 'tabbar'}>
             <Scene key="login" component={Login} title="Login"/>
 
             <Scene key="tabbar" tabs={true} >
@@ -44,7 +44,6 @@ var DhisChat = React.createClass({
                        onBack={() => null}
                        onRight={() => Actions.newMuc()}
                        rightTitle="new"/>
-                <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference"/>
                 <Scene key="groupConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}}/>
                 <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
               </Scene>
@@ -52,13 +51,24 @@ var DhisChat = React.createClass({
               <Scene key="interpretationTab" title="Interpretations" icon={TabIcon} >
                 <Scene key="interpretationList" title="Interpretations" duration={0} component={InterpretationList} hideBackImage onBack={() => null}/>
                 <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
-                <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}}/>
               </Scene>
 
               <Scene key="settings" title="Settings" component={Settings} icon={TabIcon} hideBackImage onBack={() => null}/>
 
             </Scene>
-
+            <Scene key="newMuc" direction="vertical" component={MucCreater} hideTabBar duration={1} title="Create a new conference" leftTitle="back" onLeft={() => {
+                    if(xmpp.createInterpretationMuc){
+                      xmpp.createInterpretationMuc = false;
+                      Actions.interpretationTab();
+                      Actions.interpretation();
+                      
+                    }
+                    else{
+                    Actions.groupTab();
+                      Actions.group();
+                    }
+                 }}
+            />
           </Scene>
         </Router>
 

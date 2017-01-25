@@ -103,7 +103,7 @@ export default class Interpretation extends React.Component {
                  }}
             />
             {this.props.isMuc ? null :
-                <View style={styles.button}><Button onPress={() => {xmpp.createInterpretationMuc = true; Actions.newInterpretationMuc()}}>Chat about this!</Button></View>
+                <View style={styles.button}><Button onPress={() => {xmpp.createInterpretationMuc = true; Actions.newMuc()}}>Chat about this!</Button></View>
             }
 
             <Text style={styles.bold}>Comments:</Text>
