@@ -3,6 +3,7 @@
  */
 import InterpretationMeta from './InterpretationMeta';
 import xmpp from './XmppStore';
+var btoa = require('Base64').btoa;
 
 
 
