@@ -151,7 +151,7 @@ class XmppStore {
           this.lastActive = JSON.parse(value).lastActive;
         }else {
           this.conversation = {};
-          this.lastActive = new date()
+          this.lastActive = new Date()
         }
       });
     }
