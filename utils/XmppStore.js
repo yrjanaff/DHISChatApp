@@ -323,6 +323,7 @@ class XmppStore {
     if(subject){
       console.log(this.interpretations[subject]);
       this.interpretations[subject].conversationName = chatName;
+      this.setCurrentInterpretation(this.interpretations[subject]);
       console.log(this.interpretations[subject])
     }
   }

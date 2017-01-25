@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableHighlight, ScrollView, TextInput}  from 'react-native';
 import Button from 'react-native-button';
-import {Actions} from 'react-native-mobx';
+import {Actions, ActionConst} from 'react-native-mobx';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
 var btoa = require('Base64').btoa;
@@ -141,7 +141,7 @@ export default class InterpretationList extends React.Component {
               this.state.interpretations.map(( interpretation, index ) => {
               return (
                   <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={index}
-                                      onPress={() => {Actions.interpretation({interpretation: interpretation});
+                                      onPress={() => {Actions.interpretation();
                                       xmpp.setCurrentInterpretation(interpretation)}}>
                     <View key={index}>
                       <Text style={styles.bold}>{interpretation.name}</Text>

@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, TouchableHighlight, ScrollView, Image, TextInput}  from 'react-native';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
+import {Actions} from 'react-native-mobx';
 import { getDhisHeader } from '../utils/DhisUtils';
 
 export default class InterpretationPreview extends React.Component {
@@ -17,8 +18,7 @@ export default class InterpretationPreview extends React.Component {
     if(xmpp.remote === xmpp.currentInterpretation.conversationName){
       return (
           <View>
-            <Text>{this.state.test}</Text>
-        <TouchableHighlight>
+        <TouchableHighlight onPress={() => Actions.mucInterpretation({isMuc: true})}>
           <View>
             <Image
                 source={{

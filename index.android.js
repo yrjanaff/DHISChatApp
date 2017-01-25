@@ -21,7 +21,7 @@ var DhisChat = React.createClass({
     console.log(xmpp.logged);
     return (
         <Router>
-          <Scene key="root" tabs selector={()=>!xmpp.logged ? 'login' : 'tabbar'}>
+          <Scene key="root" type={ActionConst.RESET} tabs selector={()=>!xmpp.logged ? 'login' : 'tabbar'}>
             <Scene key="login" component={Login} title="Login"/>
 
             <Scene key="tabbar" tabs={true} >
@@ -46,9 +46,10 @@ var DhisChat = React.createClass({
                        rightTitle="new"/>
                 <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference"/>
                 <Scene key="groupConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}}/>
+                <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
               </Scene>
 
-              <Scene key="interpretationTab" title="Interpretations" icon={TabIcon} onPress={()=> {Actions.interpretationList({type: ActionConst.REFRESH});}}>
+              <Scene key="interpretationTab" title="Interpretations" icon={TabIcon} >
                 <Scene key="interpretationList" title="Interpretations" duration={0} component={InterpretationList} hideBackImage onBack={() => null}/>
                 <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
                 <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}}/>
