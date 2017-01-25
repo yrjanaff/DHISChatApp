@@ -11,8 +11,6 @@ export const fetchInterpretation = (url , conversation) => {
         '!likes,!likedBy,!publicAccess,!translations,!userGroupAccesses,!attributeValues,!comments,user[name]', getDhisHeader())
         .then((response) => response.json())
         .then((interpretation) =>{
-          console.log('inni fhisutil');
-          console.log(interpretation);
           let type = interpretation.type.toLowerCase();
           let typeId = '';
 

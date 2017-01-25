@@ -102,4 +102,12 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
     @Override
     @ReactMethod
     public void sendMessage(String text, String groupChat){this.xmppService.sendMessage(text, groupChat);}
+
+    @Override
+    @ReactMethod
+    public void goOffline() {this.xmppService.goOffline();}
+
+    @Override
+    @ReactMethod
+    public void goOnline() {this.xmppService.goOnline();}
 }

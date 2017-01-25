@@ -35,7 +35,9 @@ export default class ChatCreater extends React.Component {
               value={this.state.text}
             />
           </View>
+          <View style={{marginTop:10}}>
          <ListRoster roster={this.state.dataSource}/>
+          </View>
         </View>
       );
   }

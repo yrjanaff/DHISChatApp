@@ -39,7 +39,6 @@ class XMPP{
         NativeAppEventEmitter.addListener(map.error, this.onError.bind(this)),
         NativeAppEventEmitter.addListener(map.loginError, this.onLoginError.bind(this)),
         NativeAppEventEmitter.addListener(map.login, this.onLogin.bind(this)),
-        NativeAppEventEmitter.addListener(map.presenceChanged, this.onPresenceChanged.bind(this)),
     ];
   }
 
@@ -149,16 +148,20 @@ class XMPP{
     XMPPModule.getAllJoinedMucs(username);
   }
 
-  onPresenceChanged(props){
-    console.log(props);
-  }
-
   joinMuc(roomId){
     XMPPModule.joinMuc(roomId);
   }
 
   sendMucMessage(message, to){
     XMPPModule.sendMessage(message, to);
+  }
+
+  goOffline(){
+    XMPPModule.goOffline();
+  }
+
+  goOnline(){
+    XMPPModule.goOnline();
   }
 }
 

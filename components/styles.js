@@ -60,7 +60,8 @@ var styles = StyleSheet.create({
         height:(Platform.OS=='ios') ? 30 : 50
     },
     messageItem: {
-        padding:10,
+        paddingTop:10,
+        paddingBottom:0,
         paddingRight:20,
         fontSize:15
     },
@@ -138,8 +139,8 @@ var styles = StyleSheet.create({
       marginLeft: 10,
       marginRight: 7,
       borderRadius: 100,
-      width: 10,
-      height: 10,
+      width: 12,
+      height: 12,
       backgroundColor:"#57B061"
     },
     unavailable: {
@@ -147,8 +148,8 @@ var styles = StyleSheet.create({
       marginLeft: 10,
       marginRight: 7,
       borderRadius: 100,
-      width: 10,
-      height: 10,
+      width: 12,
+      height: 12,
       backgroundColor:"#778899"
     },
     idle: {
@@ -156,8 +157,8 @@ var styles = StyleSheet.create({
       marginLeft: 10,
       marginRight: 7,
       borderRadius: 100,
-      width: 10,
-      height: 10,
+      width: 12,
+      height: 12,
       backgroundColor:"#ffea00"
     },
     badgeView: {

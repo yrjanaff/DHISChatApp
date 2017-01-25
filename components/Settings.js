@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text}  from 'react-native';
+import {View, Text, Switch}  from 'react-native';
 import styles from './styles';
 import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';
@@ -13,8 +13,15 @@ export default class Settings extends React.Component {
 
   render(){
     return (
-        <View style={[styles.container,{alignItems:'center'}]}>
-          <View style={styles.button}><Button onPress={()=>xmpp.disconnect()}>Log out</Button></View>
+        <View style={styles.container}>
+          <View style={{flexDirection: 'row', paddingLeft: 20,justifyContent: 'space-between'}}>
+            <Text>Offline mode: </Text>
+          <Switch
+              onValueChange={(value) => xmpp.settingOfflineMode(value)}
+              style={{marginBottom: 10}}
+              value={xmpp.offlineMode} />
+          </View>
+          <View style={[styles.button,{alignItems:'center'}]}><Button onPress={()=>xmpp.disconnect()}>Log out</Button></View>
           <ActivityIndicator active={xmpp.loading}/>
         </View>
     )

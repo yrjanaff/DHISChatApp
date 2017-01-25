@@ -3,7 +3,7 @@ import {Text,View, TextInput,ScrollView, findNodeHandle, Keyboard}  from 'react-
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
 import Button from 'react-native-button';
-import { Actions } from 'react-native-mobx';
+import { Actions, ActionConst } from 'react-native-mobx';
 import ListRoster from './ListRoster';
 
 export default class MucCreater extends React.Component {
@@ -76,7 +76,6 @@ export default class MucCreater extends React.Component {
     } else{
       xmpp.mucSubject = null;
     }
-    console.log(xmpp.mucSubject);
   }
 
   render() {
@@ -102,8 +101,10 @@ export default class MucCreater extends React.Component {
           <View style={{flex:1}}>
             <ListRoster roster={this.state.dataSource} clicked={this.updateParticipants}/>
           </View>
-          <Button onPress={()=> {{xmpp.createInterpretationMuc = false} xmpp.createConference(this.state.name, xmpp.mucSubject, xmpp.newMucParticipants, this.state.username); this.setState({topic:'', name:'', description:''}); Actions.groupTab({type:ActionConst.RESET}); Actions.group()} }>Create conference</Button>
-          <View style={{height:this.state.height}}/>
+          <Button disabled={
+            xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1
+          } onPress={()=> {{xmpp.createInterpretationMuc = false} {xmpp.newMucParticipants = []} xmpp.createConference(this.state.name, xmpp.mucSubject, xmpp.newMucParticipants, this.state.username); this.setState({topic:'', name:''}); Actions.groupTab(); Actions.groupConversation()} }>Create conference</Button>
+
         </View>
     );
   }

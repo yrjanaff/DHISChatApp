@@ -55,9 +55,7 @@ export default class Interpretation extends React.Component {
     })
         .then(( response ) => response.json())
         .then(( responseJson ) => {
-          console.log(responseJson);
           if( responseJson.httpStatusCode === 201 ) {
-            console.log(responseJson);
             this.getComments();
           }
         })
@@ -67,13 +65,12 @@ export default class Interpretation extends React.Component {
   }
 
   getComments() {
-    console.log('inni getComments!!!');
     let url = 'https://play.dhis2.org/demo/api/interpretations/' + xmpp.currentInterpretation.id + '/comments?fields=text,user[name]';
     return fetch(url, header)
         .then(( response ) => response.json())
         .then(( responseJson ) => {
           xmpp.updateInterpretationComments(responseJson.comments, xmpp.currentInterpretation.url);
-          
+
           this.setState({comments: responseJson.comments});
         })
         .catch(( error ) => {
