@@ -28,30 +28,30 @@ var DhisChat = React.createClass({
 
               <Scene key="chatTab" title="Chats" icon={TabIcon}>
                 <Scene key="chat" title="Chats" icon={TabIcon} component={Chats} initial={true} hideBackImage onBack={() => null}
-                       onRight={() => Actions.newChat()} rightTitle="+" duration={1}/>
-                <Scene key="newChat" component={ChatCreater} hideTabBar duration={1} title="Create a new chat"/>
-                <Scene key="conversation" component={Conversation} hideTabBar duration={1} onBack={() => {Actions.chat({type:ActionConst.RESET})}}/>
+                       onRight={() => Actions.newChat()} rightTitle="+" duration={0}/>
+                <Scene key="newChat" component={ChatCreater} hideTabBar duration={0} title="Create a new chat"/>
+                <Scene key="conversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.chat({type:ActionConst.RESET})}}/>
               </Scene>
 
               <Scene key="contactsTab" title="Contacts" icon={TabIcon}>
-                <Scene key="contacts" title="Contacts" icon={TabIcon} component={Roster}  hideBackImage
+                <Scene key="contacts" title="Contacts" icon={TabIcon} duration={0} component={Roster}  hideBackImage
                        onBack={() => null}/>
-                <Scene key="contactsConversation" component={Conversation} hideTabBar duration={1} onBack={() => {Actions.contacts({type:ActionConst.RESET})}}/>
+                <Scene key="contactsConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.contacts({type:ActionConst.RESET})}}/>
               </Scene>
 
               <Scene key="groupTab" title="Groups" icon={TabIcon}>
-                <Scene key="group" title="Groups" icon={TabIcon} component={Groups} hideBackImage duration={1}
+                <Scene key="group" title="Groups" icon={TabIcon} component={Groups} hideBackImage duration={0}
                        onBack={() => null}
                        onRight={() => Actions.newMuc()}
                        rightTitle="new"/>
-                <Scene key="newMuc" component={MucCreater} hideTabBar duration={1} title="Create a new conference"/>
-                <Scene key="groupConversation" component={Conversation} hideTabBar duration={1} onBack={() => {Actions.group({type:ActionConst.RESET})}}/>
+                <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference"/>
+                <Scene key="groupConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}}/>
               </Scene>
 
               <Scene key="interpretationTab" title="Interpretations" icon={TabIcon}>
-                <Scene key="interpretationList" title="Interpretations" icon={TabIcon} duration={1} component={InterpretationList} hideBackImage onBack={() => null}/>
-                <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={1}/>
-                <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={1} title="Create a new conference" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}}/>
+                <Scene key="interpretationList" title="Interpretations" icon={TabIcon} duration={0} component={InterpretationList} hideBackImage onBack={() => null}/>
+                <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
+                <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}}/>
               </Scene>
 
               <Scene key="settings" title="Settings" component={Settings} icon={TabIcon} hideBackImage onBack={() => null}/>
