@@ -264,10 +264,13 @@ class XmppStore {
   }
 
   onLogin(){
+    console.log("inni onLogin!!!");
     this.loading = false;
     this.loginError = null;
     this.logged = true;
     this.getAllJoinedMucs(this.mucUsername);
+
+    Actions.tabbar();
   }
 
 
