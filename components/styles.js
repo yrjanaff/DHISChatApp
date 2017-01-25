@@ -2,6 +2,7 @@
 var React = require('react-native');
 var {StyleSheet, PixelRatio, Platform} = React;
 var styles = StyleSheet.create({
+
     container: {
         flex:1,
         paddingTop: 70,
@@ -23,12 +24,9 @@ var styles = StyleSheet.create({
     },
     row: {
         flexDirection: 'row',
-        backgroundColor:'white',
-        borderRadius: 0,
-        borderWidth: 0,
-        borderTopWidth: 1 / PixelRatio.get(),
-        borderColor: '#d6d7da',
         padding:10,
+        paddingLeft: 20,
+        paddingRight:20,
         alignItems: 'center'
     },
     categoryLabel: {
@@ -40,13 +38,9 @@ var styles = StyleSheet.create({
     },
     lastRow: {
         flexDirection: 'row',
-        backgroundColor:'white',
-        borderRadius: 0,
-        borderWidth: 0,
-        borderTopWidth: 1 / PixelRatio.get(),
-        borderBottomWidth: 1 / PixelRatio.get(),
-        borderColor: '#d6d7da',
         padding:10,
+        paddingLeft: 20,
+        paddingRight:20,
         alignItems: 'center'
     },
     rowLabel: {
@@ -55,9 +49,14 @@ var styles = StyleSheet.create({
         fontSize:15,
     },
     rowInput: {
+        borderRightWidth: 1 / PixelRatio.get(),
+        borderBottomWidth: 1 / PixelRatio.get(),
+        borderRadius:10,
         fontSize:15,
         flex:1,
-        height:(Platform.OS=='ios') ? 30 : 50
+        backgroundColor: '#ffffff',
+        height:(Platform.OS=='ios') ? 30 : 50,
+
     },
     messageItem: {
         paddingTop:10,
@@ -80,17 +79,18 @@ var styles = StyleSheet.create({
         height:30
     },
     button: {
-        backgroundColor: 'white',
+        backgroundColor: '#14395F',
         padding: 15,
-        borderColor: '#eeeeee',
-        borderWidth:1,
+        borderColor: '#e3e3e3',
+        borderRightWidth: 1 / PixelRatio.get(),
         borderBottomWidth: 1 / PixelRatio.get(),
         marginTop:20,
         borderRadius:10,
         width:300,
         marginRight:20,
         marginLeft:20,
-        alignSelf: 'center'
+        alignSelf: 'center',
+
     },
     sendButton: {
         justifyContent: 'center',
@@ -119,7 +119,6 @@ var styles = StyleSheet.create({
         backgroundColor:'white'
     },
     touch: {
-        alignSelf: 'stretch',
         marginLeft: 10,
         marginBottom: 10
     },
@@ -130,8 +129,9 @@ var styles = StyleSheet.create({
       justifyContent: 'space-between'
     },
     dateColor: {
-      color: '#c3c3c3',
-      fontSize: 11
+      color: '#a3a3a3',
+      fontSize: 16,
+      paddingRight: 5
     },
 
     online: {
@@ -178,6 +178,13 @@ var styles = StyleSheet.create({
       fontWeight: 'bold',
       lineHeight:15,
     },
+
+    talkBubble: {
+      margin: 40,
+      position: 'relative',
+      width: 200,
+      backgroundColor: 'lightyellow',
+    }
 
 
 });
