@@ -8,23 +8,8 @@ import Button from 'react-native-button';
 import {Actions} from 'react-native-mobx';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
+import { dhisApiURL, getDhisImageHeader, getDhisHeader, postDhisHeader } from '../utils/DhisUtils';
 var btoa = require('Base64').btoa;
-
-let header = {
-  method: 'GET',
-  headers: {
-    'Authorization': `Basic ${btoa('admin:district')}`,
-    'Content-Type': 'application/json'
-  }
-};
-
-let imageHeader = {
-  method: 'GET',
-  headers: {
-    'Authorization': `Basic ${btoa('admin:district')}`,
-    'Content-Type': 'image/png;charset=UTF-8'
-  }
-};
 
 let intId = null;
 
@@ -45,7 +30,7 @@ export default class Interpretation extends React.Component {
   }
 
   submitComment( comment ) {
-    return fetch('https://play.dhis2.org/demo/api/interpretations/' + xmpp.currentInterpretation.id + '/comments', {
+    return fetch(dhisApiURL + 'interpretations/' + xmpp.currentInterpretation.id + '/comments', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${btoa('admin:district')}`,
@@ -65,8 +50,8 @@ export default class Interpretation extends React.Component {
   }
 
   getComments() {
-    let url = 'https://play.dhis2.org/demo/api/interpretations/' + xmpp.currentInterpretation.id + '/comments?fields=text,user[name]';
-    return fetch(url, header)
+    let url = dhisApiURL + 'interpretations/' + xmpp.currentInterpretation.id + '/comments?fields=text,user[name]';
+    return fetch(url, getDhisHeader)
         .then(( response ) => response.json())
         .then(( responseJson ) => {
           xmpp.updateInterpretationComments(responseJson.comments, xmpp.currentInterpretation.url);
@@ -89,11 +74,11 @@ export default class Interpretation extends React.Component {
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
             <Text style={styles.bold}>{xmpp.currentInterpretation.name}</Text>
             <Text>{xmpp.currentInterpretation.text}</Text>
-            <TouchableHighlight onPress={() => Actions.intView({path: xmpp.currentInterpretation.imageURL, header:header })}>
+            <TouchableHighlight onPress={() => Actions.intView({path: xmpp.currentInterpretation.imageURL, header: getDhisHeader })}>
             <Image
                 source={{
                           uri: xmpp.currentInterpretation.imageURL,
-                          headers: header
+                          headers: getDhisImageHeader
                         }}
                 style={{
                           width: 300,
