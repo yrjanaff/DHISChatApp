@@ -15,6 +15,14 @@ import Settings from './components/Settings';
 import Interpretation from './components/Interpretation';
 import xmpp from './utils/XmppStore';
 import {Icon } from 'react-native-material-design';
+
+const title={color: 'white', fontSize: 20};
+const navigationBar={
+  backgroundColor: '#1d5288',
+      borderColor: '#4c4c4c',
+      borderBottomWidth: 3,
+}
+const backIcon={tintColor: 'white'};
 // Define all routes of the app
 var DhisChat = React.createClass({
 
@@ -32,19 +40,16 @@ var DhisChat = React.createClass({
                       name='add-box'
                       color='#ffffff'
                   />
-                } duration={0}  titleStyle={{color: 'white', fontSize: 20}} navigationBarStyle={ {
-                  backgroundColor: '#1d5288',
-                  borderColor: '#4c4c4c',
-                  borderBottomWidth: 3,
-                }}/>
-                <Scene key="newChat" component={ChatCreater} hideTabBar duration={0} title="Create a new chat"/>
-                <Scene key="conversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.chat({type:ActionConst.RESET})}}/>
+                } duration={0}  titleStyle={title} navigationBarStyle={navigationBar}/>
+                <Scene key="newChat" component={ChatCreater} hideTabBar duration={0} title="Create a new chat"  titleStyle={title} navigationBarStyle={navigationBar}
+                     />
+                <Scene key="conversation" component={Conversation} hideTabBar duration={0} titleStyle={title} navigationBarStyle={navigationBar} onBack={() => {Actions.chat({type:ActionConst.RESET})}}/>
               </Scene>
 
               <Scene key="contactsTab" title="Contacts" icon={TabIcon}>
                 <Scene key="contacts" title="Contacts" duration={0} component={Roster}  hideBackImage
                        onBack={() => null}/>
-                <Scene key="contactsConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.contacts({type:ActionConst.RESET})}}/>
+                <Scene key="contactsConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.contacts({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar}/>
               </Scene>
 
               <Scene key="groupTab" title="Groups" icon={TabIcon}>
@@ -52,7 +57,7 @@ var DhisChat = React.createClass({
                        onBack={() => null}
                        onRight={() => {Actions.newMuc();}}
                        rightTitle="new"/>
-                <Scene key="groupConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}}/>
+                <Scene key="groupConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar}/>
                 <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
                 <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference"/>
               </Scene>

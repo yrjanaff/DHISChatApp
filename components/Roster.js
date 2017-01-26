@@ -11,7 +11,7 @@ export default class Roster extends React.Component {
   }
   render() {
     return (
-         <View style={styles.container}>
+         <View style={[styles.container,{marginTop: 5}]}>
           <ListRoster roster={xmpp.roster}/>
          </View>
     )
