@@ -49,7 +49,7 @@ var DhisChat = React.createClass({
               </Scene>
 
               <Scene key="contactsTab" title="Contacts" icon={TabIcon}>
-                <Scene key="contacts" title="Contacts" duration={0} component={Roster}  hideBackImage
+                <Scene key="contacts" title="Contacts" duration={0} component={Roster}  hideBackImage titleStyle={title} navigationBarStyle={navigationBar}
                        onBack={() => null}/>
                 <Scene key="contactsConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.contacts({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar}/>
               </Scene>
