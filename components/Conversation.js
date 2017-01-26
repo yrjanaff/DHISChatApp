@@ -9,13 +9,19 @@ import CameraRollPicker from 'react-native-camera-roll-picker';
 import xmpp from '../utils/XmppStore';
 const ds = new ListView.DataSource({rowHasChanged: ( r1, r2 ) => r1 !== r2});
 import InterpretationPreview from './InterpretationPreview';
+import {Icon } from 'react-native-material-design';
+
 
 var RNGRP = require('react-native-get-real-path');
 
 class Conversation extends React.Component {
   static title( props ) {
-    const username = xmpp.remote.split("@");
-    return username[0];
+    if(!xmpp.group) {
+      return xmpp.roster[xmpp.remote].displayName;
+    }else{
+      return xmpp.remote.split('@')[0];
+    }
+
   }
 
   constructor( props ) {
@@ -93,6 +99,7 @@ class Conversation extends React.Component {
             <View style={{flex:1}}>
               <TextInput ref='message'
                          value={this.state.message}
+                         multiline = {true}
                          onChangeText={(message)=>this.setState({message})}
                          style={styles.message} placeholder="Enter message..."
                          onSubmitEditing={() => {xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}}
@@ -101,8 +108,14 @@ class Conversation extends React.Component {
             {
               xmpp.group ? null :
                   <View style={styles.sendButton}>
-                    <Button onPress={()=> this.setState({showImagePicker: this.state.showImagePicker ? false : true}) }
-                            disabled={!xmpp.remoteOnline && xmpp.offlineMode}>Image</Button>
+                    <Button  onPress={()=> this.setState({showImagePicker: this.state.showImagePicker ? false : true}) }
+                             disabled={!xmpp.remoteOnline || xmpp.offlineMode}>
+                      <Icon
+                        name="local-see"
+                        color={!xmpp.remoteOnline || xmpp.offlineMode ? '#5E5E5E50':'#5E5E5E'}
+                        style={{marginLeft: 20}}
+                        size={40}
+                    /></Button>
                   </View>
             }
           </View>

@@ -73,8 +73,10 @@ export default class Chats extends React.Component {
   }
 
   prettifyUsername(username) {
-    const tmp = username.split("@");
-    return tmp[0];
+    if(xmpp.roster[username]){
+      return xmpp.roster[username].displayName;
+    }
+      return username.split('@')[0];
   }
 
   onClick(remote){

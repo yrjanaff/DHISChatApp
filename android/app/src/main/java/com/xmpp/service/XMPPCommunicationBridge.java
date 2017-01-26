@@ -77,7 +77,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
 
     @Override
     public void onRosterReceived(Roster roster) {
-        WritableArray rosterResponse = Arguments.createArray();
+        WritableMap rosterResponse = Arguments.createMap();
         for (RosterEntry rosterEntry : roster.getEntries()) {
             WritableMap rosterProps = Arguments.createMap();
 
@@ -96,7 +96,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
             }
             rosterProps.putArray("groups", groupArray);
             rosterProps.putString("subscription", rosterEntry.getType().toString());
-            rosterResponse.pushMap(rosterProps);
+            rosterResponse.putMap(rosterEntry.getUser(),rosterProps);
         }
         sendEvent(reactContext, RNXMPP_ROSTER, rosterResponse);
     }

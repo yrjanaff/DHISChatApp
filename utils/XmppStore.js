@@ -240,17 +240,8 @@ class XmppStore {
   }
 
   isRemoteOnline(){
-    if(this.remote !== ''){
-      this.roster.map((person) => {
-        if(person.username === this.remote){
-          if(person.presence === 'Online' || person.presence === 'available'){
-            this.remoteOnline = true;
-          }
-          else{
-            this.remoteOnline = false;
-          }
-        }
-      })
+    if(this.remote !== '' && this.roster[this.remote]) {
+      this.remoteOnline =  this.roster[this.remote].presence === 'Online' || this.roster[this.remote].presence === 'available';
     }
   }
 

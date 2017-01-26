@@ -8,23 +8,20 @@ const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 export default class ListRoster extends React.Component {
 
-  sortAlphabetically(array) {
-    return array.sort(function( a, b ) {
-      var nameA = a.displayName.toLowerCase();
-      var nameB = b.displayName.toLowerCase();
-      if( nameA < nameB ) {
-        return -1;
-      }
-      if( nameA > nameB ) {
-        return 1;
-      }
-      return 0;
-    });
+  sortAlphabetically(list) {
+    console.log(list)
+    let keys =[];
+    for (let k in list) {
+        keys.push(k);
+    }
+    return keys.sort();
+
   }
 
   constructor( props ) {
     super(props);
-    this.state = {roster: this.sortAlphabetically(props.roster),
+    console.log(props)
+    this.state = {roster: props.roster,
       click: null
     };
   }
@@ -56,7 +53,9 @@ export default class ListRoster extends React.Component {
   }
 
   render() {
-    const data = this.sortAlphabetically(this.state.roster)
+    const data = this.sortAlphabetically(this.state.roster);
+    console.log(data)
+    console.log(this.state.roster["julie@yj-dev.dhis2.org"])
     const dataSource = ds.cloneWithRows(data.map(x=>x));
     return (
           <ListView enableEmptySections
@@ -64,7 +63,12 @@ export default class ListRoster extends React.Component {
                     renderScrollComponent={props => <ScrollView {...props} />}
                     dataSource={dataSource}
                     renderRow={(row) =>
-                        <TouchableHighlight onPress={() => this.onClickedRow(row)}><View style={{flex:1, flexDirection: 'row', borderBottomColor: 'lightgray', borderBottomWidth: 0.5, marginBottom: 10 }}><View style={[this.getAvailableIcon(row.presence), {justifyContent: 'flex-start', paddingBottom: 10} ]}/><Text style={[{fontSize:17},{color: '#000000',paddingBottom: 10}]}> {row.displayName}</Text></View></TouchableHighlight>}
+                        <TouchableHighlight onPress={() => this.onClickedRow(this.state.roster[row])}>
+                          <View style={{flex:1, flexDirection: 'row', borderBottomColor: 'lightgray', borderBottomWidth: 0.5, marginBottom: 10 }}>
+                            <View style={[this.getAvailableIcon(this.state.roster[row].presence), {justifyContent: 'flex-start', paddingBottom: 10} ]}/>
+                            <Text style={[{fontSize:17},{color: '#000000',paddingBottom: 10}]}> {this.state.roster[row].displayName}</Text>
+                          </View></TouchableHighlight>
+                    }
           />
     )
   }

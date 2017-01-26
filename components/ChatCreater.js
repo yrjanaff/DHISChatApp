@@ -15,7 +15,12 @@ export default class ChatCreater extends React.Component {
 
   foundMatch(text) {
     xmpp.group = false;
-    const filteredRoster = this.state.roster.filter(value => value.username.toLowerCase().indexOf(text) >= 0);
+
+    let filteredRoster =[];
+    for (let k in this.state.roster) {
+      if(this.state.roster[k].displayName.toLowerCase().indexOf(text) >= 0 )
+        filteredRoster.unshift(this.state.roster[k]);
+    }
 
     this.setState({
       text,

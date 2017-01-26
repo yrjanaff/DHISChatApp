@@ -62,7 +62,13 @@ export default class MucCreater extends React.Component {
         }
       }
     }
-    const filteredRoster = this.state.roster.filter(value => value.username.indexOf(newUser.toLowerCase().trim()) >= 0 && participantsString.indexOf(value.username) < 0 );
+
+    let filteredRoster =[];
+    for (let k in this.state.roster) {
+      if(this.state.roster[k].displayName.toLowerCase().indexOf(newUser.toLowerCase().trim()) >= 0 && participantsString.indexOf(this.state.roster[k].username) < 0 )
+        filteredRoster.unshift(this.state.roster[k]);
+    }
+
     this.setState({
       participants: newUser,
       dataSource: filteredRoster
