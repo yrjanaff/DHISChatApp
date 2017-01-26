@@ -10,6 +10,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.rngrp.RNGRPPackage;
+import com.reactnative.photoview.PhotoViewPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +31,8 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
           new XMPPPackage(),
           new ReactNativePushNotificationPackage(),
-          new RNGRPPackage()
+          new RNGRPPackage(),
+          new PhotoViewPackage()
       );
     }
   };

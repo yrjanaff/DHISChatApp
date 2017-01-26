@@ -42,7 +42,7 @@ export default class ChatCreater extends React.Component {
             />
           </View>
           <View style={{marginTop:10}}>
-         <ListRoster roster={this.state.dataSource}/>
+         <ListRoster isChat={true} roster={this.state.dataSource}/>
           </View>
         </View>
       );

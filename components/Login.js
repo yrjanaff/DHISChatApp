@@ -3,7 +3,9 @@ import {View, Text, ScrollView, TextInput, ListView, Dimensions,Image}  from 're
 import styles from './styles';
 import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';
-import xmpp from '../utils/XmppStore';
+import xmpp from '../utils/XmppStore'
+
+const dismissKeyboard = require('dismissKeyboard');
 
 export default class Login extends React.Component {
   constructor( props ) {
@@ -51,7 +53,7 @@ export default class Login extends React.Component {
                        onSubmitEditing={() => xmpp.login(this.state)}
             />
           </View>
-          <View style={styles.button}><Button style={{color: 'white'}} onPress={()=>xmpp.login(this.state)}>Login</Button></View>
+          <View style={styles.button}><Button style={{color: 'white'}} onPress={()=> {dismissKeyboard(); xmpp.login(this.state)}}>Login</Button></View>
           <ActivityIndicator active={xmpp.loading}/>
 
         </View>

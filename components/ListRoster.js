@@ -20,15 +20,16 @@ export default class ListRoster extends React.Component {
 
   constructor( props ) {
     super(props);
-    console.log(props)
     this.state = {roster: props.roster,
-      click: null
+      click: null,
+      isChat: props.isChat
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({roster: nextProps.roster,
-      click: nextProps.clicked
+      click: nextProps.clicked,
+      isChat: nextProps.isChat
     })
   }
 
@@ -48,7 +49,13 @@ export default class ListRoster extends React.Component {
      return this.state.click(row.username);
     }else{
        xmpp.setRemote(row.username)
-      Actions.contactsConversation({remote: row.displayName});
+
+      if(this.state.isChat){
+        Actions.conversation({remote: row.displayName})
+      }
+      else {
+        Actions.contactsConversation({remote: row.displayName});
+      }
     }
   }
 
