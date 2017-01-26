@@ -8,7 +8,7 @@ To run the app:
 npm install
 `
 
-* Then, locate this file: `  node_modules/react-native-photo-view/android/src/main/java/com/reactnative/photoview/ImageEvent.java`
+* Then, locate this file: `node_modules/react-native-photo-view/android/src/main/java/com/reactnative/photoview/ImageEvent.java`
 
 * And add `eventType` to the code, as shown below:
 
