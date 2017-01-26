@@ -4,17 +4,9 @@ import Button from 'react-native-button';
 import {Actions, ActionConst} from 'react-native-mobx';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
+import { getDhisHeader, dhisApiURL } from '../utils/DhisUtils';
 var btoa = require('Base64').btoa;
 import InterpretationMeta from '../utils/InterpretationMeta';
-
-
-let header = {
-  method: 'GET',
-  headers: {
-    'Authorization': `Basic ${btoa('admin:district')}`,
-    'Content-Type': 'application/json'
-  }
-};
 
 let page = 1;
 
@@ -52,7 +44,7 @@ export default class InterpretationList extends React.Component {
 
   fetchInterpretations( args, concat ) {
     let interpretations = new Array();
-    return fetch('https://play.dhis2.org/demo/api/interpretations.json?page=' + page + '&pageSize=10&' + args, header)
+    return fetch(dhisApiURL + 'interpretations.json?page=' + page + '&pageSize=10&' + args, getDhisHeader)
         .then(( response ) => response.json())
         .then(( responseJson ) => {
           for( let i = 0; i < responseJson.interpretations.length; i++ ) {
@@ -76,8 +68,8 @@ export default class InterpretationList extends React.Component {
             }
 
             if( type != 'reportTables' && type != 'dataset_report' ) {
-              let tempInterpret = new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text,'https://play.dhis2.org/demo/api/interpretations/' + interpretation.id,
-                  'https://play.dhis2.org/demo/api/' + type + 's/' + typeId + '/data', null)
+              let tempInterpret = new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text, dhisApiURL + 'interpretations/' + interpretation.id,
+                  dhisApiURL + type + 's/' + typeId + '/data', null)
               interpretations.push(tempInterpret);
               xmpp.saveInterpretation(tempInterpret);
             }

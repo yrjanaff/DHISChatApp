@@ -32,7 +32,7 @@ export const fetchInterpretation = (url , conversation) => {
 
           if( type != 'reportTables' && type != 'dataset_report' ) {
             xmpp.saveInterpretation(new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text,
-                'https://play.dhis2.org/demo/api/interpretations/' + interpretation.id, 'https://play.dhis2.org/demo/api/' + type + 's/' + typeId + '/data', conversation));
+                dhisApiURL + 'interpretations/' + interpretation.id, dhisApiURL + type + 's/' + typeId + '/data', conversation));
           }
         })
         .catch(( error ) => {
@@ -50,3 +50,27 @@ export const getDhisHeader = () =>
       }
     }
   };
+
+export const getDhisImageHeader = () =>
+{
+  return {
+    method: 'GET',
+    headers: {
+      'Authorization': `Basic ${btoa('admin:district')}`,
+      'Content-Type': 'image/png;charset=UTF-8'
+    }
+  }
+};
+
+export const postDhisHeader = () =>
+{
+  return {
+    method: 'POST',
+    headers: {
+      'Authorization': `Basic ${btoa('admin:district')}`,
+      'Content-Type': 'text/plain'
+    }
+  }
+};
+
+export const dhisApiURL = 'https://play.dhis2.org/demo/api/';
