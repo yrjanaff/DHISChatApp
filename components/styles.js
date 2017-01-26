@@ -194,11 +194,26 @@ var styles = StyleSheet.create({
     lineHeight: 15,
   },
 
-  talkBubble: {
-    margin: 40,
-    position: 'relative',
-    width: 200,
-    backgroundColor: 'lightyellow',
+  bubble: {
+    marginTop: 10,
+    paddingLeft: 14,
+    paddingRight: 14,
+    paddingBottom: 8,
+    paddingTop: 8,
+  },
+
+  bubbleLeft: {
+    marginLeft: 5,
+    marginRight: 70,
+    backgroundColor: '#e6e6eb',
+    alignSelf: 'flex-start',
+  },
+
+  bubbleRight: {
+    marginRight: 5,
+    marginLeft: 70,
+    backgroundColor: '#1d5288',
+    alignSelf: 'flex-end',
   }
 
 
