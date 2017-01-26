@@ -12,7 +12,7 @@ export default class Roster extends React.Component {
   render() {
     return (
          <View style={styles.container}>
-          <ListRoster roster={xmpp.roster}/>
+          <ListRoster isChat={false} roster={xmpp.roster}/>
          </View>
     )
   }

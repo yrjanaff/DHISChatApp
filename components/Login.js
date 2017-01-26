@@ -5,7 +5,7 @@ import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';
 import xmpp from '../utils/XmppStore'
 
-const dismissKeyboard = require('dismissKeyboard');;
+const dismissKeyboard = require('dismissKeyboard');
 
 export default class Login extends React.Component {
   constructor( props ) {
