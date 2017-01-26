@@ -4,9 +4,7 @@ React Native XMPP chat application **(Android only)** for DHIS 2 using a [custom
 To run the app:
 
 * Clone the repo and use npm to install node_modules:
-`
-npm install
-`
+`npm install`
 
 * Then, locate this file: `node_modules/react-native-photo-view/android/src/main/java/com/reactnative/photoview/ImageEvent.java`
 
