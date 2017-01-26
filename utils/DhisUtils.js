@@ -51,6 +51,18 @@ export const getDhisHeader = () =>
     }
   };
 
+export const getDhisHeaderUser = (username, password) =>
+{
+  console.log(username + ' ' + password);
+  return {
+    method: 'GET',
+    headers: {
+      'Authorization': `Basic ${btoa(username + ':' + password)}`,
+      'Content-Type': 'application/json'
+    }
+  }
+};
+
 export const getDhisImageHeader = () =>
 {
   return {
@@ -74,3 +86,5 @@ export const postDhisHeader = () =>
 };
 
 export const dhisApiURL = 'https://play.dhis2.org/demo/api/';
+
+export const realDhisApiURL = 'https://yj-dev.dhis2.org/dhis/api/';
