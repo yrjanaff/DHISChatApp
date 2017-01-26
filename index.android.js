@@ -13,6 +13,7 @@ import TabIcon from './components/TabIcon';
 import InterpretationList from './components/InterpretationList';
 import Settings from './components/Settings';
 import Interpretation from './components/Interpretation';
+import ImageViewer from './components/ImageViewer';
 import xmpp from './utils/XmppStore';
 import {Icon } from 'react-native-material-design';
 // Define all routes of the app
@@ -39,6 +40,7 @@ var DhisChat = React.createClass({
                 }}/>
                 <Scene key="newChat" component={ChatCreater} hideTabBar duration={0} title="Create a new chat"/>
                 <Scene key="conversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.chat({type:ActionConst.RESET})}}/>
+                <Scene key="conView" component={ImageViewer} hideTabBar duration={0} title="Zoom"/>
               </Scene>
 
               <Scene key="contactsTab" title="Contacts" icon={TabIcon}>
@@ -61,6 +63,7 @@ var DhisChat = React.createClass({
                 <Scene key="interpretationList" title="Interpretations" duration={0} component={InterpretationList} hideBackImage onBack={() => null}/>
                 <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
                 <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}}/>
+                <Scene key="intView" component={ImageViewer} hideTabBar duration={0} title="Zoom"/>
               </Scene>
 
               <Scene key="settings" title="Settings" component={Settings} icon={TabIcon} hideBackImage onBack={() => null}/>

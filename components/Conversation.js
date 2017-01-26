@@ -70,7 +70,7 @@ class Conversation extends React.Component {
                         return !row.image ? <View style={{flexDirection: 'column', alignSelf:row.own ? 'flex-end':'flex-start' }}><Text style={[styles.messageItem, {textAlign:row.own ? 'right':'left' }]}>{row.text}</Text><Text style={{fontSize: 10, textAlign:row.own ? 'right':'left' }}>{row.from ? row.from.split('@')[0]:null}</Text></View>:
 
                             <TouchableHighlight style={styles.touch} underlayColor={'#ffffff'} key={row.text}
-                                      onPress={isSent && row.text === this.state.selectedImage || row.sent ? () => null : () => { this.retrySendImage(row.text); this.setState({selectedImage: row.text});}}>
+                                      onPress={isSent && row.text === this.state.selectedImage || row.sent ? () => Actions.conView({path: row.text, header:null }) : () => { this.retrySendImage(row.text); this.setState({selectedImage: row.text});}}>
 
                                <Image source={{
                                   uri: row.text

@@ -1,6 +1,7 @@
 package com.dhischat;
 
 import com.facebook.react.ReactActivity;
+import com.reactnative.photoview.PhotoViewPackage;
 import rnxmpp.RNXMPPPackage;
 
 public class MainActivity extends ReactActivity {

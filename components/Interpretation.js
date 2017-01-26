@@ -89,6 +89,7 @@ export default class Interpretation extends React.Component {
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
             <Text style={styles.bold}>{xmpp.currentInterpretation.name}</Text>
             <Text>{xmpp.currentInterpretation.text}</Text>
+            <TouchableHighlight onPress={() => Actions.intView({path: xmpp.currentInterpretation.imageURL, header:header })}>
             <Image
                 source={{
                           uri: xmpp.currentInterpretation.imageURL,
@@ -100,6 +101,7 @@ export default class Interpretation extends React.Component {
                           alignSelf: 'center'
                  }}
             />
+            </TouchableHighlight>
             {this.props.isMuc ? null :
                 <View style={styles.button}><Button onPress={() => {xmpp.createInterpretationMuc = true; Actions.newInterpretationMuc()}}>Chat about this!</Button></View>
             }

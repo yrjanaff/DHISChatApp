@@ -33,7 +33,7 @@ export default class ListRoster extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.setState({roster: nextProps.roster,
       click: nextProps.clicked,
-      isChat: nextprops.isChat
+      isChat: nextProps.isChat
     })
   }
 
