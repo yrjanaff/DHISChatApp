@@ -1,6 +1,6 @@
 import React from 'react';
 import {AppRegistry} from 'react-native';
-import { Scene, Router, Reducer, Switch } from 'react-native-mobx';
+import { Scene, Router, Route, Reducer, Switch } from 'react-native-mobx';
 import Conversation from './components/Conversation';
 import Login from './components/Login';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -50,34 +50,25 @@ var DhisChat = React.createClass({
               <Scene key="groupTab" title="Groups" icon={TabIcon}>
                 <Scene key="group" title="Groups" component={Groups} hideBackImage duration={0}
                        onBack={() => null}
-                       onRight={() => Actions.newMuc()}
+                       onRight={() => {Actions.newMuc();}}
                        rightTitle="new"/>
                 <Scene key="groupConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}}/>
                 <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
+                <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference"/>
               </Scene>
 
               <Scene key="interpretationTab" title="Interpretations" icon={TabIcon} >
                 <Scene key="interpretationList" title="Interpretations" duration={0} component={InterpretationList} hideBackImage onBack={() => null}/>
                 <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
+                <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}}/>
               </Scene>
 
               <Scene key="settings" title="Settings" component={Settings} icon={TabIcon} hideBackImage onBack={() => null}/>
 
             </Scene>
-            <Scene key="newMuc" direction="vertical" component={MucCreater} hideTabBar duration={1} title="Create a new conference" leftTitle="back" onLeft={() => {
-                    if(xmpp.createInterpretationMuc){
-                      xmpp.createInterpretationMuc = false;
-                      Actions.interpretationTab();
-                      Actions.interpretation();
-                      
-                    }
-                    else{
-                    Actions.groupTab();
-                      Actions.group();
-                    }
-                 }}
-            />
+
           </Scene>
+
         </Router>
 
 
