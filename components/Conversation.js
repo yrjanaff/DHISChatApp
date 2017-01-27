@@ -104,6 +104,8 @@ class Conversation extends React.Component {
                          value={this.state.message}
                          multiline = {true}
                          onChangeText={(message)=>this.setState({message})}
+                         autoCapitalize={'sentences'}
+                         returnKeyType={'done'}
                          style={styles.message} placeholder="Enter message..."
                          onSubmitEditing={() => {xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}}
                          disabled={!this.state.message || !this.state.message.trim() && xmpp.offlineMode}/>

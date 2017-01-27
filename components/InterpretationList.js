@@ -119,6 +119,7 @@ export default class InterpretationList extends React.Component {
                            value={this.state.search}
                            onChangeText={(search)=>this.setState({search})}
                            style={styles.message} placeholder="Search interpretation"
+                           returnKeyType={'search'}
                            onSubmitEditing={()=>{
                               if(this.state.search !== '')
                                 this.search(this.state.search);this.setState({search:''})}

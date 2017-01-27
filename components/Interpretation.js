@@ -106,6 +106,8 @@ export default class Interpretation extends React.Component {
                            value={this.state.newComment}
                            onChangeText={(newComment)=>this.setState({newComment})}
                            style={styles.message} placeholder="Enter comment..."
+                           returnKeyType={'send'}
+                           autoCapitalize={'sentences'}
                            onSubmitEditing={()=>{
                            if( this.state.newComment !== '')
                               this.submitComment(this.state.newComment);this.setState({newComment:''})}

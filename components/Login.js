@@ -31,6 +31,7 @@ export default class Login extends React.Component {
                        autoCorrect={false}
                        autoCapitalize="none"
                        autoFocus={true}
+                       returnKeyType={'next'}
                        placeholder="Username"
                        value={this.state.username}
                        onChangeText={(username)=>this.setState({username})}
@@ -47,6 +48,7 @@ export default class Login extends React.Component {
                        autoCorrect={false}
                        autoCapitalize="none"
                        placeholder="Password"
+                       returnKeyType={'go'}
                        value={this.state.password}
                        onChangeText={(password)=>this.setState({password})}
                        blurOnSubmit={true}
