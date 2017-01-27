@@ -23,7 +23,7 @@ export default class TabIcon extends React.Component {
       case 'Contacts': return 'contact-mail';
       case 'Groups': return  'forum';
       case 'Interpretations': return 'insert-chart';
-      case 'Settings': return 'brightness-5';
+      case 'Profile': return 'person';
     }
   }
 
