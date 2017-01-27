@@ -88,9 +88,7 @@ export default class Interpretation extends React.Component {
             </TouchableHighlight>
             <View>
               <Text style={[styles.bold,{fontSize: 18}]}>Comments:</Text>
-              {console.log(this.state.comments.length)}
                {
-
                  this.state.comments.length !== 0 ?
                      this.state.comments.map(( comment, index ) => {
                         return (
@@ -107,6 +105,8 @@ export default class Interpretation extends React.Component {
                              multiline = {true}
                              value={this.state.newComment}
                              onChangeText={(newComment)=>this.setState({newComment})}
+                             returnKeyType={'send'}
+                             autoCapitalize={'sentences'}
                              style={styles.message} placeholder="Enter comment..."
                   />
                 </View>
@@ -118,6 +118,7 @@ export default class Interpretation extends React.Component {
                    disabled={!this.state.newComment || !this.state.newComment.trim() && xmpp.offlineMode}
                    style={{color: !this.state.newComment || !this.state.newComment.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>post</Button>
                 </View>
+
               </View>
             </View>
           </ScrollView>

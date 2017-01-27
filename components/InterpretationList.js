@@ -118,6 +118,7 @@ export default class InterpretationList extends React.Component {
                 <TextInput ref='newComment'
                            value={this.state.search}
                            onChangeText={(search)=>this.setState({search})}
+                           returnKeyType={'search'}
                            style={{height: 50,width: 400}} placeholder="Search for interpretation"
                            underlineColorAndroid="lightgray"
                            onSubmitEditing={()=>{
