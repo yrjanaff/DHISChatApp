@@ -600,11 +600,19 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                     room.pushString( roomInfo.getSubject());
                     room.pushString( Integer.toString(roomInfo.getOccupantsCount()));
 
-                    rooms.pushArray(room);
+
 
                     MultiUserChat muc = userChatManager.getMultiUserChat(j.getJid());
                     muc.join(jid);
                     muc.addMessageListener( this );
+                    WritableArray occupants = Arguments.createArray();
+                    List<String> participants = muc.getOccupants();
+                    for ( String nick : participants )
+                        occupants.pushString( nick );
+
+                    room.pushArray(occupants);
+
+                    rooms.pushArray(room);
                 }
             }
             this.xmppServiceListener.onAllMucFetced(rooms);

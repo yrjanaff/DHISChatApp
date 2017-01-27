@@ -89,26 +89,37 @@ export default class Chats extends React.Component {
     this.setUp(this.state);
     return (
         <View style={styles.container}>
+          { this.state.people.length !== 0 ?
 
-          <ScrollView  automaticallyAdjustContentInsets={true} horizontal={false} >
-            {
-           this.state.people.map((remote) => {
-                  return (
-                        <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={remote} onPress={() => this.onClick(remote)}>
-                          <View>
-                          <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
-                            <Text style={[{fontSize: 20},{fontWeight: xmpp.unSeenNotifications.Chats.indexOf(remote) > -1 ? 'bold': 'normal' }]}>{this.prettifyUsername(remote)}</Text>
-                            <Text style={styles.dateColor}>{this.formatDate(xmpp.conversation[remote].chat[0].date)}</Text>
-                          </View>
-                            {
-                              this.prevMessage(xmpp.conversation[remote].chat[0].text, xmpp.conversation[remote].chat[0].image)
-                            }
-                          </View>
-                        </TouchableHighlight>
-                  );
-           })
-        }
-          </ScrollView>
+            <ScrollView  automaticallyAdjustContentInsets={true} horizontal={false} >
+              {
+               this.state.people.map((remote) => {
+                      return (
+                            <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={remote} onPress={() => this.onClick(remote)}>
+                              <View>
+                              <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
+                                <Text style={[{fontSize: 20},{fontWeight: xmpp.unSeenNotifications.Chats.indexOf(remote) > -1 ? 'bold': 'normal' }]}>{this.prettifyUsername(remote)}</Text>
+                                <Text style={styles.dateColor}>{this.formatDate(xmpp.conversation[remote].chat[0].date)}</Text>
+                              </View>
+                                {
+                                  this.prevMessage(xmpp.conversation[remote].chat[0].text, xmpp.conversation[remote].chat[0].image)
+                                }
+                              </View>
+                            </TouchableHighlight>
+                      );
+               })
+            }
+            </ScrollView> :
+              <View>
+                <Text style={styles.emptyResult}>No chats</Text>
+                <Text style={{
+                  fontSize: 16,
+                  color: "#5E5E5E65",
+                  textAlign: 'center',
+                  marginTop: 0
+                }}>press + to start a new chat</Text>
+              </View>
+          }
         </View>
      )
   }

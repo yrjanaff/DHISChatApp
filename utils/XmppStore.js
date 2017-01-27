@@ -32,6 +32,7 @@ class XmppStore {
     @observable offlineMode = false;
     @observable interpretations = {};
     @observable lastActive = null;
+    @observable interpratationHasMuc = false;
 
 
   constructor() {
@@ -237,6 +238,7 @@ class XmppStore {
   onFetchedRoster(rosterList){
     this.roster =  rosterList;
     this.isRemoteOnline();
+    console.log(rosterList)
   }
 
   isRemoteOnline(){

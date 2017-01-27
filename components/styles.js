@@ -75,7 +75,6 @@ var styles = StyleSheet.create({
   },
   messageItem: {
     paddingTop: 10,
-    paddingBottom: 0,
     paddingRight: 20,
     fontSize: 15
   },
@@ -230,6 +229,13 @@ var styles = StyleSheet.create({
     marginLeft: 70,
     backgroundColor: '#1d5288',
     alignSelf: 'flex-end',
+  },
+
+  emptyResult:{
+    fontSize: 20,
+    color: "#5E5E5E65",
+    textAlign: 'center',
+    marginTop: 20
   }
 
 

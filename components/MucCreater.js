@@ -96,15 +96,17 @@ export default class MucCreater extends React.Component {
               style={{height: 40, width:300, borderColor: 'gray', borderWidth: 1}}
               onChangeText={(name) => this.setState({name})}
               value={this.state.name}
+              underlineColorAndroid="transparent"
           />
           </View>
           <View style={styles.toContainer}>
             <View  style={{flex:0, flexDirection: 'row', borderColor: 'lightgray', borderBottomWidth: 7, marginBottom: 10}}>
-              <Text style={{fontSize: 16, color: 'darkgray', marginTop:20 }}>TOO:</Text>
+              <Text style={{fontSize: 16, color: 'darkgray', marginTop:20 }}>TO:</Text>
             <TextInput
                 style={{height: 60,width: 300,borderColor: 'gray', borderWidth: 1}}
                 onChangeText={(participants) => this.foundMatch(participants)}
                 value={val}
+                underlineColorAndroid="transparent"
             />
             </View>
           </View>

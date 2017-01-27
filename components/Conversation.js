@@ -75,7 +75,7 @@ class Conversation extends React.Component {
                       renderRow={(row) => {
                         return !row.image ?
                               <View style={[styles.bubble, row.own ? styles.bubbleRight : styles.bubbleLeft]}>
-                                <Text style={[styles.messageItem, {color: row.own ? '#ffffff' : 'black'}]}>{row.text}</Text><Text style={{fontSize: 10}}>{row.from ? row.from.split('@')[0]:null}</Text>
+                                <Text style={[styles.messageItem, {color: row.own ? '#ffffff' : 'black'}]}>{row.text}</Text><Text style={{fontSize: 10,marginTop: -10,color: row.own ? '#ffffff' : 'black', textAlign: row.own ? 'right' : 'left'}}>{row.from ? row.from.split('@')[0]:null}</Text>
                               </View> :
 
                             <TouchableHighlight style={styles.touch} underlayColor={'#ffffff'} key={row.text}
@@ -111,7 +111,8 @@ class Conversation extends React.Component {
             {
               xmpp.group ?  <View style={styles.sendButton}>
                     <Button  onPress={()=> {xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}}
-                             disabled={!this.state.message || !this.state.message.trim() && xmpp.offlineMode}>send</Button>
+                             disabled={!this.state.message || !this.state.message.trim() && xmpp.offlineMode}
+                             style={{color: !this.state.message || !this.state.message.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>send</Button>
                   </View> :
                   <View style={styles.sendButton}>
                     <Button  onPress={()=> this.setState({showImagePicker: this.state.showImagePicker ? false : true}) }

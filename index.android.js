@@ -24,6 +24,7 @@ const navigationBar={
       borderBottomWidth: 3,
 }
 const backIcon={tintColor: 'white'};
+
 // Define all routes of the app
 var DhisChat = React.createClass({
 
@@ -71,7 +72,13 @@ var DhisChat = React.createClass({
 
               <Scene key="interpretationTab" title="Interpretations" icon={TabIcon} >
                 <Scene key="interpretationList" title="Interpretations" duration={0} component={InterpretationList} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar}/>
-                <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0} titleStyle={title} navigationBarStyle={navigationBar}/>
+                <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0} titleStyle={title} navigationBarStyle={navigationBar} onRight={() =>  {Actions.newInterpretationMuc();
+                  xmpp.createInterpretationMuc = true;}} rightTitle={
+                  <Icon
+                      name='add-box'
+                      color={ xmpp.interpratationHasMuc ? 'transparent':'#ffffff'}
+                  />
+                }/>
                 <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}}/>
                 <Scene key="intView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar}/>
               </Scene>

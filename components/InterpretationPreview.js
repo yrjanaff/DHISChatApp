@@ -18,7 +18,7 @@ export default class InterpretationPreview extends React.Component {
     if(xmpp.remote === xmpp.currentInterpretation.conversationName){
       return (
           <View>
-        <TouchableHighlight onPress={() => Actions.mucInterpretation({isMuc: true})}>
+        <TouchableHighlight onPress={() => {xmpp.interpratationHasMuc = true; Actions.mucInterpretation()} }>
           <View>
             <Image
                 source={{

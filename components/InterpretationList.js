@@ -113,29 +113,32 @@ export default class InterpretationList extends React.Component {
     return (
         <View style={styles.container}>
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
-            <View style={styles.messageBar}>
-              <View style={{flex:1}}>
+            <View  style={{flex:1, flexDirection: 'row', borderColor: 'lightgray', borderBottomWidth: 5, marginBottom: 10}}>
+
                 <TextInput ref='newComment'
                            value={this.state.search}
                            onChangeText={(search)=>this.setState({search})}
-                           style={styles.message} placeholder="Search interpretation"
+                           style={{height: 50,width: 400}} placeholder="Search for interpretation"
+                           underlineColorAndroid="lightgray"
                            onSubmitEditing={()=>{
                               if(this.state.search !== '')
                                 this.search(this.state.search);this.setState({search:''})}
                            }
                 />
-              </View>
             </View>
-            <View style={styles.button}><Button onPress={() => this.reset()}>Reset</Button></View>
-            <View style={styles.button}><Button onPress={() => this.loadMore()}>Load More</Button></View>
-            {this.state.interpretations.length === 0 ? <Text>No results</Text> :
+            <View style={{flex: 1, flexDirection: 'row',justifyContent: 'space-around', borderColor: 'lightgray', borderBottomWidth: 7, marginBottom: 10}}>
+            <View><Button style={{color: '#1d5288'}} onPress={() => this.reset()}>End search</Button></View>
+            <View><Button style={{color: '#1d5288'}} onPress={() => this.loadMore()}>Load More</Button></View>
+            </View>
+            {this.state.interpretations.length === 0 ? <Text style={styles.emptyResult}>No results</Text> :
               this.state.interpretations.map(( interpretation, index ) => {
               return (
                   <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={index}
                                       onPress={() => {Actions.interpretation();
+                                        xmpp.interpratationHasMuc = false;
                                       xmpp.setCurrentInterpretation(interpretation)}}>
                     <View key={index}>
-                      <Text style={styles.bold}>{interpretation.name}</Text>
+                      <Text style={[styles.bold,{fontSize: 18}]}>{interpretation.name}</Text>
                       <Text>
                         {interpretation.text}
                       </Text>

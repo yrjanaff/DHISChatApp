@@ -72,8 +72,7 @@ export default class Interpretation extends React.Component {
     return (
         <View style={styles.containerNoTabs}>
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
-            <Text style={styles.bold}>{xmpp.currentInterpretation.name}</Text>
-            <Text>{xmpp.currentInterpretation.text}</Text>
+            <Text style={{textAlign: 'center', fontSize: 20}}>{xmpp.currentInterpretation.text}</Text>
             <TouchableHighlight onPress={() => Actions.intView({path: xmpp.currentInterpretation.imageURL, header: getDhisHeader })}>
             <Image
                 source={{
@@ -87,30 +86,38 @@ export default class Interpretation extends React.Component {
                  }}
             />
             </TouchableHighlight>
-            {this.props.isMuc ? null :
-                <View style={styles.button}><Button onPress={() => {xmpp.createInterpretationMuc = true; Actions.newInterpretationMuc()}}>Chat about this!</Button></View>
-            }
+            <View>
+              <Text style={[styles.bold,{fontSize: 18}]}>Comments:</Text>
+              {console.log(this.state.comments.length)}
+               {
 
-            <Text style={styles.bold}>Comments:</Text>
-            {this.state.comments ? this.state.comments.map(( comment, index ) => {
-              return (
-                  <View key={index}>
-                    <Text style={styles.bold}>{comment.user.name}</Text>
-                    <Text>{comment.text}</Text>
-                  </View>
-              );
-            }) : null}
-            <View style={styles.messageBar}>
-              <View style={{flex:1}}>
-                <TextInput ref='newComment'
-                           value={this.state.newComment}
-                           onChangeText={(newComment)=>this.setState({newComment})}
-                           style={styles.message} placeholder="Enter comment..."
-                           onSubmitEditing={()=>{
-                           if( this.state.newComment !== '')
-                              this.submitComment(this.state.newComment);this.setState({newComment:''})}
-                           }
-                />
+                 this.state.comments.length !== 0 ?
+                     this.state.comments.map(( comment, index ) => {
+                        return (
+                            <View key={index}>
+                              <Text style={styles.bold}>{comment.user.name}</Text>
+                              <Text>{comment.text}</Text>
+                            </View>
+                        );})
+                     : <Text style={[styles.emptyResult]}>No comments</Text>
+               }
+              <View style={[styles.messageBar]}>
+                <View style={{flex:1}}>
+                  <TextInput ref='newComment'
+                             multiline = {true}
+                             value={this.state.newComment}
+                             onChangeText={(newComment)=>this.setState({newComment})}
+                             style={styles.message} placeholder="Enter comment..."
+                  />
+                </View>
+                <View style={styles.sendButton}>
+                  <Button  onPress={()=> {
+                    if( this.state.newComment !== '')
+                      this.submitComment(this.state.newComment);this.setState({newComment:''})
+                    }}
+                   disabled={!this.state.newComment || !this.state.newComment.trim() && xmpp.offlineMode}
+                   style={{color: !this.state.newComment || !this.state.newComment.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>post</Button>
+                </View>
               </View>
             </View>
           </ScrollView>
