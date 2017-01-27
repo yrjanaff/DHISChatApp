@@ -55,23 +55,28 @@ var DhisChat = React.createClass({
               </Scene>
 
               <Scene key="groupTab" title="Groups" icon={TabIcon}>
-                <Scene key="group" title="Groups" component={Groups} hideBackImage duration={0}
+                <Scene key="group" title="Groups" component={Groups} hideBackImage duration={0} titleStyle={title} navigationBarStyle={navigationBar}
                        onBack={() => null}
                        onRight={() => {Actions.newMuc();}}
-                       rightTitle="new"/>
+                       rightTitle={
+                         <Icon
+                             name='add-box'
+                             color='#ffffff'
+                         />
+                       }/>
                 <Scene key="groupConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar}/>
                 <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
-                <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference"/>
+                <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="new conference" titleStyle={title} navigationBarStyle={navigationBar}/>
               </Scene>
 
               <Scene key="interpretationTab" title="Interpretations" icon={TabIcon} >
-                <Scene key="interpretationList" title="Interpretations" duration={0} component={InterpretationList} hideBackImage onBack={() => null}/>
-                <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
+                <Scene key="interpretationList" title="Interpretations" duration={0} component={InterpretationList} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar}/>
+                <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0} titleStyle={title} navigationBarStyle={navigationBar}/>
                 <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}}/>
-                <Scene key="intView" component={ImageViewer} hideTabBar duration={0} title="Zoom"/>
+                <Scene key="intView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar}/>
               </Scene>
 
-              <Scene key="settings" title="Settings" component={Settings} icon={TabIcon} hideBackImage onBack={() => null}/>
+              <Scene key="settings" title="Settings" component={Settings} icon={TabIcon} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar}/>
 
             </Scene>
 

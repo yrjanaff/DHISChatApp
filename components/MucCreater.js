@@ -90,27 +90,32 @@ export default class MucCreater extends React.Component {
     let val = xmpp.newMucParticipants.length > 0 ? xmpp.newMucParticipants.join(', ') + this.state.participants: this.state.participants
     return(
         <View style={styles.container}>
-          <Text>Conversation name:</Text>
+          <View  style={{flex:0, flexDirection: 'row', borderColor: 'lightgray', marginTop: 10,borderBottomWidth: 3}}>
+            <Text style={{fontSize: 16, color: 'darkgray', marginTop:10 }}>NAME:</Text>
           <TextInput
-              style={{height: 40, borderColor: 'gray', borderWidth: 1, marginBottom:20}}
+              style={{height: 40, width:300, borderColor: 'gray', borderWidth: 1}}
               onChangeText={(name) => this.setState({name})}
               value={this.state.name}
           />
+          </View>
           <View style={styles.toContainer}>
-            <Text>TO:</Text>
+            <View  style={{flex:0, flexDirection: 'row', borderColor: 'lightgray', borderBottomWidth: 7, marginBottom: 10}}>
+              <Text style={{fontSize: 16, color: 'darkgray', marginTop:20 }}>TOO:</Text>
             <TextInput
-                style={{height: 40, borderColor: 'gray', borderWidth: 1, marginBottom:20}}
+                style={{height: 60,width: 300,borderColor: 'gray', borderWidth: 1}}
                 onChangeText={(participants) => this.foundMatch(participants)}
                 value={val}
             />
+            </View>
           </View>
           <View style={{flex:1}}>
             <ListRoster roster={this.state.dataSource} clicked={this.updateParticipants}/>
           </View>
-          <Button disabled={
+          <View style={styles.buttons}>
+          <Button style={{color: '#ffffff'}} disabled={
             xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1
           } onPress={()=> {{xmpp.createInterpretationMuc = false} xmpp.createConference(this.state.name, xmpp.mucSubject, xmpp.newMucParticipants, this.state.username); this.setState({topic:'', name:''}); Actions.pop(); Actions.groupTab(); Actions.groupConversation()} }>Create conference</Button>
-
+          </View>
         </View>
     );
   }

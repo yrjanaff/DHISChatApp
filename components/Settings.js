@@ -28,16 +28,15 @@ export default class Settings extends React.Component {
 
   render() {
     return (
-        <View style={styles.container}>
-          <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
+          <View style={[styles.container, {marginTop: 30}]}>
             <View style={{flexDirection: 'row', paddingLeft: 20,justifyContent: 'space-between'}}>
               <Text>Offline mode: </Text>
               <Switch
                   onValueChange={(value) => xmpp.settingOfflineMode(value)}
                   style={{marginBottom: 10}}
-                  value={xmpp.offlineMode}/>
+                  value={xmpp.offlineMode} />
             </View>
-
+          <ScrollView>
             <View style={styles.row}>
               <TextInput style={styles.rowInput}
                          autoCorrect={false}
@@ -67,10 +66,11 @@ export default class Settings extends React.Component {
               />
             </View>
 
-            <View style={[styles.button,{alignItems:'center'}]}><Button onPress={()=>xmpp.disconnect()}>Log out</Button></View>
+            <View style={[styles.buttons,{alignItems:'center'}]}><Button style={{color: '#ffffff'}}onPress={()=>xmpp.disconnect()}>Log out</Button></View>
             <ActivityIndicator active={xmpp.loading}/>
           </ScrollView>
         </View>
     )
   }
 }
+

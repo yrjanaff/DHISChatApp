@@ -12,6 +12,24 @@ export default class Groups extends React.Component {
     xmpp.remote = null;
   }
 
+  sortArray(array) {
+    return array.sort(function( a, b ) {
+      console.log(a);
+      console.log(b)
+      var nameA = 0;
+      var nameB = 0;
+      console.log(xmpp.mucConversation)
+      console.log(xmpp.mucConversation[a[1]])
+      console.log(xmpp.mucConversation[b[1]])
+      if(xmpp.mucConversation[a[1]] && xmpp.mucConversation[b[1]]) {
+         nameA = new Date(xmpp.mucConversation[a[0]].chat[0].date);
+         nameB = new Date(xmpp.mucConversation[b[0]].chat[0].date);
+      }
+
+      return nameB - nameA;
+    });
+  }
+
   onClick(remote){
     xmpp.setRemote(remote[0],true, remote[1]);
     xmpp.joinMuc(remote[1]);
@@ -26,14 +44,13 @@ export default class Groups extends React.Component {
   }
 
   render() {
-        return (
-        <View style={styles.container}>
-          <View>
+   let groupChats =  this.sortArray(xmpp.multiUserChat);
 
-          </View>
+        return (
+        <View style={[styles.container, {marginTop: 10}]}>
         <ScrollView  automaticallyAdjustContentInsets={true} horizontal={false} >
         {
-          xmpp.multiUserChat.map((current) => {
+          groupChats.map((current) => {
             return (
                 <TouchableHighlight style={styles.touch} underlayColor={'#ffffff'} key={current[0]} onPress={() => this.onClick(current)}>
                   <View>

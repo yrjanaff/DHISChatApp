@@ -9,7 +9,6 @@ const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 export default class ListRoster extends React.Component {
 
   sortAlphabetically(list) {
-    console.log(list)
     let keys =[];
     for (let k in list) {
         keys.push(k);
@@ -45,7 +44,7 @@ export default class ListRoster extends React.Component {
   }
 
   onClickedRow(row){
-    if(xmpp.group){
+    if(this.state.click){
      return this.state.click(row.username);
     }else{
        xmpp.setRemote(row.username)
@@ -61,8 +60,6 @@ export default class ListRoster extends React.Component {
 
   render() {
     const data = this.sortAlphabetically(this.state.roster);
-    console.log(data)
-    console.log(this.state.roster["julie@yj-dev.dhis2.org"])
     const dataSource = ds.cloneWithRows(data.map(x=>x));
     return (
           <ListView enableEmptySections

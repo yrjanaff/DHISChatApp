@@ -53,7 +53,7 @@ export default class Login extends React.Component {
                        onSubmitEditing={() => xmpp.login(this.state)}
             />
           </View>
-          <View style={styles.button}><Button style={{color: 'white'}} onPress={()=> {dismissKeyboard(); xmpp.login(this.state)}}>Login</Button></View>
+          <View style={styles.loginButton}><Button style={{color: 'white'}} onPress={()=> {dismissKeyboard(); xmpp.login(this.state)}}>Login</Button></View>
           <ActivityIndicator active={xmpp.loading}/>
 
         </View>

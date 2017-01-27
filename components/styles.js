@@ -93,7 +93,7 @@ var styles = StyleSheet.create({
     flex: 1,
     height: 30
   },
-  button: {
+  loginButton: {
     backgroundColor: '#14395F',
     padding: 15,
     borderColor: '#e3e3e3',
@@ -102,6 +102,22 @@ var styles = StyleSheet.create({
     marginTop: 20,
     borderRadius: 10,
     width: 300,
+    marginRight: 20,
+    marginLeft: 20,
+    alignSelf: 'center',
+
+  },
+
+  buttons: {
+    backgroundColor: '#1d5288',//'transparent',
+    padding: 5,
+    borderColor: 'black',
+    borderStyle:'solid',
+    borderRightWidth: 5,
+    borderBottomWidth: 5,
+    marginTop: 20,
+    borderRadius: 10,
+    width: 200,
     marginRight: 20,
     marginLeft: 20,
     alignSelf: 'center',

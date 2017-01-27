@@ -109,7 +109,10 @@ class Conversation extends React.Component {
                          disabled={!this.state.message || !this.state.message.trim() && xmpp.offlineMode}/>
             </View>
             {
-              xmpp.group ? null :
+              xmpp.group ?  <View style={styles.sendButton}>
+                    <Button  onPress={()=> {xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}}
+                             disabled={!this.state.message || !this.state.message.trim() && xmpp.offlineMode}>send</Button>
+                  </View> :
                   <View style={styles.sendButton}>
                     <Button  onPress={()=> this.setState({showImagePicker: this.state.showImagePicker ? false : true}) }
                              disabled={!xmpp.remoteOnline || xmpp.offlineMode}>
