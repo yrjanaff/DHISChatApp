@@ -18,8 +18,17 @@ export default class Settings extends React.Component {
         .then(( response ) => response.json())
         .then(( responseJson ) => {
           console.log(responseJson);
-          this.setState({firstname: responseJson.firstName, surname: responseJson.surname, education: responseJson.education, employer: responseJson.employer, jobtitle: responseJson.jobTitle,
-          email: responseJson.email, phonenumber: responseJson.phoneNumber, interests: responseJson.interests, languages: responseJson.languages});
+          this.setState({
+            firstname: responseJson.firstName,
+            surname: responseJson.surname,
+            education: responseJson.education,
+            employer: responseJson.employer,
+            jobtitle: responseJson.jobTitle,
+            email: responseJson.email,
+            phonenumber: responseJson.phoneNumber,
+            interests: responseJson.interests,
+            languages: responseJson.languages
+          });
         })
         .catch(( error ) => {
           console.error(error);
@@ -38,33 +47,34 @@ export default class Settings extends React.Component {
                   value={xmpp.offlineMode}/>
             </View>
 
-            <View style={styles.row}>
-              <TextInput style={styles.rowInput}
-                         autoCorrect={false}
-                         autoCapitalize="none"
-                         autoFocus={true}
-                         placeholder="Firstname"
-                         value={this.state.firstname}
-                         onChangeText={(firstname)=>this.setState({firstname})}
-                         onSubmitEditing={(event) => {
-                        this.refs.surname.focus();
-                     }}
-                         blurOnSubmit={false}
-              />
-            </View>
-            <View style={styles.lastRow}>
-              <TextInput style={styles.rowInput}
-                         autoCorrect={false}
-                         autoCapitalize="none"
-                         autoFocus={true}
-                         placeholder="Surname"
-                         value={this.state.surname}
-                         onChangeText={(surname)=>this.setState({surname})}
-                         onSubmitEditing={(event) => {
-                        //this.refs.Password.focus();
-                     }}
-                         blurOnSubmit={false}
-              />
+            <View>
+              <Text>Profile</Text>
+
+              <Text style={styles.rowLabel}>Firstname:</Text>
+              <View style={styles.lastRow}>
+                <TextInput style={styles.rowInput}
+                           autoCorrect={false}
+                           autoCapitalize="none"
+                           autoFocus={false}
+                           placeholder="Firstname"
+                           value={this.state.firstname}
+                           onChangeText={(firstname)=>this.setState({firstname})}
+                           blurOnSubmit={false}
+                />
+              </View>
+              
+              <Text style={styles.rowLabel}>Surname:</Text>
+              <View style={styles.lastRow}>
+                <TextInput style={styles.rowInput}
+                           autoCorrect={false}
+                           autoCapitalize="none"
+                           autoFocus={false}
+                           placeholder="Surname"
+                           value={this.state.surname}
+                           onChangeText={(surname)=>this.setState({surname})}
+                           blurOnSubmit={false}
+                />
+              </View>
             </View>
 
             <View style={[styles.button,{alignItems:'center'}]}><Button onPress={()=>xmpp.disconnect()}>Log out</Button></View>
