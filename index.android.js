@@ -67,7 +67,7 @@ var DhisChat = React.createClass({
                        }/>
                 <Scene key="groupConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar}/>
                 <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
-                <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="new conference" titleStyle={title} navigationBarStyle={navigationBar}/>
+                <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="New group" titleStyle={title} navigationBarStyle={navigationBar}/>
               </Scene>
 
               <Scene key="interpretationTab" title="Interpretations" icon={TabIcon} >
@@ -79,7 +79,7 @@ var DhisChat = React.createClass({
                       color={ xmpp.interpratationHasMuc ? 'transparent':'#ffffff'}
                   />
                 }/>
-                <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={0} title="Create a new conference" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}}/>
+                <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={0} navigationBarStyle={navigationBar} titleStyle={title} title="New group" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}}/>
                 <Scene key="intView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar}/>
               </Scene>
 

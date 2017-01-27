@@ -1,11 +1,10 @@
 import React from 'react';
-import {View, Text, TouchableHighlight, ScrollView, TextInput}  from 'react-native';
+import {View, Text, TouchableHighlight, ScrollView, TextInput, RefreshControl}  from 'react-native';
 import Button from 'react-native-button';
 import {Actions, ActionConst} from 'react-native-mobx';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
 import { getDhisHeader, dhisApiURL } from '../utils/DhisUtils';
-var btoa = require('Base64').btoa;
 import InterpretationMeta from '../utils/InterpretationMeta';
 
 let page = 1;
@@ -17,7 +16,9 @@ export default class InterpretationList extends React.Component {
 
     this.state = {
       interpretations: [],
-      search: ''
+      search: '',
+      isRefreshing: false,
+      isSearching: false
     };
 
     this.getInterpretations = this.getInterpretations.bind(this);
@@ -32,19 +33,9 @@ export default class InterpretationList extends React.Component {
         '!likes,!likedBy,!publicAccess,!translations,!userGroupAccesses,!attributeValues,!comments,user[name]', true);
   }
 
-  setInterpret( list ) {
-    //legge til i lista hvis den allerede eksisterer!
-    if( this.state.interpretations === [] ) {
-      this.setState({interpretations: list});
-    }
-    else {
-      this.setState({interpretations: this.state.interpretations.concat(list)});
-    }
-  }
-
   fetchInterpretations( args, concat ) {
     let interpretations = new Array();
-    return fetch(dhisApiURL + 'interpretations.json?page=' + page + '&pageSize=10&' + args, getDhisHeader)
+    return fetch(dhisApiURL + 'interpretations.json?page=' + page + '&pageSize=15&' + args, getDhisHeader)
         .then(( response ) => response.json())
         .then(( responseJson ) => {
           for( let i = 0; i < responseJson.interpretations.length; i++ ) {
@@ -69,15 +60,17 @@ export default class InterpretationList extends React.Component {
 
             if( type != 'reportTables' && type != 'dataset_report' ) {
               let tempInterpret = new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text, dhisApiURL + 'interpretations/' + interpretation.id,
-                  dhisApiURL + type + 's/' + typeId + '/data', null)
+                  dhisApiURL + type + 's/' + typeId + '/data', null);
               interpretations.push(tempInterpret);
               xmpp.saveInterpretation(tempInterpret);
             }
             if( i + 1 == responseJson.interpretations.length ) {
               if( this.state.interpretations === [] || !concat ) {
+                this.setState({isRefreshing: false});
                 this.setState({interpretations: interpretations});
               }
               else {
+                this.setState({isRefreshing: false});
                 this.setState({interpretations: this.state.interpretations.concat(interpretations)});
               }
 
@@ -95,7 +88,6 @@ export default class InterpretationList extends React.Component {
   }
 
   search( search ) {
-    console.log('inni serach');
     page = 1;
     this.setState({interpretations: []});
     this.fetchInterpretations('filter=text:ilike:' + search +
@@ -109,28 +101,50 @@ export default class InterpretationList extends React.Component {
         '!likes,!likedBy,!publicAccess,!translations,!userGroupAccesses,!attributeValues,!comments,user[name]', false);
   }
 
+  onRefresh(){
+    this.setState({isRefreshing: true});
+    this.loadMore();
+  }
+
   render() {
     return (
         <View style={styles.container}>
-          <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
+          <ScrollView
+              style={{flex: 1}}
+              contentInset={{bottom:49}}
+              automaticallyAdjustContentInsets={false}
+              refreshControl={
+                <RefreshControl
+                    refreshing={this.state.isRefreshing}
+                    onRefresh={() => this.onRefresh()}
+                    title="Loading interpretations..."
+                    titleColor="#00ff00"
+                    colors={['#1d5288', '#3383d4', '#215f9d']}
+                    tintColor="#EBEBEB"
+                    progressBackgroundColor="#EBEBEB"
+                />
+               }
+          >
             <View  style={{flex:1, flexDirection: 'row', borderColor: 'lightgray', borderBottomWidth: 5, marginBottom: 10}}>
 
                 <TextInput ref='newComment'
                            value={this.state.search}
-                           onChangeText={(search)=>this.setState({search})}
+                           onChangeText={(search)=>{this.setState({search}); this.setState({isSearching: true})}}
                            returnKeyType={'search'}
                            style={{height: 50,width: 400}} placeholder="Search for interpretation"
                            underlineColorAndroid="lightgray"
                            onSubmitEditing={()=>{
                               if(this.state.search !== '')
-                                this.search(this.state.search);this.setState({search:''})}
+                                this.search(this.state.search);this.setState({search:''});}
                            }
                 />
             </View>
-            <View style={{flex: 1, flexDirection: 'row',justifyContent: 'space-around', borderColor: 'lightgray', borderBottomWidth: 7, marginBottom: 10}}>
-            <View><Button style={{color: '#1d5288'}} onPress={() => this.reset()}>End search</Button></View>
-            <View><Button style={{color: '#1d5288'}} onPress={() => this.loadMore()}>Load More</Button></View>
-            </View>
+            { this.state.isSearching ?
+              <View
+                  style={{flex: 1, flexDirection: 'row',justifyContent: 'space-around', borderColor: 'lightgray', borderBottomWidth: 5, marginBottom: 10}}>
+                <View><Button style={{color: '#1d5288'}} onPress={() => {this.reset(); this.setState({isSearching: false});}}>End search</Button></View>
+              </View> : null
+            }
             {this.state.interpretations.length === 0 ? <Text style={styles.emptyResult}>No results</Text> :
               this.state.interpretations.map(( interpretation, index ) => {
               return (

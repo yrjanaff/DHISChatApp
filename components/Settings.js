@@ -9,11 +9,7 @@ var btoa = require('Base64').btoa;
 
 const dismissKeyboard = require('dismissKeyboard');
 
-const profileUpdated = 'Your profile has been updated!';
-const profileNotUpdated = 'Your profile was not updated';
-
 class Profile {
-
   constructor( firstName, surname, education, employer, jobTitle, email, phoneNumber, interests, languages ) {
     this.firstName = firstName;
     this.surname = surname;
@@ -38,7 +34,6 @@ export default class Settings extends React.Component {
     return fetch(realDhisApiURL + 'me?fields=firstName,surname,education,employer,jobTitle,email,phoneNumber, interests,languages', getDhisHeaderUser(xmpp.username, xmpp.password))
         .then(( response ) => response.json())
         .then(( responseJson ) => {
-          console.log(responseJson);
           this.setState({
             updated: '',
             firstName: responseJson.firstName,
@@ -87,16 +82,8 @@ export default class Settings extends React.Component {
   }
 
   render() {
-    console.log( this.state);
     return (
         <View style={[styles.container, {marginTop: 30}]}>
-          <View style={{flexDirection: 'row', paddingLeft: 20, justifyContent: 'space-between'}}>
-            <Text>Offline mode: </Text>
-            <Switch
-                onValueChange={(value) => xmpp.settingOfflineMode(value)}
-                style={{marginBottom: 10}}
-                value={xmpp.offlineMode}/>
-          </View>
           <ScrollView>
 
             <Text style={styles.rowLabel}>Firstname:</Text>
@@ -244,8 +231,8 @@ export default class Settings extends React.Component {
             </View>
 
             {this.state.dirty ?
-                <View style={[styles.buttons,{alignItems:'center',marginBottom: 20}]}><Button style={{color: '#ffffff'}}
-                                                                                              disabled={!this.state.dirty} onPress={()=>
+                <View style={[styles.buttons,{alignItems:'center',marginBottom: 20}]}>
+                  <Button style={{color: '#ffffff'}} disabled={!this.state.dirty} onPress={()=>
                 Alert.alert(
                   'DHIS 2',
                   'Update profile?',
@@ -258,16 +245,22 @@ export default class Settings extends React.Component {
 
             {this.state.updated === 'true' ? <Text style={{color: 'green'}}>Your DHIS2 profile was updated!</Text> : null}
             {this.state.updated === 'false' ?
-                <Text style={{color: 'red'}}>Something went wrong! Your DHIS2 profile was NOT updated!</Text> : null}
-            <View style={[styles.buttons,{alignItems:'center', marginBottom: 20}]}><Button style={{color: '#ffffff'}}
-                                                                                           onPress={()=>xmpp.disconnect()}>Log
-              out</Button></View>
+                <Text style={{color: 'red'}}>Something went wrong. Your DHIS2 profile was NOT updated.</Text> : null}
+
+
+            <View style={{flexDirection: 'row', paddingLeft: 20, justifyContent: 'space-between'}}>
+              <Text>Offline mode: </Text>
+              <Switch
+                  onValueChange={(value) => xmpp.settingOfflineMode(value)}
+                  style={{marginBottom: 10}}
+                  value={xmpp.offlineMode}/>
+            </View>
+            <View style={[styles.buttons,{alignItems:'center', marginBottom: 20}]}>
+              <Button style={{color: '#ffffff'}} onPress={()=>xmpp.disconnect()}>Log Out</Button>
+            </View>
+
           </ScrollView>
           <ActivityIndicator active={xmpp.loading}/>
-
-          {}
-
-
         </View>
     )
   }
