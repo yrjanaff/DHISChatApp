@@ -76,7 +76,7 @@ var DhisChat = React.createClass({
                 <Scene key="intView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar}/>
               </Scene>
 
-              <Scene key="settings" title="Settings" component={Settings} icon={TabIcon} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar}/>
+              <Scene key="settings" title="Profile" component={Settings} icon={TabIcon} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar}/>
 
             </Scene>
 
