@@ -32,7 +32,7 @@ var DhisChat = React.createClass({
   render: function() {
     return (
         <Router>
-          <Scene key="root" component={Switch} type={ActionConst.RESET}  tabs selector={()=>!xmpp.logged ? 'login' : 'tabbar'}>
+          <Scene key="root" component={Switch} type={ActionConst.RESET}  tabs selector={()=>!xmpp.logged ? 'login' : 'tabbar'} >
             <Scene key="login" component={Login} title="Login" hideNavBar={true}/>
 
             <Scene key="tabbar" tabs={true} >
@@ -44,16 +44,15 @@ var DhisChat = React.createClass({
                       color='#ffffff'
                   />
                 } duration={0}  titleStyle={title} navigationBarStyle={navigationBar}/>
-                <Scene key="newChat" component={ChatCreater} hideTabBar duration={0} title="Create a new chat"  titleStyle={title} navigationBarStyle={navigationBar}
-                     />
-                <Scene key="conversation" component={Conversation} hideTabBar duration={0} titleStyle={title} navigationBarStyle={navigationBar} onBack={() => {Actions.chat({type:ActionConst.RESET})}}/>
-                <Scene key="conView" component={ImageViewer} hideTabBar duration={0} title="Zoom"/>
+                <Scene key="newChat" component={ChatCreater} hideTabBar duration={0} title="Create a new chat"  titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')}/>
+                <Scene key="conversation" component={Conversation} hideTabBar duration={0} titleStyle={title} navigationBarStyle={navigationBar} onBack={() => {Actions.chat({type:ActionConst.RESET})}} backButtonImage={require('./image/back_chevron.png')}/>
+                <Scene key="conView" component={ImageViewer} hideTabBar duration={0} title="Zoom" backButtonImage={require('./image/back_chevron.png')}/>
               </Scene>
 
               <Scene key="contactsTab" title="Contacts" icon={TabIcon}>
                 <Scene key="contacts" title="Contacts" duration={0} component={Roster}  hideBackImage titleStyle={title} navigationBarStyle={navigationBar}
                        onBack={() => null}/>
-                <Scene key="contactsConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.contacts({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar}/>
+                <Scene key="contactsConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.contacts({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')}/>
               </Scene>
 
               <Scene key="groupTab" title="Groups" icon={TabIcon}>
@@ -71,10 +70,10 @@ var DhisChat = React.createClass({
                       name='people'
                       color='#ffffff'
                   />
-                }/>
-                <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0} titleStyle={title} navigationBarStyle={navigationBar}/>
-                <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="New group" titleStyle={title} navigationBarStyle={navigationBar}/>
-                <Scene key="mucIntView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar}/>
+                } backButtonImage={require('./image/back_chevron.png')}/>
+                <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0} titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')}/>
+                <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="New group" titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')}/>
+                <Scene key="mucIntView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')}/>
               </Scene>
 
               <Scene key="interpretationTab" title="Interpretations" icon={TabIcon} >
@@ -85,9 +84,9 @@ var DhisChat = React.createClass({
                       name='add-box'
                       color={ xmpp.interpratationHasMuc ? 'transparent':'#ffffff'}
                   />
-                }/>
-                <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={0} navigationBarStyle={navigationBar} titleStyle={title} title="New group" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}}/>
-                <Scene key="intView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar}/>
+                } backButtonImage={require('./image/back_chevron.png')}/>
+                <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={0} navigationBarStyle={navigationBar} titleStyle={title} title="New group" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}} backButtonImage={require('./image/back_chevron.png')}/>
+                <Scene key="intView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')}/>
               </Scene>
 
               <Scene key="settings" title="Profile" component={Settings} icon={TabIcon} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar} onRight={()=>xmpp.disconnect()} rightTitle={
