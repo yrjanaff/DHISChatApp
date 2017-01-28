@@ -95,15 +95,17 @@ export default class Chats extends React.Component {
               {
                this.state.people.map((remote) => {
                       return (
-                            <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={remote} onPress={() => this.onClick(remote)}>
-                              <View>
-                              <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
+                            <TouchableHighlight underlayColor={'#d3d3d3'} key={remote} onPress={() => this.onClick(remote)}>
+                              <View style={{flex:1, flexDirection: 'column', borderColor: 'lightgray', borderBottomWidth: 0.5, marginBottom: 10}}>
+                              <View style={{flexDirection:'row', justifyContent: 'space-between', marginLeft: 10}}>
                                 <Text style={[{fontSize: 20},{fontWeight: xmpp.unSeenNotifications.Chats.indexOf(remote) > -1 ? 'bold': 'normal' }]}>{this.prettifyUsername(remote)}</Text>
                                 <Text style={styles.dateColor}>{this.formatDate(xmpp.conversation[remote].chat[0].date)}</Text>
                               </View>
-                                {
-                                  this.prevMessage(xmpp.conversation[remote].chat[0].text, xmpp.conversation[remote].chat[0].image)
-                                }
+                                  <Text style={{marginLeft:10, marginBottom: 5}}>
+                                    {
+                                      this.prevMessage(xmpp.conversation[remote].chat[0].text, xmpp.conversation[remote].chat[0].image)
+                                    }
+                                  </Text>
                               </View>
                             </TouchableHighlight>
                       );
