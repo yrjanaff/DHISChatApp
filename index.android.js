@@ -16,6 +16,7 @@ import Interpretation from './components/Interpretation';
 import ImageViewer from './components/ImageViewer';
 import xmpp from './utils/XmppStore';
 import {Icon } from 'react-native-material-design';
+import GroupConversation from './components/GroupConversation';
 
 const title={color: 'white', fontSize: 20};
 const navigationBar={
@@ -65,7 +66,12 @@ var DhisChat = React.createClass({
                              color='#ffffff'
                          />
                        }/>
-                <Scene key="groupConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar}/>
+                <Scene key="groupConversation" component={GroupConversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar} onRight={() => xmpp.drawerOpen = true} rightTitle={
+                  <Icon
+                      name='people'
+                      color='#ffffff'
+                  />
+                }/>
                 <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0} titleStyle={title} navigationBarStyle={navigationBar}/>
                 <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="New group" titleStyle={title} navigationBarStyle={navigationBar}/>
                 <Scene key="mucIntView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar}/>
@@ -84,7 +90,12 @@ var DhisChat = React.createClass({
                 <Scene key="intView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar}/>
               </Scene>
 
-              <Scene key="settings" title="Profile" component={Settings} icon={TabIcon} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar}/>
+              <Scene key="settings" title="Profile" component={Settings} icon={TabIcon} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar} onRight={()=>xmpp.disconnect()} rightTitle={
+                <Icon
+                    name='exit-to-app'
+                    color='#ffffff'
+                />
+              }/>
 
             </Scene>
 

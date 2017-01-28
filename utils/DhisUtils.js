@@ -53,7 +53,6 @@ export const getDhisHeader = () =>
 
 export const getDhisHeaderUser = (username, password) =>
 {
-  console.log(username + ' ' + password);
   return {
     method: 'GET',
     headers: {

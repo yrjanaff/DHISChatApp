@@ -1,6 +1,5 @@
 import XMPP from './CallbackHandler';
-//const DOMAIN = "yj-dev.dhis2.org";
-const DOMAIN ='1x-193-157-188-65.uio.no';
+const DOMAIN = "yj-dev.dhis2.org";
 
 import {observable} from 'mobx';
 import autobind from 'autobind';
@@ -34,6 +33,7 @@ class XmppStore {
     @observable interpretations = {};
     @observable lastActive = null;
     @observable interpratationHasMuc = false;
+    @observable drawerOpen = false;
 
 
   constructor() {
@@ -163,8 +163,6 @@ class XmppStore {
   }
 
   setCurrentInterpretation(interpretation){
-    console.log('setter current!!');
-    console.log(interpretation);
     this.currentInterpretation = interpretation;
   }
 
@@ -243,7 +241,6 @@ class XmppStore {
   onFetchedRoster(rosterList){
     this.roster =  rosterList;
     this.isRemoteOnline();
-    console.log(rosterList)
   }
 
   isRemoteOnline(){
@@ -257,7 +254,7 @@ class XmppStore {
   }
 
   onDisconnect(message){
-    Actions.chat()
+
   }
 
   onLogin(){
@@ -301,8 +298,9 @@ class XmppStore {
 
   disconnect() {
     XMPP.disconnect();
-    this.logged = false;
+    Actions.chatTab()
     AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {lastActive: new Date()})));
+    this.logged = false;
   }
 
   createConference(chatName, subject, participants, from) {

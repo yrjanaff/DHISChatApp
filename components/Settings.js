@@ -57,7 +57,6 @@ export default class Settings extends React.Component {
     this.setState({updated: ''});
     let profile = new Profile(this.state.firstName, this.state.surname, this.state.education, this.state.employer, this.state.jobTitle,
         this.state.email, this.state.phoneNumber, this.state.interests, this.state.languages);
-    console.log(JSON.stringify(profile));
     return fetch(realDhisApiURL + 'me/user-account', {
       method: 'POST',
       headers: {
@@ -67,12 +66,11 @@ export default class Settings extends React.Component {
       body: JSON.stringify(profile)
     })
         .then(( response ) => {
-          console.log(response.status);
           if( response.status === 200 ) {
             ToastAndroid.show('Profile updated', ToastAndroid.SHORT)
           }
           else {
-            ToastAndroid.show('Profile not updated', ToastAndroid.SHORT)
+            ToastAndroid.show('Profile not updated', ToastAndroid.Long)
           }
         })
         .catch(( error ) => {
@@ -242,17 +240,6 @@ export default class Settings extends React.Component {
                   ]
                )}>Update profile</Button></View>
                 : null}
-            <View style={{flexDirection: 'row', paddingLeft: 20, justifyContent: 'space-between'}}>
-              <Text>Offline mode: </Text>
-              <Switch
-                  onValueChange={(value) => xmpp.settingOfflineMode(value)}
-                  style={{marginBottom: 10}}
-                  value={xmpp.offlineMode}/>
-            </View>
-            <View style={[styles.buttons,{alignItems:'center', marginBottom: 20}]}>
-              <Button style={{color: '#ffffff'}} onPress={()=>xmpp.disconnect()}>Log Out</Button>
-            </View>
-
           </ScrollView>
           <ActivityIndicator active={xmpp.loading}/>
         </View>

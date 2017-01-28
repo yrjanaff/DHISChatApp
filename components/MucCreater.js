@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text,View, TextInput,ScrollView, findNodeHandle, Keyboard}  from 'react-native';
+import {Text,View, TextInput,ScrollView, findNodeHandle, Keyboard, ToastAndroid}  from 'react-native';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
 import Button from 'react-native-button';
@@ -76,6 +76,19 @@ export default class MucCreater extends React.Component {
 
   }
 
+  onClick(){
+    if(xmpp.mucConversation[this.state.name]){
+      ToastAndroid.show('Group already exist', ToastAndroid.LONG)
+    }else{
+      xmpp.createInterpretationMuc = false
+      xmpp.createConference(this.state.name, xmpp.mucSubject, xmpp.newMucParticipants, this.state.username);
+      this.setState({topic:'', name:''});
+      Actions.pop();
+      Actions.groupTab();
+      Actions.groupConversation()
+    }
+  }
+
   setMucFill(){
     if(xmpp.createInterpretationMuc) {
       xmpp.mucSubject = xmpp.currentInterpretation.url;
@@ -116,7 +129,7 @@ export default class MucCreater extends React.Component {
           <View style={ xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1 ? styles.disabled :styles.buttons}>
           <Button style={{color: '#ffffff'}} disabled={
             xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1
-          } onPress={()=> {{xmpp.createInterpretationMuc = false} xmpp.createConference(this.state.name, xmpp.mucSubject, xmpp.newMucParticipants, this.state.username); this.setState({topic:'', name:''}); Actions.pop(); Actions.groupTab(); Actions.groupConversation()} }>Create group</Button>
+          } onPress={()=> this.onClick()}>Create group</Button>
           </View>
         </View>
     );
