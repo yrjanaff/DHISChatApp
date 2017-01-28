@@ -108,7 +108,7 @@ var styles = StyleSheet.create({
   },
 
   buttons: {
-    backgroundColor: '#1d5288',//'transparent',
+    backgroundColor: '#1d5288',
     padding: 5,
     borderColor: 'black',
     borderStyle:'solid',
@@ -121,6 +121,15 @@ var styles = StyleSheet.create({
     marginLeft: 20,
     alignSelf: 'center',
 
+  },
+  disabled:{
+    backgroundColor: '#1d528840',
+    padding: 5,
+    marginTop: 20,
+    width: 200,
+    marginRight: 20,
+    marginLeft: 20,
+    alignSelf: 'center',
   },
   sendButton: {
     justifyContent: 'center',
