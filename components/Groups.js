@@ -60,23 +60,25 @@ export default class Groups extends React.Component {
             {
               groupChats.map((current) => {
                 return (
-                    <TouchableHighlight style={styles.touch} underlayColor={'#ffffff'} key={current[0]} onPress={() => this.onClick(current)}>
-                      <View>
+                    <TouchableHighlight underlayColor={'#ffffff'} key={current[0]} onPress={() => this.onClick(current)}>
+                      <View style={{flex:1, flexDirection: 'column', borderColor: 'lightgray', borderBottomWidth: 0.5, marginBottom: 10}}>
                         <View style={{flexDirection: 'row', justifyContent:'space-between'}}>
-                          <Text style={[{fontSize: 18},{fontWeight: xmpp.unSeenNotifications.Groups.indexOf(current[0]) > -1 ? 'bold': 'normal' }]}>{current[0]}</Text>
+                          <Text style={[{fontSize: 18, marginLeft: 10},{fontWeight: xmpp.unSeenNotifications.Groups.indexOf(current[0]) > -1 ? 'bold': 'normal' }]}>{current[0]}</Text>
                           <View style={{flexDirection: 'row'}}>
-                          {current[2] ?
-                              <Icon name="insert-chart" color="#5E5E5E"/>
-                              : null
-                          }
-                          <Icon name="people-outline" color="#276696" size={18} style={{marginTop: 3, marginRight: 3}}/>
-                            <Text style={{fontSize: 18, paddingRight: 7}}>{current[3]}</Text>
+                            <Icon name="people-outline" color="#1d5288" size={18} style={{marginTop: 2, marginRight: 3}}/>
+                            <Text style={{fontSize: 16, paddingRight: 7}}>{current[3]}</Text>
                           </View>
                         </View>
-                        {
-                          xmpp.mucConversation[current[0]] ?
-                          <Text>{xmpp.mucConversation[current[0]].chat[0].from.split('@')[0]}: {this.prevMessage(xmpp.mucConversation[current[0]].chat[0].text)}</Text>: null
-                        }
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                          {
+                            xmpp.mucConversation[current[0]] ?
+                                <Text style={{marginLeft: 10, marginBottom: 5}}>{xmpp.mucConversation[current[0]].chat[0].from.split('@')[0]}: {this.prevMessage(xmpp.mucConversation[current[0]].chat[0].text)}</Text>: null
+                          }
+                          {current[2] ?
+                              <Icon name="equalizer" color="#1d528899" size={20} style={{marginRight: 20, marginBottom: 5}}/>
+                              : null
+                          }
+                        </View>
                       </View>
                     </TouchableHighlight>
                 );
