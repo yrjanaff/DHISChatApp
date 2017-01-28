@@ -28,15 +28,28 @@ export default class Groups extends React.Component {
   }
 
   onClick(remote){
+    xmpp.remoteMuc = [];
     xmpp.setRemote(remote[0],true, remote[1]);
     xmpp.joinMuc(remote[1]);
 
     xmpp.unSeenNotifications.Groups = xmpp.unSeenNotifications.Groups.filter( notification => notification !== remote[0]);
 
     if(remote[2]){
-      xmpp.setCurrentInterpretation(xmpp.interpretations[remote[2]]);
-    }
 
+      console.log(remote[0] + '   ' + remote[2]);
+      console.log(xmpp.interpretations[remote[2]]);
+      if(xmpp.interpretations[remote[2]]){
+        xmpp.setCurrentInterpretation(xmpp.interpretations[remote[2]]);
+        xmpp.remoteMuc.push(remote[0]);
+        xmpp.remoteMuc.push(remote[2]);
+      }
+      else{
+        xmpp.fetchInterpretationForMuc(remote[2], remote[0]);
+        xmpp.remoteMuc.push(remote[0]);
+        xmpp.remoteMuc.push(remote[2]);
+      }
+    }
+    
     Actions.groupConversation();
   }
 

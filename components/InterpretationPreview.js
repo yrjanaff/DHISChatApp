@@ -15,11 +15,17 @@ export default class InterpretationPreview extends React.Component {
   }
   
   render(){
-    if(xmpp.remote === xmpp.currentInterpretation.conversationName){
+    console.log(xmpp.remote)
+    console.log(xmpp.currentInterpretation)
+
+    console.log(xmpp.remoteMuc);
+    let intUrl = xmpp.remoteMuc[1];
+
+    if(xmpp.remote === xmpp.remoteMuc[0] && xmpp.remoteMuc[1].indexOf(xmpp.currentInterpretation.id) != -1){
+      console.log('kom gjennom iffen!');
       return (
-          <View>
-        <TouchableHighlight onPress={() => {xmpp.interpratationHasMuc = true; Actions.mucInterpretation({isMuc: true})} }>
-          <View>
+        <TouchableHighlight onPress={() => {xmpp.interpratationHasMuc = true; Actions.mucInterpretation({isMuc: true})}} style={{borderBottomColor:'lightgray', borderBottomWidth: 4, paddingBottom:20}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 20}}>
             <Image
                 source={{
                             uri: xmpp.currentInterpretation.imageURL,
@@ -28,13 +34,16 @@ export default class InterpretationPreview extends React.Component {
                 style={{
                             width: 100,
                             height: 100,
-                            alignSelf: 'center'
+                            alignSelf: 'flex-end',
+                            backgroundColor: '#f3f3f3',
+                            marginLeft: 10,
+                            marginRight: 10
                    }}
             />
-            <Text>{ xmpp.currentInterpretation.text}</Text>
+            <Text style={{flex: 1, marginRight: 10}}>{xmpp.currentInterpretation.text.slice(0,240).concat('...')}</Text>
           </View>
         </TouchableHighlight>
-      </View>)
+      )
     }else{
       return null;
     }

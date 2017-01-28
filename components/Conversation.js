@@ -19,6 +19,7 @@ class Conversation extends React.Component {
     if(!xmpp.group) {
       return xmpp.roster[xmpp.remote].displayName;
     }else{
+      console.log(xmpp.remote);
       return xmpp.remote.split('@')[0];
     }
 
@@ -65,7 +66,7 @@ class Conversation extends React.Component {
     }
     let isSent = xmpp.currentFileSent;
     return (
-        <View style={styles.containerNoTabs}>
+        <View style={[styles.containerNoTabs,{paddingTop:50}]}>
          <InterpretationPreview />
           <View style={{flex:1}}>
             <ListView enableEmptySections
@@ -106,9 +107,7 @@ class Conversation extends React.Component {
                          onChangeText={(message)=>this.setState({message})}
                          autoCapitalize={'sentences'}
                          returnKeyType={'done'}
-                         style={styles.message} placeholder="Enter message..."
-                         onSubmitEditing={() => {xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}}
-                         disabled={!this.state.message || !this.state.message.trim() && xmpp.offlineMode}/>
+                         style={styles.message} placeholder="Enter message..."/>
             </View>
             {
               xmpp.group ?  <View style={styles.sendButton}>

@@ -61,6 +61,7 @@ class XmppStore {
         this.retryPicture = null;
         this.createInterpretationMuc = false;
         this.mucSubject = null;
+        this.remoteMuc = [];
     }
 
   saveInterpretation(interpretation){
@@ -68,6 +69,7 @@ class XmppStore {
       this.interpretations = Object.assign({}, this.interpretations, {[interpretation.url]: {id: interpretation.id, name: interpretation.name,
         text: interpretation.text, comments: [], imageURL: interpretation.imageURL, conversationName: interpretation.conversationName}});
     }
+    this.setCurrentInterpretation(this.interpretations[interpretation.url]);
   }
 
   updateInterpretationComments(comments, url) {
@@ -160,6 +162,8 @@ class XmppStore {
   }
 
   setCurrentInterpretation(interpretation){
+    console.log('setter current!!');
+    console.log(interpretation);
     this.currentInterpretation = interpretation;
   }
 
@@ -301,7 +305,7 @@ class XmppStore {
   }
 
   createConference(chatName, subject, participants, from) {
-
+    this.remoteMuc = [];
     this.setRemote(chatName.toLowerCase(),true,chatName+'@conference.' +DOMAIN)
     this.multiUserChat = this.multiUserChat.concat([[chatName.toLowerCase(), chatName+'@conference.' +DOMAIN, subject, participants.length]]);
     XMPP.createConference(chatName.toLowerCase(), subject, participants, from);
@@ -309,6 +313,8 @@ class XmppStore {
     if(subject){
       this.interpretations[subject].conversationName = chatName;
       this.setCurrentInterpretation(this.interpretations[subject]);
+      this.remoteMuc.push(chatName);
+      this.remoteMuc.push(subject);
     }
   }
 
