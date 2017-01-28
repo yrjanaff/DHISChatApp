@@ -93,7 +93,7 @@ export default class MucCreater extends React.Component {
           <View  style={{flex:0, flexDirection: 'row', borderColor: 'lightgray', marginTop: 10,borderBottomWidth: 3}}>
             <Text style={{fontSize: 16, color: 'darkgray', marginTop:10 }}>NAME:</Text>
           <TextInput
-              style={{height: 40, width:300, borderColor: 'gray', borderWidth: 1}}
+              style={{height: 40, flex:1, borderColor: 'gray', borderWidth: 1}}
               onChangeText={(name) => this.setState({name})}
               value={this.state.name}
               underlineColorAndroid="transparent"
@@ -103,7 +103,7 @@ export default class MucCreater extends React.Component {
             <View  style={{flex:0, flexDirection: 'row', borderColor: 'lightgray', borderBottomWidth: 7, marginBottom: 10}}>
               <Text style={{fontSize: 16, color: 'darkgray', marginTop:20 }}>TO:</Text>
             <TextInput
-                style={{height: 60,width: 300,borderColor: 'gray', borderWidth: 1}}
+                style={{height: 60,flex:1,borderColor: 'gray', borderWidth: 1}}
                 onChangeText={(participants) => this.foundMatch(participants)}
                 value={val}
                 underlineColorAndroid="transparent"
@@ -113,7 +113,7 @@ export default class MucCreater extends React.Component {
           <View style={{flex:1}}>
             <ListRoster roster={this.state.dataSource} clicked={this.updateParticipants}/>
           </View>
-          <View style={styles.buttons}>
+          <View style={ xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1 ? styles.disabled :styles.buttons}>
           <Button style={{color: '#ffffff'}} disabled={
             xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1
           } onPress={()=> {{xmpp.createInterpretationMuc = false} xmpp.createConference(this.state.name, xmpp.mucSubject, xmpp.newMucParticipants, this.state.username); this.setState({topic:'', name:''}); Actions.pop(); Actions.groupTab(); Actions.groupConversation()} }>Create group</Button>

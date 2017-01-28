@@ -35,7 +35,7 @@ export default class ChatCreater extends React.Component {
           <View  style={{flex:0, flexDirection: 'row', borderColor: 'lightgray', borderBottomWidth: 7}}>
             <Text style={{fontSize: 20, color: 'darkgray', marginTop:5 }}>TOO:</Text>
             <TextInput
-              style={{height:40, width: 300}}
+              style={{height:40, flex:1}}
               onChangeText={(text) => {this.setState({text});this.foundMatch(text)}}
               value={this.state.text}
               underlineColorAndroid="#ffffff"

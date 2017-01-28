@@ -109,20 +109,21 @@ class Conversation extends React.Component {
                          returnKeyType={'done'}
                          style={styles.message} placeholder="Enter message..."/>
             </View>
+            <View style={styles.sendButton}>
+              <Button  onPress={()=> {xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}}
+                       disabled={!this.state.message || !this.state.message.trim() && xmpp.offlineMode}
+                       style={{color: !this.state.message || !this.state.message.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>Send</Button>
+            </View>
             {
-              xmpp.group ?  <View style={styles.sendButton}>
-                    <Button  onPress={()=> {xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}}
-                             disabled={!this.state.message || !this.state.message.trim() && xmpp.offlineMode}
-                             style={{color: !this.state.message || !this.state.message.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>send</Button>
-                  </View> :
-                  <View style={styles.sendButton}>
+              xmpp.group ? null :
+                  <View style={{ justifyContent: 'center'}}>
                     <Button  onPress={()=> this.setState({showImagePicker: this.state.showImagePicker ? false : true}) }
                              disabled={!xmpp.remoteOnline || xmpp.offlineMode}>
                       <Icon
                         name="local-see"
                         color={!xmpp.remoteOnline || xmpp.offlineMode ? '#5E5E5E50':'#5E5E5E'}
-                        style={{marginLeft: 20}}
-                        size={40}
+                        style={{marginRight: 10}}
+                        size={20}
                     /></Button>
                   </View>
             }

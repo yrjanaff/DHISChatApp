@@ -125,13 +125,13 @@ export default class InterpretationList extends React.Component {
                 />
                }
           >
-            <View  style={{flex:1, flexDirection: 'row', borderColor: 'lightgray', borderBottomWidth: 5, marginBottom: 10}}>
+            <View  style={{flex:1, flexDirection: 'row', justifyContent: 'space-between', borderColor: 'lightgray', borderBottomWidth: 5, marginBottom: 10}}>
 
                 <TextInput ref='newComment'
                            value={this.state.search}
                            onChangeText={(search)=>{this.setState({search}); this.setState({isSearching: true})}}
                            returnKeyType={'search'}
-                           style={{height: 50, width: 340}} placeholder="Search for interpretation"
+                           style={{height: 50,  flex:1}} placeholder="Search for interpretation"
                            underlineColorAndroid="transparent"
                            onSubmitEditing={()=>{
                               if(this.state.search !== '')
