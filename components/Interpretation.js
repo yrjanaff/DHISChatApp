@@ -8,7 +8,7 @@ import Button from 'react-native-button';
 import {Actions} from 'react-native-mobx';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
-import { dhisApiURL, getDhisImageHeader, getDhisHeader, postDhisHeader } from '../utils/DhisUtils';
+import {dhisApiURL, getDhisImageHeader, getDhisHeader, postDhisHeader} from '../utils/DhisUtils';
 var btoa = require('Base64').btoa;
 
 let intId = null;
@@ -44,7 +44,7 @@ export default class Interpretation extends React.Component {
             ToastAndroid.show('Comment was posted', ToastAndroid.SHORT)
             this.getComments();
           }
-          else{
+          else {
             console.log("ERROR!");
             console.log(responseJson);
             ToastAndroid.show('Access denied', ToastAndroid.SHORT)
@@ -78,33 +78,36 @@ export default class Interpretation extends React.Component {
     return (
         <View style={styles.containerNoTabs}>
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
-            <Text style={{textAlign: 'center', fontSize: 20}}>{xmpp.currentInterpretation.text}</Text>
+            <View style={{flex:1, flexDirection: 'column', borderColor: 'lightgray', borderBottomWidth: 1, marginBottom: 20}}>
+              <Text style={{textAlign: 'center', fontSize: 17, marginBottom: 10}}>{xmpp.currentInterpretation.text}</Text>
+            </View>
             <TouchableHighlight onPress={() => Actions.intView({path: xmpp.currentInterpretation.imageURL, header: getDhisHeader })}>
-            <Image
-                source={{
+              <Image
+                  source={{
                           uri: xmpp.currentInterpretation.imageURL,
                           headers: getDhisImageHeader
                         }}
-                style={{
+                  style={{
                           width: 300,
                           height: 300,
                           alignSelf: 'center'
                  }}
-            />
+              />
             </TouchableHighlight>
             <View>
               <Text style={[styles.bold,{fontSize: 18}]}>Comments:</Text>
-               {
-                 this.state.comments.length !== 0 ?
-                     this.state.comments.map(( comment, index ) => {
-                        return (
-                            <View key={index}>
-                              <Text style={styles.bold}>{comment.user.name}</Text>
-                              <Text>{comment.text}</Text>
-                            </View>
-                        );})
-                     : <Text style={[styles.emptyResult]}>No comments</Text>
-               }
+              {
+                this.state.comments.length !== 0 ?
+                    this.state.comments.map(( comment, index ) => {
+                      return (
+                          <View key={index}>
+                            <Text style={styles.bold}>{comment.user.name}</Text>
+                            <Text>{comment.text}</Text>
+                          </View>
+                      );
+                    })
+                    : <Text style={[styles.emptyResult]}>No comments</Text>
+              }
 
             </View>
           </ScrollView>
@@ -112,7 +115,7 @@ export default class Interpretation extends React.Component {
           <View style={[styles.messageBar]}>
             <View style={{flex:1}}>
               <TextInput ref='newComment'
-                         multiline = {true}
+                         multiline={true}
                          value={this.state.newComment}
                          onChangeText={(newComment)=>this.setState({newComment})}
                          returnKeyType={'send'}
@@ -121,12 +124,12 @@ export default class Interpretation extends React.Component {
               />
             </View>
             <View style={styles.sendButton}>
-              <Button  onPress={()=> {
+              <Button onPress={()=> {
                     if( this.state.newComment !== '')
                       this.submitComment(this.state.newComment);this.setState({newComment:''})
                     }}
-                       disabled={!this.state.newComment || !this.state.newComment.trim() && xmpp.offlineMode}
-                       style={{color: !this.state.newComment || !this.state.newComment.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>post</Button>
+                      disabled={!this.state.newComment || !this.state.newComment.trim() && xmpp.offlineMode}
+                      style={{color: !this.state.newComment || !this.state.newComment.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>Post</Button>
             </View>
 
           </View>
