@@ -61,7 +61,7 @@ export default class InterpretationList extends React.Component {
             if( type != 'reportTables' && type != 'dataset_report' ) {
               let tempInterpret = new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text, dhisApiURL + 'interpretations/' + interpretation.id,
                   dhisApiURL + type + 's/' + typeId + '/data', null);
-              interpretations.push(tempInterpret);
+              interpretations.unshift(tempInterpret);
               xmpp.saveInterpretation(tempInterpret);
             }
             if( i + 1 == responseJson.interpretations.length ) {
@@ -71,7 +71,7 @@ export default class InterpretationList extends React.Component {
               }
               else {
                 this.setState({isRefreshing: false});
-                this.setState({interpretations: this.state.interpretations.concat(interpretations)});
+                this.setState({interpretations: interpretations.concat(this.state.interpretations)});
               }
 
             }
@@ -131,30 +131,41 @@ export default class InterpretationList extends React.Component {
                            value={this.state.search}
                            onChangeText={(search)=>{this.setState({search}); this.setState({isSearching: true})}}
                            returnKeyType={'search'}
-                           style={{height: 50,width: 400}} placeholder="Search for interpretation"
+                           style={{height: 50, width: 340}} placeholder="Search for interpretation"
                            underlineColorAndroid="lightgray"
                            onSubmitEditing={()=>{
                               if(this.state.search !== '')
-                                this.search(this.state.search);this.setState({search:''});}
+                                this.search(this.state.search);}
                            }
+                           underlineColorAndroid="transparent"
                 />
+              <View style={styles.sendButton}>
+                <Button  onPress={()=> {
+                    if( this.state.search !== '')
+                      this.search(this.state.search);
+                    }}
+                         disabled={!this.state.search || !this.state.search.trim() && xmpp.offlineMode}
+                         style={{color: !this.state.search || !this.state.search.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>Search</Button>
+              </View>
+              
             </View>
-            { this.state.isSearching ?
+            { this.state.search !== '' ?
               <View
                   style={{flex: 1, flexDirection: 'row',justifyContent: 'space-around', borderColor: 'lightgray', borderBottomWidth: 5, marginBottom: 10}}>
-                <View><Button style={{color: '#1d5288'}} onPress={() => {this.reset(); this.setState({isSearching: false});}}>End search</Button></View>
+                <View><Button style={{color: '#1d5288'}} onPress={() => {this.reset(); this.setState({search:''});}}>End search</Button></View>
               </View> : null
             }
             {this.state.interpretations.length === 0 ? <Text style={styles.emptyResult}>No results</Text> :
               this.state.interpretations.map(( interpretation, index ) => {
               return (
                   <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={index}
-                                      onPress={() => {Actions.interpretation();
+                                      onPress={() => {
                                         xmpp.interpratationHasMuc = false;
-                                      xmpp.setCurrentInterpretation(interpretation)}}>
-                    <View key={index}>
+                                      xmpp.setCurrentInterpretation(interpretation);
+                                      Actions.interpretation();}}>
+                    <View key={index} style={{flex:1, flexDirection: 'column', borderBottomColor: 'lightgray', borderBottomWidth: 0.5, marginBottom: 10 }}>
                       <Text style={[styles.bold,{fontSize: 18}]}>{interpretation.name}</Text>
-                      <Text>
+                      <Text style={{marginBottom: 10}}>
                         {interpretation.text}
                       </Text>
                     </View>

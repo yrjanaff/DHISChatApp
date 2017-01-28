@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert, View, Text, Switch, ScrollView, TextInput}  from 'react-native';
+import {Alert, View, Text, Switch, ScrollView, TextInput, ToastAndroid}  from 'react-native';
 import styles from './styles';
 import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';
@@ -69,10 +69,10 @@ export default class Settings extends React.Component {
         .then(( response ) => {
           console.log(response.status);
           if( response.status === 200 ) {
-            this.setState({updated: 'true'});
+            ToastAndroid.show('Profile updated', ToastAndroid.SHORT)
           }
           else {
-            this.setState({updated: 'false'});
+            ToastAndroid.show('Profile not updated', ToastAndroid.SHORT)
           }
         })
         .catch(( error ) => {
@@ -242,12 +242,6 @@ export default class Settings extends React.Component {
                   ]
                )}>Update profile</Button></View>
                 : null}
-
-            {this.state.updated === 'true' ? <Text style={{color: 'green'}}>Your DHIS2 profile was updated!</Text> : null}
-            {this.state.updated === 'false' ?
-                <Text style={{color: 'red'}}>Something went wrong. Your DHIS2 profile was NOT updated.</Text> : null}
-
-
             <View style={{flexDirection: 'row', paddingLeft: 20, justifyContent: 'space-between'}}>
               <Text>Offline mode: </Text>
               <Switch
