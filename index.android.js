@@ -66,8 +66,9 @@ var DhisChat = React.createClass({
                          />
                        }/>
                 <Scene key="groupConversation" component={Conversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar}/>
-                <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0}/>
+                <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0} titleStyle={title} navigationBarStyle={navigationBar}/>
                 <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="New group" titleStyle={title} navigationBarStyle={navigationBar}/>
+                <Scene key="mucIntView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar}/>
               </Scene>
 
               <Scene key="interpretationTab" title="Interpretations" icon={TabIcon} >
