@@ -133,7 +133,7 @@ var styles = StyleSheet.create({
   },
   sendButton: {
     justifyContent: 'center',
-    width: 80
+    marginRight: 10
   },
   navBar: {
     backgroundColor: '#0db0d9'

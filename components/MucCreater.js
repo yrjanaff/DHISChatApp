@@ -93,7 +93,7 @@ export default class MucCreater extends React.Component {
           <View  style={{flex:0, flexDirection: 'row', borderColor: 'lightgray', marginTop: 10,borderBottomWidth: 3}}>
             <Text style={{fontSize: 16, color: 'darkgray', marginTop:10 }}>NAME:</Text>
           <TextInput
-              style={{height: 40, width:300, borderColor: 'gray', borderWidth: 1}}
+              style={{height: 40, flex:1, borderColor: 'gray', borderWidth: 1}}
               onChangeText={(name) => this.setState({name})}
               value={this.state.name}
               underlineColorAndroid="transparent"
@@ -103,7 +103,7 @@ export default class MucCreater extends React.Component {
             <View  style={{flex:0, flexDirection: 'row', borderColor: 'lightgray', borderBottomWidth: 7, marginBottom: 10}}>
               <Text style={{fontSize: 16, color: 'darkgray', marginTop:20 }}>TO:</Text>
             <TextInput
-                style={{height: 60,width: 300,borderColor: 'gray', borderWidth: 1}}
+                style={{height: 60,flex:1,borderColor: 'gray', borderWidth: 1}}
                 onChangeText={(participants) => this.foundMatch(participants)}
                 value={val}
                 underlineColorAndroid="transparent"
