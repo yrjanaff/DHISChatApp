@@ -137,8 +137,7 @@ export default class InterpretationList extends React.Component {
                               if(this.state.search !== '')
                                 this.search(this.state.search);}
                            }
-                           underlineColorAndroid="transparent"
-                />
+                  />
               <View style={styles.sendButton}>
                 <Button  onPress={()=> {
                     if( this.state.search !== '')
