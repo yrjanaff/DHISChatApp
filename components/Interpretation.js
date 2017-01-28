@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import {View, Text, TouchableHighlight, ScrollView, Image, TextInput}  from 'react-native';
+import {View, Text, TouchableHighlight, ScrollView, Image, TextInput, ToastAndroid}  from 'react-native';
 import Button from 'react-native-button';
 import {Actions} from 'react-native-mobx';
 import styles from './styles';
@@ -41,7 +41,13 @@ export default class Interpretation extends React.Component {
         .then(( response ) => response.json())
         .then(( responseJson ) => {
           if( responseJson.httpStatusCode === 201 ) {
+            ToastAndroid.show('Comment was posted', ToastAndroid.SHORT)
             this.getComments();
+          }
+          else{
+            console.log("ERROR!");
+            console.log(responseJson);
+            ToastAndroid.show('Access denied', ToastAndroid.SHORT)
           }
         })
         .catch(( error ) => {
@@ -99,29 +105,32 @@ export default class Interpretation extends React.Component {
                         );})
                      : <Text style={[styles.emptyResult]}>No comments</Text>
                }
-              <View style={[styles.messageBar]}>
-                <View style={{flex:1}}>
-                  <TextInput ref='newComment'
-                             multiline = {true}
-                             value={this.state.newComment}
-                             onChangeText={(newComment)=>this.setState({newComment})}
-                             returnKeyType={'send'}
-                             autoCapitalize={'sentences'}
-                             style={styles.message} placeholder="Enter comment..."
-                  />
-                </View>
-                <View style={styles.sendButton}>
-                  <Button  onPress={()=> {
+
+            </View>
+          </ScrollView>
+
+          <View style={[styles.messageBar]}>
+            <View style={{flex:1}}>
+              <TextInput ref='newComment'
+                         multiline = {true}
+                         value={this.state.newComment}
+                         onChangeText={(newComment)=>this.setState({newComment})}
+                         returnKeyType={'send'}
+                         autoCapitalize={'sentences'}
+                         style={styles.message} placeholder="Enter comment..."
+              />
+            </View>
+            <View style={styles.sendButton}>
+              <Button  onPress={()=> {
                     if( this.state.newComment !== '')
                       this.submitComment(this.state.newComment);this.setState({newComment:''})
                     }}
-                   disabled={!this.state.newComment || !this.state.newComment.trim() && xmpp.offlineMode}
-                   style={{color: !this.state.newComment || !this.state.newComment.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>post</Button>
-                </View>
-
-              </View>
+                       disabled={!this.state.newComment || !this.state.newComment.trim() && xmpp.offlineMode}
+                       style={{color: !this.state.newComment || !this.state.newComment.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>post</Button>
             </View>
-          </ScrollView>
+
+          </View>
+
         </View>
     )
   }
