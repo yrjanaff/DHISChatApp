@@ -65,7 +65,7 @@ var DhisChat = React.createClass({
                              color='#ffffff'
                          />
                        }/>
-                <Scene key="groupConversation" component={GroupConversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar} onRight={() => xmpp.drawerOpen = true} rightTitle={
+                <Scene key="groupConversation" component={GroupConversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar} onRight={() => {xmpp.drawerOpen = true; xmpp.getOccupants(xmpp.mucRemote[1])}} rightTitle={
                   <Icon
                       name='people'
                       color='#ffffff'

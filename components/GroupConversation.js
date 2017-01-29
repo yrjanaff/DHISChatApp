@@ -21,14 +21,20 @@ export default class GroupConversation extends React.Component {
     super(props);
   }
 
+  componentWillReceiveProps(props){
+
+  }
+
   render() {
     let open = xmpp.drawerOpen;
+    console.log("HENTER")
+    console.log(xmpp.mucRemote)
     return(
        <View style={{height: height-20}}>
          <Drawer
              type="overlay"
              open={open}
-             content={<MucOccupant roster={xmpp.roster}/>}
+             content={<MucOccupant roster={xmpp.roster} remote={xmpp.mucRemote}/>}
              tapToClose={false}
              openDrawerOffset={0.4} // 20% gap on the right side of drawer
              panCloseMask={0.2}
