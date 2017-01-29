@@ -43,6 +43,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     public static final String RXMPP_MucMessage = "XMPPMucMessage";
     public static final String RNXMPP_FILETRANSFER = "XMPPFileTransfer";
     public static final String RNXMPP_FILERECEIVED = "XMPPFileReceived";
+    public static final String RNXMPP_USERADDED = "XMPPUserAddedToGroup";
     ReactContext reactContext;
 
     public XMPPCommunicationBridge(ReactContext reactContext) {
@@ -193,6 +194,11 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
         params.putString("uri",uri);
         params.putString("from",jid);
         sendEvent( reactContext, RNXMPP_FILERECEIVED, params);
+    }
+
+    @Override
+     public void onUserAddedToGroup(WritableArray occupants){
+        sendEvent( reactContext, RNXMPP_USERADDED, occupants );
     }
 
     void sendEvent(ReactContext reactContext, String eventName, @Nullable Object params) {

@@ -51,6 +51,9 @@ public interface XmppService
     void fileTransfer(String uri, String to);
 
     @ReactMethod
+    void addUserToGroup(String username, String roomId, String subject);
+
+    @ReactMethod
     void goOffline();
 
     @ReactMethod

@@ -130,12 +130,12 @@ class Conversation extends React.Component {
           {
             this.state.showImagePicker
                 ? <CameraRollPicker
-                callback={this.getImage}
-                maximum={1}
-                selected={[]}
-                assetType='All'
+                    callback={this.getImage}
+                    maximum={1}
+                    selected={[]}
+                    assetType='All'
 
-            />
+                />
                 : null
           }
         </View>

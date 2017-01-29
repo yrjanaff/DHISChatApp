@@ -25,11 +25,10 @@ export default class GroupConversation extends React.Component {
     let open = xmpp.drawerOpen;
     return(
        <View style={{height: height-20}}>
-         <Text>synes dette?</Text>
          <Drawer
              type="overlay"
              open={open}
-             content={<MucOccupant />}
+             content={<MucOccupant roster={xmpp.roster}/>}
              tapToClose={false}
              openDrawerOffset={0.4} // 20% gap on the right side of drawer
              panCloseMask={0.2}

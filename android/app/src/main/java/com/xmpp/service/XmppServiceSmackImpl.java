@@ -682,6 +682,25 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     }
 
     @Override
+    public void addUserToGroup(String username, String roomId, String subject){
+        MultiUserChat muc = MultiUserChatManager.getInstanceFor( connection ).getMultiUserChat(roomId);
+        try{
+            muc.invite(username, subject);
+            WritableArray occupants = Arguments.createArray();
+            List<String> participants = muc.getOccupants();
+            for ( String nick : participants )
+            {
+                logger.info("nick" + nick);
+                occupants.pushString( nick );
+            }
+
+            this.xmppServiceListener.onUserAddedToGroup(occupants);
+        }catch (SmackException.NotConnectedException e) {
+            logger.info("ERROR: " + e);
+        }
+    }
+
+    @Override
     public void goOffline(){
         logger.info("går offline");
         connection.removeConnectionListener(this);
@@ -717,5 +736,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         }
         presence( null,"available" );
     }
+
+
 
 }
