@@ -80,7 +80,7 @@ export default class Interpretation extends React.Component {
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
             <View style={{flex:1, flexDirection: 'column', borderColor: 'lightgray', borderBottomWidth: 1, marginBottom: 20}}>
               <Text style={{textAlign: 'center', fontSize: 17, marginBottom: 5, fontWeight: 'bold'}}>{xmpp.currentInterpretation.name}</Text>
-              <Text style={{textAlign: 'center', fontSize: 17, marginBottom: 10}}>{xmpp.currentInterpretation.text}</Text>
+              <Text style={{textAlign: 'center', fontSize: 17, marginBottom: 10, marginRight: 10, marginLeft: 10}}>{xmpp.currentInterpretation.text}</Text>
             </View>
             <TouchableHighlight onPress={() => {this.props.isMuc ? Actions.mucIntView({path: xmpp.currentInterpretation.imageURL, header: getDhisHeader }) 
                 : Actions.intView({path: xmpp.currentInterpretation.imageURL, header: getDhisHeader })}}>
@@ -96,13 +96,13 @@ export default class Interpretation extends React.Component {
                  }}
               />
             </TouchableHighlight>
-            <View>
-              <Text style={[styles.bold,{fontSize: 18}]}>Comments:</Text>
+            <View style={{margin: 10}}>
+              <Text style={[styles.bold,{fontSize: 18, marginBottom: 10, marginTop: 10}]}>Comments:</Text>
               {
                 this.state.comments.length !== 0 ?
                     this.state.comments.map(( comment, index ) => {
                       return (
-                          <View key={index}>
+                          <View key={index} style={{marginBottom: 20}}>
                             <Text style={styles.bold}>{comment.user.name}</Text>
                             <Text>{comment.text}</Text>
                           </View>

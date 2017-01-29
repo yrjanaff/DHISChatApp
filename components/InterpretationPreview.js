@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableHighlight, ScrollView, Image, TextInput}  from 'react-native';
 import styles from './styles';
+import {Icon } from 'react-native-material-design';
 import xmpp from '../utils/XmppStore';
 import {Actions} from 'react-native-mobx';
 import { getDhisHeader } from '../utils/DhisUtils';
@@ -15,11 +16,6 @@ export default class InterpretationPreview extends React.Component {
   }
   
   render(){
-    console.log(xmpp.remote)
-    console.log(xmpp.currentInterpretation)
-
-    console.log(xmpp.remoteMuc);
-    let intUrl = xmpp.remoteMuc[1];
 
     if(xmpp.remote === xmpp.remoteMuc[0] && xmpp.remoteMuc[1].indexOf(xmpp.currentInterpretation.id) != -1){
       console.log('kom gjennom iffen!');
@@ -40,7 +36,12 @@ export default class InterpretationPreview extends React.Component {
                             marginRight: 10
                    }}
             />
-            <Text style={{flex: 1, marginRight: 10}}>{xmpp.currentInterpretation.text.slice(0,240).concat('...')}</Text>
+            <Text style={{flex: 1, marginRight: 10}}>{xmpp.currentInterpretation.text.length > 240 ? xmpp.currentInterpretation.text.slice(0,260).concat('...') : xmpp.currentInterpretation.text}</Text>
+            <Icon
+                name={'keyboard-arrow-right'}
+                style={{justifyContent: 'flex-start', padding: 0, alignSelf: 'center'}}
+                color={this.state.selected ? '#1d5288' : '#5E5E5E' }
+            />
           </View>
         </TouchableHighlight>
       )
