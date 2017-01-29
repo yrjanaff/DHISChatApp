@@ -30,4 +30,5 @@ public interface XmppServiceListener {
     void onMucMessage(String body, String from, String time);
     void onFileTransfer(String message);
     void onFileRecieved(String uri, String jid );
+    void onUserAddedToGroup(WritableArray occupants);
 }

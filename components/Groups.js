@@ -29,7 +29,7 @@ export default class Groups extends React.Component {
 
   onClick(remote){
     xmpp.remoteMuc = [];
-    xmpp.setRemote(remote[0],true, remote[1]);
+    xmpp.setRemote(remote[0],true, remote);
     xmpp.joinMuc(remote[1]);
 
     xmpp.unSeenNotifications.Groups = xmpp.unSeenNotifications.Groups.filter( notification => notification !== remote[0]);
@@ -60,7 +60,6 @@ export default class Groups extends React.Component {
 
   render() {
    let groupChats =  this.sortArray(xmpp.multiUserChat);
-
         return (
         <View style={[styles.container, {marginTop: 10}]}>
           {

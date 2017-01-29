@@ -105,6 +105,11 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
 
     @Override
     @ReactMethod
+    public void addUserToGroup(String username, String roomId, String subject){
+            this.xmppService.addUserToGroup(username, roomId, subject);
+    }
+        @Override
+    @ReactMethod
     public void goOffline() {this.xmppService.goOffline();}
 
     @Override

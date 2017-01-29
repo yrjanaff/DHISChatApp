@@ -19,7 +19,8 @@ var map = {
   'joinedRoom': 'XMPPRoomJoined',
   'mucMessage': 'XMPPMucMessage',
   'fileTransfer': 'XMPPFileTransfer',
-  'fileReceived': 'XMPPFileReceived'
+  'fileReceived': 'XMPPFileReceived',
+  'userAdded': 'XMPPUserAddedToGroup'
 }
 
 const LOG = (message) => {
@@ -154,6 +155,10 @@ class XMPP{
 
   sendMucMessage(message, to){
     XMPPModule.sendMessage(message, to);
+  }
+
+  addUserToGroup(username, roomId, subject){
+    XMPPModule.addUserToGroup(username, roomId, subject);
   }
 
   goOffline(){

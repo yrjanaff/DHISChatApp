@@ -124,7 +124,7 @@ export default class MucCreater extends React.Component {
             </View>
           </View>
           <View style={{flex:1}}>
-            <ListRoster roster={this.state.dataSource} clicked={this.updateParticipants}/>
+            <ListRoster  style={{color:'black'}} roster={this.state.dataSource} clicked={this.updateParticipants}/>
           </View>
           <View style={ xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1 ? styles.disabled :styles.buttons}>
           <Button style={{color: '#ffffff'}} disabled={

@@ -70,7 +70,7 @@ export default class Settings extends React.Component {
             ToastAndroid.show('Profile updated', ToastAndroid.SHORT)
           }
           else {
-            ToastAndroid.show('Profile not updated', ToastAndroid.Long)
+            ToastAndroid.show('Profile not updated', ToastAndroid.LONG)
           }
         })
         .catch(( error ) => {

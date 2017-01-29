@@ -36,6 +36,7 @@ class XmppStore {
     @observable drawerOpen = false;
 
 
+
   constructor() {
         XMPP.on('loginError', this.onLoginError);
         XMPP.on('error', this.onError);
@@ -48,6 +49,7 @@ class XmppStore {
         XMPP.on('mucInvitation', this.MucInvitationReceived);
         XMPP.on('fileTransfer', this.fileTransferMessage);
         XMPP.on('fileReceived', this.fileReceived);
+        XMPP.on('userAdded', this.onUserAdded);
 
 
         AppState.addEventListener('change', this.isAppActive.bind(this));
@@ -63,6 +65,7 @@ class XmppStore {
         this.createInterpretationMuc = false;
         this.mucSubject = null;
         this.remoteMuc = [];
+        this.conversation={};
     }
 
   saveInterpretation(interpretation){
@@ -148,8 +151,9 @@ class XmppStore {
       AsyncStorage.getItem(this._userForName(this.username)).then((value) => {
         if(value != null) {
           this.savedData = JSON.parse(value);
-          this.conversation = JSON.parse(value).conversation;
-          this.lastActive = JSON.parse(value).lastActive;
+
+          this.conversation = JSON.parse(value).conversation ? JSON.parse(value).conversation : {};
+          this.lastActive = JSON.parse(value).lastActive ? JSON.parse(value).lastActive : new Date();
         }else {
           this.conversation = {};
           this.lastActive = new Date()
@@ -178,6 +182,17 @@ class XmppStore {
     this.isRemoteOnline();
   }
 
+  onUserAdded( occupants ){
+    this.mucRemote[4] = occupants;
+
+    for(let i = 0; i < this.multiUserChat.length; i++){
+      if(this.multiUserChat[i][0] === this.mucRemote[0]){
+        this.multiUserChat[i][4] = occupants;
+        break;
+      }
+    }
+  }
+
   createConversationObject(remote, own, message) {
     this.conversation = Object.assign({}, this.conversation, {[remote]: {chat: [{own:own, text:message, date: new Date() }]}});
   }
@@ -203,7 +218,7 @@ class XmppStore {
       AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     }
     else{
-      XMPP.sendMucMessage(message, this.mucRemote);
+      XMPP.sendMucMessage(message, this.mucRemote[1]);
     }
   }
 
@@ -241,6 +256,7 @@ class XmppStore {
   onFetchedRoster(rosterList){
     this.roster =  rosterList;
     this.isRemoteOnline();
+    console.log(rosterList)
   }
 
   isRemoteOnline(){
@@ -382,6 +398,11 @@ class XmppStore {
       Vibration.vibrate([0, 200, 0, 0], false);
     }
 
+
+  }
+
+  addUserToGroup(username, groupId, subject ){
+    XMPP.addUserToGroup(username,groupId,subject)
 
   }
 
