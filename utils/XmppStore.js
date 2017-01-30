@@ -336,6 +336,7 @@ class XmppStore {
       this.interpretations[subject].conversationName = chatName;
       this.setCurrentInterpretation(this.interpretations[subject]);
       this.remoteMuc.push(chatName);
+      this.remoteMuc.push(chatName+'@conference.' +DOMAIN);
       this.remoteMuc.push(subject);
     }
   }
