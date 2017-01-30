@@ -43,6 +43,7 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smackx.bytestreams.socks5.provider.BytestreamsProvider;
 import org.jivesoftware.smackx.disco.provider.DiscoverItemsProvider;
 import org.jivesoftware.smackx.disco.provider.DiscoverInfoProvider;
+import org.jivesoftware.smackx.muc.Occupant;
 
 import android.os.AsyncTask;
 
@@ -686,18 +687,25 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         MultiUserChat muc = MultiUserChatManager.getInstanceFor( connection ).getMultiUserChat(roomId);
         try{
             muc.invite(username, subject);
-            WritableArray occupants = Arguments.createArray();
-            List<String> participants = muc.getOccupants();
-            for ( String nick : participants )
-            {
-                logger.info("nick" + nick);
-                occupants.pushString( nick );
-            }
-
-            this.xmppServiceListener.onUserAddedToGroup(occupants);
+            this.xmppServiceListener.onUserAddedToGroup(username,roomId);
         }catch (SmackException.NotConnectedException e) {
             logger.info("ERROR: " + e);
         }
+    }
+
+    @Override
+    public void getOccupants(String roomId){
+        MultiUserChat muc = MultiUserChatManager.getInstanceFor( connection ).getMultiUserChat(roomId);
+        WritableArray occupants = Arguments.createArray();
+        List<String> participants = muc.getOccupants();
+        for ( String nick : participants )
+        {
+            logger.info("nick" + nick);
+            occupants.pushString( nick );
+        }
+
+        this.xmppServiceListener.onOccupantsFetched(occupants);
+
     }
 
     @Override

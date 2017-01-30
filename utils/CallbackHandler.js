@@ -20,7 +20,8 @@ var map = {
   'mucMessage': 'XMPPMucMessage',
   'fileTransfer': 'XMPPFileTransfer',
   'fileReceived': 'XMPPFileReceived',
-  'userAdded': 'XMPPUserAddedToGroup'
+  'userAdded': 'XMPPUserAddedToGroup',
+  'occupants': 'XMPPOCCUPANTSFETCHED'
 }
 
 const LOG = (message) => {
@@ -140,7 +141,9 @@ class XMPP{
       XMPPModule.disconnect();
     }
   }
-
+  getOccupants(roomId){
+    XMPPModule.getOccupants(roomId)
+  }
   createConference(chatName, subject, participants, from) {
     XMPPModule.createConference(chatName, subject, participants, from);
   }

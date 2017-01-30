@@ -26,7 +26,10 @@ export default class Chats extends React.Component {
   constructor( props ) {
     super(props);
     this.setUp(props);
+    xmpp.remote = '';
   }
+
+  componentWillReceiveProps(props){  xmpp.remote = '';}
 
 
       setUp(props){
@@ -86,6 +89,7 @@ export default class Chats extends React.Component {
   }
 
   render() {
+
     this.setUp(this.state);
     return (
         <View style={styles.container}>

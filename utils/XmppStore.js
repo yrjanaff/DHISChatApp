@@ -22,7 +22,7 @@ class XmppStore {
     @observable currentInterpretation = '';
     @observable mucConversation = [];
     @observable group = false;
-    @observable mucRemote = '';
+    @observable mucRemote = [];
     @observable newMucParticipants = [];
     @observable activeApp  = true;
     @observable sendFileError = null;
@@ -50,6 +50,7 @@ class XmppStore {
         XMPP.on('fileTransfer', this.fileTransferMessage);
         XMPP.on('fileReceived', this.fileReceived);
         XMPP.on('userAdded', this.onUserAdded);
+        XMPP.on('occupants', this.onOccupantsFetched);
 
 
         AppState.addEventListener('change', this.isAppActive.bind(this));
@@ -181,13 +182,16 @@ class XmppStore {
     this.mucRemote = fullMucRemote;
     this.isRemoteOnline();
   }
-
-  onUserAdded( occupants ){
+  onUserAdded(props){
+    this.getOccupants(props[1]);
+  }
+  onOccupantsFetched( occupants ){
     this.mucRemote[4] = occupants;
 
     for(let i = 0; i < this.multiUserChat.length; i++){
       if(this.multiUserChat[i][0] === this.mucRemote[0]){
         this.multiUserChat[i][4] = occupants;
+        this.multiUserChat[i][3] = occupants.length;
         break;
       }
     }
@@ -404,6 +408,9 @@ class XmppStore {
   addUserToGroup(username, groupId, subject ){
     XMPP.addUserToGroup(username,groupId,subject)
 
+  }
+  getOccupants(roomId){
+    XMPP.getOccupants(roomId)
   }
 
 

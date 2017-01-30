@@ -54,6 +54,9 @@ public interface XmppService
     void addUserToGroup(String username, String roomId, String subject);
 
     @ReactMethod
+    void getOccupants(String roomId);
+
+    @ReactMethod
     void goOffline();
 
     @ReactMethod

@@ -44,6 +44,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     public static final String RNXMPP_FILETRANSFER = "XMPPFileTransfer";
     public static final String RNXMPP_FILERECEIVED = "XMPPFileReceived";
     public static final String RNXMPP_USERADDED = "XMPPUserAddedToGroup";
+    public static final String RNXMPP_OCCUPANTSFETCHED = "XMPPOCCUPANTSFETCHED";
     ReactContext reactContext;
 
     public XMPPCommunicationBridge(ReactContext reactContext) {
@@ -197,8 +198,18 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     }
 
     @Override
-     public void onUserAddedToGroup(WritableArray occupants){
-        sendEvent( reactContext, RNXMPP_USERADDED, occupants );
+    public void onUserAddedToGroup(String added, String room)
+    {
+        WritableArray params = Arguments.createArray();
+        params.pushString(added);
+        params.pushString(room);
+        sendEvent( reactContext, RNXMPP_USERADDED, params );
+    }
+
+    @Override
+    public void onOccupantsFetched(WritableArray occupants)
+    {
+        sendEvent( reactContext, RNXMPP_OCCUPANTSFETCHED, occupants );
     }
 
     void sendEvent(ReactContext reactContext, String eventName, @Nullable Object params) {
