@@ -156,6 +156,7 @@ class XmppStore {
           this.conversation = JSON.parse(value).conversation ? JSON.parse(value).conversation : {};
           this.lastActive = JSON.parse(value).lastActive ? JSON.parse(value).lastActive : new Date();
         }else {
+          this.savedData = {};
           this.conversation = {};
           this.lastActive = new Date()
         }

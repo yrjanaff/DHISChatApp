@@ -16,9 +16,7 @@ export default class InterpretationPreview extends React.Component {
   }
   
   render(){
-
-    if(xmpp.remote === xmpp.remoteMuc[0] && xmpp.remoteMuc[1].indexOf(xmpp.currentInterpretation.id) != -1){
-      console.log('kom gjennom iffen!');
+    if(xmpp.remote === xmpp.remoteMuc[0] && xmpp.remoteMuc[2].indexOf(xmpp.currentInterpretation.id) != -1){
       return (
         <TouchableHighlight onPress={() => {xmpp.interpratationHasMuc = true; Actions.mucInterpretation({isMuc: true})}} style={{borderBottomColor:'lightgray', borderBottomWidth: 4, paddingBottom:20}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 20}}>

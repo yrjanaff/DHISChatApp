@@ -36,6 +36,8 @@ export default class Groups extends React.Component {
 
     xmpp.unSeenNotifications.Groups = xmpp.unSeenNotifications.Groups.filter( notification => notification !== remote[0]);
 
+    console.log(remote);
+    console.log(remote[2]);
     if(remote[2]){
       if(xmpp.interpretations[remote[2]]){
         xmpp.setCurrentInterpretation(xmpp.interpretations[remote[2]]);
