@@ -151,11 +151,14 @@ class XmppStore {
     getSavedData(){
       AsyncStorage.getItem(this._userForName(this.username)).then((value) => {
         if(value != null) {
+          Alert.alert('Value != null', value);
           this.savedData = JSON.parse(value);
 
           this.conversation = JSON.parse(value).conversation ? JSON.parse(value).conversation : {};
           this.lastActive = JSON.parse(value).lastActive ? JSON.parse(value).lastActive : new Date();
+
         }else {
+          Alert.alert('Value == null');
           this.savedData = {};
           this.conversation = {};
           this.lastActive = new Date()
@@ -178,7 +181,6 @@ class XmppStore {
   }
 
   setRemote(remote, group, fullMucRemote){
-    console.log(fullMucRemote)
     this.remote = remote;
     this.group = group;
     this.mucRemote = fullMucRemote;
@@ -224,7 +226,6 @@ class XmppStore {
       AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     }
     else{
-      console.log(message, this.mucRemote[1])
       XMPP.sendMucMessage(message, this.mucRemote[1]);
     }
   }
@@ -263,7 +264,6 @@ class XmppStore {
   onFetchedRoster(rosterList){
     this.roster =  rosterList;
     this.isRemoteOnline();
-    console.log(rosterList)
   }
 
   isRemoteOnline(){

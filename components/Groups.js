@@ -61,7 +61,9 @@ export default class Groups extends React.Component {
     }
     return message;
   }
-
+  componentWillReceiveProps(props){
+    xmpp.drawerOpen = false;
+  }
   render() {
    let groupChats =  this.sortArray(xmpp.multiUserChat);
         return (
@@ -85,7 +87,8 @@ export default class Groups extends React.Component {
                         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                           {
                             xmpp.mucConversation[current[0]] ?
-                                <Text style={{marginLeft: 10, marginBottom: 5}}>{xmpp.mucConversation[current[0]].chat[0].from.split('@')[0]}: {this.prevMessage(xmpp.mucConversation[current[0]].chat[0].text)}</Text>: null
+                                <Text style={{marginLeft: 10, marginBottom: 5}}>{xmpp.mucConversation[current[0]].chat[0].from.split('@')[0]}: {this.prevMessage(xmpp.mucConversation[current[0]].chat[0].text)}</Text>:
+                                <Text style={{marginLeft: 10, marginBottom: 5, color:"lightgray"}}>No messages</Text>
                           }
                           {current[2] ?
                               <Icon name="equalizer" color="#1d528899" size={20} style={{marginRight: 20, marginBottom: 5}}/>

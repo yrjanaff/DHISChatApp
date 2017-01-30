@@ -22,14 +22,8 @@ export default class GroupConversation extends React.Component {
     super(props);
   }
 
-  componentWillReceiveProps(props){
-
-  }
-
   render() {
     let open = xmpp.drawerOpen;
-    console.log("HENTER")
-    console.log(xmpp.mucRemote)
     return(
        <View style={{height: height-20}}>
          <Drawer
