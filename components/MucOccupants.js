@@ -18,24 +18,13 @@ export default class MucOccupants extends React.Component {
 
   }
   componentDidMount(){
-    console.log("didmount")
-    console.log(xmpp.mucRemote)
-    //this.setState({mucRemote: xmpp.mucRemote})
-    console.log(this.state.mucRemote)
     this.setState({occupants:  this.occupantsList(xmpp.roster)})
-
   }
   occupantsList(roster){
     let filteredRoster = [];
     let occupantsName = [];
-    console.log(roster)
-    console.log(this.state.mucRemote)
 
-    console.log(this.state.mucRemote[3])
     for(let i = 0; i < this.state.mucRemote[3]; i++ ){
-      console.log(this.state.mucRemote[4]);
-      console.log(roster[this.state.mucRemote[4][i].split('/')[1]])   ;
-      console.log(this.state.mucRemote[4][i].split('/')[1]);
       if(roster[this.state.mucRemote[4][i].split('/')[1]]) {
         filteredRoster.push(roster[this.state.mucRemote[4][i].split('/')[1]])
         occupantsName.push(roster[this.state.mucRemote[4][i].split('/')[1]].username.toLowerCase())
@@ -46,17 +35,12 @@ export default class MucOccupants extends React.Component {
   }
 
   foundMatch(text) {
-    console.log(this.state.occupantsName)
-    console.log(this.state.occupantsName.indexOf(text))
     let filteredRoster =[];
     for (let k in xmpp.roster) {
-      console.log(k)
       if(xmpp.roster[k].displayName.toLowerCase().indexOf(text) >= 0 || xmpp.roster[k].username.toLowerCase().indexOf(text) >= 0) {
-        console.log('inne i if')
         filteredRoster.unshift(xmpp.roster[k]);
       }
     }
-console.log(filteredRoster)
     this.setState({
       text,
       occupants: filteredRoster
@@ -65,11 +49,8 @@ console.log(filteredRoster)
   }
 
   occupantToAdd(username){
-    console.log(username)
-    console.log(xmpp.mucRemote)
     if(this.state.occupantsName.indexOf(username) > -1){
       ToastAndroid.show('User is already in group', ToastAndroid.LONG);
-      console.log('fantes')
     }
     else{
       ToastAndroid.show('User added', ToastAndroid.LONG);
