@@ -1,5 +1,5 @@
 import React from 'react';
-import {AppRegistry} from 'react-native';
+import {AppRegistry, Text} from 'react-native';
 import { Scene, Router, Route, Reducer, Switch } from 'react-native-mobx';
 import Conversation from './components/Conversation';
 import Login from './components/Login';
@@ -32,7 +32,7 @@ var DhisChat = React.createClass({
   render: function() {
     return (
         <Router>
-          <Scene key="root" component={Switch} type={ActionConst.RESET}  tabs selector={()=>!xmpp.logged ? 'login' : 'tabbar'} >
+          <Scene key="root" component={Switch} tabs selector={()=>!xmpp.logged ? 'login' : 'tabbar'} >
             <Scene key="login" component={Login} title="Login" hideNavBar={true}/>
 
             <Scene key="tabbar" tabs={true} >
@@ -46,7 +46,7 @@ var DhisChat = React.createClass({
                 } duration={0}  titleStyle={title} navigationBarStyle={navigationBar}/>
                 <Scene key="newChat" component={ChatCreater} hideTabBar duration={0} title="Create a new chat"  titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')}/>
                 <Scene key="conversation" component={Conversation} hideTabBar duration={0} titleStyle={title} navigationBarStyle={navigationBar} onBack={() => {Actions.chat({type:ActionConst.RESET})}} backButtonImage={require('./image/back_chevron.png')}/>
-                <Scene key="conView" component={ImageViewer} hideTabBar duration={0} title="Zoom" backButtonImage={require('./image/back_chevron.png')}/>
+                <Scene key="conView" component={ImageViewer} hideTabBar titleStyle={title} navigationBarStyle={navigationBar} duration={0} title="Zoom" backButtonImage={require('./image/back_chevron.png')}/>
               </Scene>
 
               <Scene key="contactsTab" title="Contacts" icon={TabIcon}>
@@ -65,7 +65,7 @@ var DhisChat = React.createClass({
                              color='#ffffff'
                          />
                        }/>
-                <Scene key="groupConversation" component={GroupConversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar} onRight={() => {xmpp.drawerOpen = true; xmpp.getOccupants(xmpp.mucRemote[1])}} rightTitle={
+                <Scene key="groupConversation" component={GroupConversation} hideTabBar duration={0} onBack={() => {Actions.group({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar} onRight={() => {xmpp.drawerOpen = !xmpp.drawerOpen; xmpp.getOccupants(xmpp.mucRemote[1])}} rightTitle={
                   <Icon
                       name='people'
                       color='#ffffff'
@@ -90,10 +90,9 @@ var DhisChat = React.createClass({
               </Scene>
 
               <Scene key="settings" title="Profile" component={Settings} icon={TabIcon} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar} onRight={()=>xmpp.disconnect()} rightTitle={
-                <Icon
-                    name='exit-to-app'
-                    color='#ffffff'
-                />
+                <Text style={{justifyContent: 'flex-end', color: 'white'}}>
+                    Log out
+                </Text>
               }/>
 
             </Scene>

@@ -13,6 +13,7 @@ export default class GroupConversation extends React.Component {
     if(!xmpp.group) {
       return xmpp.roster[xmpp.remote].displayName;
     }else{
+      console.log(xmpp.remote);
       return xmpp.remote.split('@')[0];
     }
 

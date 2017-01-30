@@ -11,6 +11,7 @@ const ds = new ListView.DataSource({rowHasChanged: ( r1, r2 ) => r1 !== r2});
 import InterpretationPreview from './InterpretationPreview';
 import {Icon } from 'react-native-material-design';
 
+const dismissKeyboard = require('dismissKeyboard');
 
 var RNGRP = require('react-native-get-real-path');
 
@@ -116,7 +117,7 @@ class Conversation extends React.Component {
             {
               xmpp.group ? null :
                   <View style={{ justifyContent: 'center'}}>
-                    <Button  onPress={()=> this.setState({showImagePicker: this.state.showImagePicker ? false : true}) }
+                    <Button  onPress={()=> {this.setState({showImagePicker: !this.state.showImagePicker}); dismissKeyboard();}}
                              disabled={!xmpp.remoteOnline || xmpp.offlineMode}>
                       <Icon
                         name="local-see"

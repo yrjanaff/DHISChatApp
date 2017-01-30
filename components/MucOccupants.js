@@ -114,9 +114,7 @@ console.log(filteredRoster)
           }
           </TouchableHighlight>
           <ListRoster style={{color:'white'}} roster={this.state.occupants} clicked={this.occupantToAdd}/>
-          <Button  style={{color: 'white'}} onPress={()=> xmpp.drawerOpen = false }>
-            close
-          </Button>
+
         </View>
     );
   }
