@@ -30,6 +30,7 @@ export default class Groups extends React.Component {
   onClick(remote){
     xmpp.remoteMuc = remote;
     console.log("BLIR SATT")
+    console.log(remote)
     xmpp.setRemote(remote[0],true, remote);
     xmpp.joinMuc(remote[1]);
 

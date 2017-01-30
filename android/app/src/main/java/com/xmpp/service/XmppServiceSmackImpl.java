@@ -258,7 +258,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
         XMPPTCPConnectionConfiguration.Builder confBuilder = XMPPTCPConnectionConfiguration.builder()
             .setServiceName(serviceName)
-            .setCompressionEnabled(true)
+            .setCompressionEnabled(false)
             .setUsernameAndPassword(jidParts[0], password)
             .setConnectTimeout(3000)
             //.setDebuggerEnabled(true)
@@ -674,6 +674,8 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     @Override
     public void sendMessage(String text, String groupChatId){
         MultiUserChat muc = MultiUserChatManager.getInstanceFor( connection ).getMultiUserChat(groupChatId);
+        logger.info(groupChatId);
+        logger.info(muc.toString());
         try
         {
             muc.sendMessage( text );

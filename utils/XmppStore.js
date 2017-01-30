@@ -177,6 +177,7 @@ class XmppStore {
   }
 
   setRemote(remote, group, fullMucRemote){
+    console.log(fullMucRemote)
     this.remote = remote;
     this.group = group;
     this.mucRemote = fullMucRemote;
@@ -222,6 +223,7 @@ class XmppStore {
       AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     }
     else{
+      console.log(message, this.mucRemote[1])
       XMPP.sendMucMessage(message, this.mucRemote[1]);
     }
   }
@@ -325,7 +327,7 @@ class XmppStore {
 
   createConference(chatName, subject, participants, from) {
     this.remoteMuc = [];
-    this.setRemote(chatName.toLowerCase(),true,chatName+'@conference.' +DOMAIN)
+    this.setRemote(chatName.toLowerCase(),true,[chatName,chatName+'@conference.' +DOMAIN,subject, participants.length, participants])
     this.multiUserChat = this.multiUserChat.concat([[chatName.toLowerCase(), chatName+'@conference.' +DOMAIN, subject, participants.length]]);
     XMPP.createConference(chatName.toLowerCase(), subject, participants, from);
     this.newMucParticipants = []
@@ -352,7 +354,7 @@ class XmppStore {
 
   MucInvitationReceived(props){
     let name = props.from.split("@")[0];
-    this.multiUserChat = this.multiUserChat.concat([[name, props.from, props.subject, props.occupants.length]]);
+    this.multiUserChat = this.multiUserChat.concat([[name, props.from, props.subject, props.occupants.length,props.occupants ]]);
     if(!this.activeApp){
       sendPush('Conference - invite', name, 'You have been added to a conference called: ' + name, props.from);
       Vibration.vibrate([0, 500, 200, 500], false);
