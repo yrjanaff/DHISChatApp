@@ -34,10 +34,11 @@ export default class InterpretationList extends React.Component {
   }
 
   fetchInterpretations( args, concat ) {
-    let interpretations = new Array();
-    return fetch(dhisApiURL + 'interpretations.json?page=' + page + '&pageSize=15&' + args, getDhisHeader)
+    let interpretations = [];
+    return fetch(dhisApiURL + 'interpretations?page=' + page + '&pageSize=15&' + args, getDhisHeader())
         .then(( response ) => response.json())
         .then(( responseJson ) => {
+          console.log(responseJson);
           for( let i = 0; i < responseJson.interpretations.length; i++ ) {
             let interpretation = responseJson.interpretations[i];
             let type = interpretation.type.toLowerCase();
@@ -78,7 +79,7 @@ export default class InterpretationList extends React.Component {
           }
         })
         .catch(( error ) => {
-          console.error(error);
+          console.log('Could not fetch interpretations...\n' + error);
         });
   }
 

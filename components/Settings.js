@@ -30,12 +30,17 @@ export default class Settings extends React.Component {
     this.getDhisProfile();
   }
 
+  onDisconnect(){
+    this.setState({firstName: '', surname: '', education: '', employer: '', jobTitle: '', email: '', phoneNumber: '', interests: '', languages: ''})
+  }
+
   getDhisProfile() {
     return fetch(realDhisApiURL + 'me?fields=firstName,surname,education,employer,jobTitle,email,phoneNumber, interests,languages', getDhisHeaderUser(xmpp.username, xmpp.password))
         .then(( response ) => response.json())
         .then(( responseJson ) => {
           this.setState({
             updated: '',
+            ussername: xmpp.username,
             firstName: responseJson.firstName,
             surname: responseJson.surname,
             education: responseJson.education,
@@ -51,6 +56,10 @@ export default class Settings extends React.Component {
         .catch(( error ) => {
           console.error(error);
         });
+  }
+
+  componentWillReceiveProps(nextProps){
+    console.log('ny prop');
   }
 
   setDhisProfile() {
@@ -80,6 +89,9 @@ export default class Settings extends React.Component {
   }
 
   render() {
+    if(xmpp.username !== this.state.username){
+      this.getDhisProfile();
+    }
     return (
         <View style={[styles.container, {marginTop: 30}]}>
           <ScrollView>
