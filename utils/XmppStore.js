@@ -3,7 +3,7 @@ const DOMAIN = "yj-dev.dhis2.org";
 
 import {observable} from 'mobx';
 import autobind from 'autobind';
-import {AsyncStorage, AppState, Vibration} from 'react-native';
+import {AsyncStorage, AppState, Vibration,Alert} from 'react-native';
 import { Actions } from 'react-native-mobx';
 import { sendPush } from './PushUtils'
 import { fetchInterpretation } from './DhisUtils';
@@ -100,7 +100,8 @@ class XmppStore {
           }
         }
       }
-      AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
+
+      this.saveState(JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     }
     else{
       this.retryPicture = null;
@@ -117,7 +118,7 @@ class XmppStore {
     } else {
       this.conversation[from_name].chat.unshift({own: false, text: uri, date: new Date(), image: true, sent:true})
     }
-    AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
+    this.saveState(JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     if(!this.activeApp){
       sendPush('Chat',from.split("@")[0], "Sent you a picture", from_name, uri);
       Vibration.vibrate([0, 500, 200, 500], false);
@@ -139,7 +140,7 @@ class XmppStore {
     isAppActive(appState){
       if(appState === 'background'){
         this.activeApp = false
-        AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {lastActive: new Date()})));
+        this.saveState( JSON.stringify(Object.assign({}, this.savedData, {lastActive: new Date()})));
       }
       if(appState === 'active'){
         this.activeApp = true;
@@ -149,9 +150,10 @@ class XmppStore {
       }
     }
     getSavedData(){
+      //Alert.alert('skal hented ata');
       AsyncStorage.getItem(this._userForName(this.username)).then((value) => {
         if(value != null) {
-          Alert.alert('Value != null', value);
+          //Alert.alert('Value != null', value);
           this.savedData = JSON.parse(value);
 
           this.conversation = JSON.parse(value).conversation ? JSON.parse(value).conversation : {};
@@ -163,7 +165,7 @@ class XmppStore {
           this.conversation = {};
           this.lastActive = new Date()
         }
-      });
+      }).catch(error => Alert.alert(error));
     }
 
 
@@ -222,8 +224,8 @@ class XmppStore {
       // empty sent message
       this.error = null;
       // send to XMPP server
-      XMPP.message(message.trim(), this.remote)
-      AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
+      XMPP.message(message.trim(), this.remote);
+      this.saveState(JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
     }
     else{
       XMPP.sendMucMessage(message, this.mucRemote[1]);
@@ -244,7 +246,7 @@ class XmppStore {
       this.conversation[from_name].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
     }
 
-    AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
+    this.saveState(JSON.stringify(Object.assign({}, this.savedData, {conversation: this.conversation})));
 
     if(!this.activeApp) {
       sendPush('Chat', from.split("@")[0], body, from_name);
@@ -322,7 +324,7 @@ class XmppStore {
   disconnect() {
     XMPP.disconnect();
     Actions.chatTab()
-    AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {lastActive: new Date()})));
+    this.saveState(JSON.stringify(Object.assign({}, this.savedData, {lastActive: new Date()})));
     this.logged = false;
   }
 
@@ -424,11 +426,21 @@ class XmppStore {
 
   settingOfflineMode(isOffline){
     this.offlineMode = isOffline;
-    AsyncStorage.setItem(this._userForName(this.username), JSON.stringify(Object.assign({}, this.savedData, {lastActive: new Date()})));
+    this.saveState(JSON.stringify(Object.assign({}, this.savedData, {lastActive: new Date()})));
 
     isOffline ? XMPP.goOffline() : XMPP.goOnline();
 
   }
+
+  async saveState(state) {
+  try {
+    await AsyncStorage.setItem(this._userForName(this.username), state);
+   // Alert.alert('Saved selection to disk:');
+    //Alert.alert(state);
+  } catch (error) {
+    //Alert.alert('AsyncStorage error: ' + error.message);
+  }
+}
 
 
 
