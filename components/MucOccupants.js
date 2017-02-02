@@ -70,8 +70,8 @@ export default class MucOccupants extends React.Component {
     console.log("render")
     console.log(this.state.roster)
     return(
-        <View style={[styles.containerNoTabs,{backgroundColor: '#1d5288'}]}>
-          <TouchableHighlight onPress={() => this.setState({adding: true})}>
+        <View style={[{backgroundColor: '#1d5288', flex: 1}]}>
+          <TouchableHighlight onPress={() => this.setState({adding: true})} underlayColor="transparent">
           {
             this.state.adding ?
                 <View style={{flex:1, flexDirection: 'row', justifyContent:'center', borderColor: 'lightgray', borderBottomWidth: 4, marginBottom: 10}}>
@@ -85,11 +85,11 @@ export default class MucOccupants extends React.Component {
                   />
                 </View>:
                 <View style={{flex:1, flexDirection: 'row', justifyContent:'center', borderColor: 'lightgray', borderBottomWidth: 4, marginBottom: 10}}>
-                  <Text style={{color:'white', marginRight:5, fontSize: 16}} >Add participant</Text>
+                  <Text style={{color:'white', marginRight:5, fontSize: 16, marginTop: 25}} >Add participant</Text>
                   <Icon
                     name='group-add'
                     color='#ffffff'
-                    style={{marginBottom: 20}}
+                    style={{marginBottom: 20, marginTop: 25}}
                   />
                 </View>
           }

@@ -131,8 +131,17 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         FileTransferManager manager = FileTransferManager.getInstanceFor(connection);
         File mf = Environment.getExternalStorageDirectory();
         OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer( to + "/DHISCHAT");
-        String[] splitURI = uri.split("\\/0");
+        String[] splitURI;
+        logger.info(uri);
         try {
+            if(uri.contains("\\/0")){
+                splitURI = uri.split("\\/0");
+            }
+            else{
+                splitURI = uri.split("\\/sdcard0");
+            }
+            //logger.info(mf.getAbsoluteFile());
+            logger.info(splitURI[1].toString());
             File file = new File(mf.getAbsoluteFile() + new URI(splitURI[1]).toString());
             transfer.sendFile(file, "test_file");
         } catch (SmackException e) {
