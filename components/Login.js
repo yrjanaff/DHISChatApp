@@ -12,6 +12,8 @@ export default class Login extends React.Component {
   constructor( props ) {
     super(props);
     this.state = {savePassword: true};
+
+    this.getCredentials();
   }
 
   login(username, password){
@@ -23,7 +25,7 @@ export default class Login extends React.Component {
       const username = await AsyncStorage.getItem('username');
       const password = await AsyncStorage.getItem('password');
       if (username !== null && password !== null && username !== '' && password !== ''){
-        // We have data!!
+        console.log("Setter username: " + username + "  password: " + password);
         this.setState({username: username, password: password});
       }
     } catch (error) {
@@ -53,8 +55,6 @@ export default class Login extends React.Component {
   }
 
   render() {
-    this.getCredentials();
-
     return (
         <View style={[styles.container,{alignItems:'center', backgroundColor: '#1d5288'}]}>
           <Image

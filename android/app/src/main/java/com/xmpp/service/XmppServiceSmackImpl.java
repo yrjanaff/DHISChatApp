@@ -267,7 +267,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
         XMPPTCPConnectionConfiguration.Builder confBuilder = XMPPTCPConnectionConfiguration.builder()
             .setServiceName(serviceName)
-            .setCompressionEnabled(false)
+            .setCompressionEnabled(true)
             .setUsernameAndPassword(jidParts[0], password)
             .setConnectTimeout(3000)
             //.setDebuggerEnabled(true)
