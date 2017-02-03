@@ -25,7 +25,6 @@ export default class Login extends React.Component {
       const username = await AsyncStorage.getItem('username');
       const password = await AsyncStorage.getItem('password');
       if (username !== null && password !== null && username !== '' && password !== ''){
-        console.log("Setter username: " + username + "  password: " + password);
         this.setState({username: username, password: password});
       }
     } catch (error) {

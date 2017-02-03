@@ -11,7 +11,6 @@ export default class MucOccupants extends React.Component {
   constructor( props ) {
     super(props);
     this.state = {adding: false, occupantsName:[],mucRemote: xmpp.mucRemote}
-    console.log("konstruktør")
     this.occupantToAdd = this.occupantToAdd.bind(this);
     this.occupantsList = this.occupantsList.bind(this);
 
@@ -25,7 +24,6 @@ export default class MucOccupants extends React.Component {
     let occupantsName = [];
 
     for(let i = 0; i < this.state.mucRemote[3]; i++ ){
-      console.log(this.state.mucRemote);
       if(roster[this.state.mucRemote[4][i].split('/')[1]]) {
         filteredRoster.push(roster[this.state.mucRemote[4][i].split('/')[1]])
         occupantsName.push(roster[this.state.mucRemote[4][i].split('/')[1]].username.toLowerCase())
@@ -64,12 +62,10 @@ export default class MucOccupants extends React.Component {
     }
   }
 
-  componentWillReceiveProps(props){ console.log(props); this.setState({mucRemote:props.remote}); this.setState({occupants:  this.occupantsList(props.roster) }); console.log("will receive"); console.log(this.state.mucRemote); console.log(this.state.roster)}
+  componentWillReceiveProps(props){ this.setState({mucRemote:props.remote}); this.setState({occupants:  this.occupantsList(props.roster) }); console.log("will receive"); console.log(this.state.mucRemote); console.log(this.state.roster)}
 
 
   render() {
-    console.log("render")
-    console.log(this.state.roster)
     return(
         <View style={[{backgroundColor: '#1d5288', flex: 1}]}>
           <TouchableHighlight onPress={() => this.setState({adding: true})} underlayColor="transparent">

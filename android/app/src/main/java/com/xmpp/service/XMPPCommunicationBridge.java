@@ -71,7 +71,6 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
 
     @Override
     public void onMessage(Message message, String date) {
-        logger.info(date);
         WritableMap params = Arguments.createMap();
         params.putString("thread", message.getThread());
         params.putString("subject", message.getSubject());
@@ -160,8 +159,6 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
 
     @Override
     public void onAllMucFetced(WritableArray mucRooms) {
-
-        logger.info("Inside onAllMucsFetched! " +  mucRooms.size());
         sendEvent(reactContext, RNXMPP_ALLMUCS, mucRooms);
     }
 
