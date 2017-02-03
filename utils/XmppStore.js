@@ -280,7 +280,7 @@ class XmppStore {
   }
 
   onDisconnect(message){
-    this.logged = false;
+    //this.logged = false;
   }
 
   onLogin(){
