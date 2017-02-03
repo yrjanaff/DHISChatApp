@@ -294,7 +294,6 @@ class XmppStore {
 
 
   login({username, password}){
-    console.log('Inni login!!!!!!!');
     this.username = username;
     this.mucUsername = this._userForName(username) + "/DHISCHAT";
     this.password = password;
@@ -347,13 +346,10 @@ class XmppStore {
   }
 
   getAllJoinedMucs(username){
-    console.log("Inni getalljointedMucs " + username)
     XMPP.getAllJoinedMucs(username);
   }
 
   onAllMucsFetched(allMucs){
-    console.log("inni onAllMucsFetched");
-    console.log(allMucs);
     this.multiUserChat = allMucs;
 
     this.multiUserChat.map((current) => {

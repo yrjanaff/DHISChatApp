@@ -38,7 +38,6 @@ export default class InterpretationList extends React.Component {
     return fetch(dhisApiURL + 'interpretations?page=' + page + '&pageSize=15&' + args, getDhisHeader())
         .then(( response ) => response.json())
         .then(( responseJson ) => {
-          console.log(responseJson);
           for( let i = 0; i < responseJson.interpretations.length; i++ ) {
             let interpretation = responseJson.interpretations[i];
             let type = interpretation.type.toLowerCase();
