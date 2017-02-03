@@ -48,7 +48,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     public static final String RNXMPP_OCCUPANTSFETCHED = "XMPPOCCUPANTSFETCHED";
     ReactContext reactContext;
 
-    Logger logger = Logger.getLogger(XmppServiceSmackImpl.class.getName());
+    Logger logger = Logger.getLogger(XMPPCommunicationBridge.class.getName());
 
     public XMPPCommunicationBridge(ReactContext reactContext) {
         this.reactContext = reactContext;
@@ -70,13 +70,15 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     }
 
     @Override
-    public void onMessage(Message message) {
+    public void onMessage(Message message, String date) {
+        logger.info(date);
         WritableMap params = Arguments.createMap();
         params.putString("thread", message.getThread());
         params.putString("subject", message.getSubject());
         params.putString("body", message.getBody());
         params.putString("from", message.getFrom());
         params.putString("src", message.toXML().toString());
+        params.putString("date", date);
         sendEvent(reactContext, RNXMPP_MESSAGE, params);
     }
 
@@ -158,6 +160,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
 
     @Override
     public void onAllMucFetced(WritableArray mucRooms) {
+
         logger.info("Inside onAllMucsFetched! " +  mucRooms.size());
         sendEvent(reactContext, RNXMPP_ALLMUCS, mucRooms);
     }

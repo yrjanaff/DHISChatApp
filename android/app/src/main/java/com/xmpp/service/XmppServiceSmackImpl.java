@@ -256,18 +256,19 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     @Override
     public void connect(String jid, String password, String authMethod, String hostname, Integer port) {
 
+        logger.info("\n\ninne i connect1");
         final String[] jidParts = jid.split("@");
         String[] serviceNameParts = jidParts[1].split("/");
         String serviceName = serviceNameParts[0];
-
+        logger.info("\n\ninne i connect2");
         final String currentJid = jid;
 
         this.password = password;
         //  Se på connectionConfig for unødvendig kode
-
+        logger.info("\n\ninne i connect3");
         XMPPTCPConnectionConfiguration.Builder confBuilder = XMPPTCPConnectionConfiguration.builder()
             .setServiceName(serviceName)
-            .setCompressionEnabled(false)
+            .setCompressionEnabled(true)
             .setUsernameAndPassword(jidParts[0], password)
             .setConnectTimeout(3000)
             //.setDebuggerEnabled(true)
@@ -275,6 +276,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
 
             confBuilder.setResource("DHISCHAT");
+        logger.info("\n\ninne i connect4");
 
         if (hostname != null){
             confBuilder.setHost(hostname);
@@ -286,7 +288,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         if (trustedHosts.contains(hostname) || (hostname == null && trustedHosts.contains(serviceName))){
             confBuilder.setCustomSSLContext(UnsafeSSLContext.INSTANCE.getContext());
         }
-
+        logger.info("\n\ninne i connect5");
         XMPPTCPConnectionConfiguration connectionConfiguration = confBuilder.build();
         connection = new XMPPTCPConnection(connectionConfiguration);
 
@@ -305,19 +307,21 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         roster.addRosterListener(this);
 
 
-
+        logger.info("\n\ninne i connect5");
         new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... params) {
                 try {
+                    logger.info("\n\ninne i connect6");
                     connection.connect().login();
                 } catch (XMPPException | SmackException | IOException e) {
-                    logger.log(Level.SEVERE, "Could not login for user " + jidParts[0], e);
+                    logger.log(Level.SEVERE, "Could not login for userr " + jidParts[0], e);
                     if (e instanceof SASLErrorException){
                         XmppServiceSmackImpl.this.xmppServiceListener.onLoginError(((SASLErrorException) e).getSASLFailure().toString());
                     }else{
                         XmppServiceSmackImpl.this.xmppServiceListener.onError(e);
+                        logger.info("could not log in");
                     }
 
                 }
@@ -454,7 +458,18 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
     @Override
     public void processMessage(Chat chat, Message message) {
-        this.xmppServiceListener.onMessage(message);
+        logger.info("\n\n\n\n inne i processMessage");
+        logger.info(chat.toString());
+        logger.info(message.toString());
+        String date = null;
+        DelayInformation extraInfo = message.getExtension( "delay", "urn:xmpp:delay" );
+        try
+        {
+            date = extraInfo.getStamp().toString();
+        }catch(NullPointerException e){
+            logger.info("No stamp available");
+        }
+        this.xmppServiceListener.onMessage(message, date);
     }
 
     @Override
@@ -598,6 +613,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
             String[] tmp = connection.getUser().split( "/" );
             String jid = tmp[0];
 
+            logger.info("antall rooms: " +hostedRooms.size());
             WritableArray rooms = Arguments.createArray();
             if(!hostedRooms.isEmpty()){
                 for (HostedRoom j : hostedRooms)
@@ -610,8 +626,6 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                     room.pushString( roomInfo.getSubject());
                     room.pushString( Integer.toString(roomInfo.getOccupantsCount()));
                     logger.info(roomInfo.getName());
-
-
 
 
                     MultiUserChat muc = userChatManager.getMultiUserChat(j.getJid());
@@ -639,7 +653,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         } catch (SmackException e) {
             logger.info("Something wrong with chat server.." + e);
         } catch (Exception e) {
-            logger.info("Something went wrong.." + e);
+            logger.info("Something went wrong with getting mucs" + e);
         }
     }
 

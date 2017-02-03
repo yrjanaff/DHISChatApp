@@ -357,7 +357,6 @@ class XmppStore {
   }
 
   onAllMucsFetched(allMucs){
-    console.log("inni onAllMucsFetched");
     console.log(allMucs);
     this.multiUserChat = allMucs;
 
