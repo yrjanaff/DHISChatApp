@@ -352,12 +352,10 @@ class XmppStore {
   }
 
   getAllJoinedMucs(username){
-    console.log("Inni getalljointedMucs " + username)
     XMPP.getAllJoinedMucs(username);
   }
 
   onAllMucsFetched(allMucs){
-    console.log(allMucs);
     this.multiUserChat = allMucs;
 
     this.multiUserChat.map((current) => {
