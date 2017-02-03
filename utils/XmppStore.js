@@ -34,6 +34,7 @@ class XmppStore {
     @observable lastActive = null;
     @observable interpratationHasMuc = false;
     @observable drawerOpen = false;
+    @observable logginIn = false;
 
 
 
@@ -284,6 +285,7 @@ class XmppStore {
   }
 
   onLogin(){
+    this.logginIn = true;
     this.loading = false;
     this.loginError = null;
     this.logged = true;
@@ -294,22 +296,26 @@ class XmppStore {
 
 
   login({username, password}){
-    this.username = username;
-    this.mucUsername = this._userForName(username) + "/DHISCHAT";
-    this.password = password;
-    if (!username || !username.trim()){
-      this.loginError = "Username should not be empty";
-    } else if (!password || !password.trim()){
-      this.loginError = "Password should not be empty";
-    } else {
-      this.loginError = null;
+    console.log('logger inn')
+    console.log(this.logginIn)
+    if(!this.logginIn) {
+      this.username = username;
+      this.mucUsername = this._userForName(username) + "/DHISCHAT";
+      this.password = password;
+      if( !username || !username.trim() ) {
+        this.loginError = "Username should not be empty";
+      } else if( !password || !password.trim() ) {
+        this.loginError = "Password should not be empty";
+      } else {
+        this.loginError = null;
 
-      XMPP.trustHosts(['1x-193-157-251-127.uio.no', '1x-193-157-200-122.uio.no', '1x-193-157-188-65.uio.no','yj-dev.dhis2.org'])
-      // try to login to test domain with the same password as username
-      XMPP.connect(this._userForName(this.username),this.password, "", DOMAIN, 5222);
-      this.loading = true
+        XMPP.trustHosts(['1x-193-157-251-127.uio.no', '1x-193-157-200-122.uio.no', '1x-193-157-188-65.uio.no', 'yj-dev.dhis2.org'])
+        // try to login to test domain with the same password as username
+        XMPP.connect(this._userForName(this.username), this.password, "", DOMAIN, 5222);
+        this.loading = true
 
-      this.getSavedData()
+        this.getSavedData()
+      }
     }
 
   }
