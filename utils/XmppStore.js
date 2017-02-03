@@ -294,6 +294,7 @@ class XmppStore {
 
 
   login({username, password}){
+    console.log('Inni login!!!!!!!');
     this.username = username;
     this.mucUsername = this._userForName(username) + "/DHISCHAT";
     this.password = password;
