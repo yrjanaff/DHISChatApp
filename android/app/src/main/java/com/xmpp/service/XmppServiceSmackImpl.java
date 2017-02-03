@@ -134,11 +134,11 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         String[] splitURI;
         logger.info(uri);
         try {
-            if(uri.contains("\\/0")){
-                splitURI = uri.split("\\/0");
+            if(uri.contains("/0")){
+                splitURI = uri.split("/0");
             }
             else{
-                splitURI = uri.split("\\/sdcard0");
+                splitURI = uri.split("/sdcard0");
             }
             //logger.info(mf.getAbsoluteFile());
             logger.info(splitURI[1].toString());
@@ -602,13 +602,15 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
             if(!hostedRooms.isEmpty()){
                 for (HostedRoom j : hostedRooms)
                 {
-
+                    logger.info("Amount of rooms!!: " + rooms.size());
                     WritableArray room = Arguments.createArray();
                     RoomInfo roomInfo = MultiUserChatManager.getInstanceFor( connection ).getRoomInfo( j.getJid() );
                     room.pushString( roomInfo.getName());
                     room.pushString( j.getJid());
                     room.pushString( roomInfo.getSubject());
                     room.pushString( Integer.toString(roomInfo.getOccupantsCount()));
+                    logger.info(roomInfo.getName());
+
 
 
 
@@ -618,11 +620,15 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                     WritableArray occupants = Arguments.createArray();
                     List<String> participants = muc.getOccupants();
                     for ( String nick : participants )
+                    {
                         occupants.pushString( nick );
+                        logger.info("Nick of occupant is: " + nick);
+                    }
 
                     room.pushArray(occupants);
 
                     rooms.pushArray(room);
+
                 }
             }
             this.xmppServiceListener.onAllMucFetced(rooms);

@@ -16,6 +16,7 @@ export default class InterpretationPreview extends React.Component {
   }
   
   render(){
+    if(xmpp.remoteMuc[2]){
     if(xmpp.remote === xmpp.remoteMuc[0] && xmpp.remoteMuc[2].indexOf(xmpp.currentInterpretation.id) != -1){
       return (
         <TouchableHighlight onPress={() => {xmpp.interpratationHasMuc = true; Actions.mucInterpretation({isMuc: true})}} style={{borderBottomColor:'lightgray', borderBottomWidth: 4, paddingBottom:20, marginTop: -50}}>
@@ -43,7 +44,7 @@ export default class InterpretationPreview extends React.Component {
           </View>
         </TouchableHighlight>
       )
-    }else{
+    }}else{
       return null;
     }
   }

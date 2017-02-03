@@ -25,6 +25,7 @@ export default class MucOccupants extends React.Component {
     let occupantsName = [];
 
     for(let i = 0; i < this.state.mucRemote[3]; i++ ){
+      console.log(this.state.mucRemote);
       if(roster[this.state.mucRemote[4][i].split('/')[1]]) {
         filteredRoster.push(roster[this.state.mucRemote[4][i].split('/')[1]])
         occupantsName.push(roster[this.state.mucRemote[4][i].split('/')[1]].username.toLowerCase())

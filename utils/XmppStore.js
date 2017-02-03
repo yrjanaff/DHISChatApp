@@ -192,6 +192,7 @@ class XmppStore {
     this.getOccupants(props[1]);
   }
   onOccupantsFetched( occupants ){
+    conosle.log("inni onOccupantsFetched: " + occupants);
     this.mucRemote[4] = occupants;
 
     for(let i = 0; i < this.multiUserChat.length; i++){
@@ -331,7 +332,7 @@ class XmppStore {
   createConference(chatName, subject, participants, from) {
     this.remoteMuc = [];
     this.setRemote(chatName.toLowerCase(),true,[chatName,chatName+'@conference.' +DOMAIN,subject, participants.length, participants])
-    this.multiUserChat = this.multiUserChat.concat([[chatName.toLowerCase(), chatName+'@conference.' +DOMAIN, subject, participants.length]]);
+    this.multiUserChat = this.multiUserChat.concat([[chatName.toLowerCase(), chatName+'@conference.' +DOMAIN, subject, participants.length, participants]]);
     XMPP.createConference(chatName.toLowerCase(), subject, participants, from);
     this.newMucParticipants = []
     if(subject){
@@ -344,10 +345,13 @@ class XmppStore {
   }
 
   getAllJoinedMucs(username){
+    console.log("Inni getalljointedMucs " + username)
     XMPP.getAllJoinedMucs(username);
   }
 
   onAllMucsFetched(allMucs){
+    console.log("inni onAllMucsFetched");
+    console.log(allMucs);
     this.multiUserChat = allMucs;
 
     this.multiUserChat.map((current) => {

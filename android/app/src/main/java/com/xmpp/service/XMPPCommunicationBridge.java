@@ -19,6 +19,7 @@ import org.jivesoftware.smack.packet.Presence;
 
 import com.xmpp.utils.Parser;
 import android.util.Log;
+import java.util.logging.Logger;
 
 /**
  * Created by Kristian Frølund on 7/19/16.
@@ -46,6 +47,8 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     public static final String RNXMPP_USERADDED = "XMPPUserAddedToGroup";
     public static final String RNXMPP_OCCUPANTSFETCHED = "XMPPOCCUPANTSFETCHED";
     ReactContext reactContext;
+
+    Logger logger = Logger.getLogger(XmppServiceSmackImpl.class.getName());
 
     public XMPPCommunicationBridge(ReactContext reactContext) {
         this.reactContext = reactContext;
@@ -155,6 +158,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
 
     @Override
     public void onAllMucFetced(WritableArray mucRooms) {
+        logger.info("Inside onAllMucsFetched! " +  mucRooms.size());
         sendEvent(reactContext, RNXMPP_ALLMUCS, mucRooms);
     }
 
