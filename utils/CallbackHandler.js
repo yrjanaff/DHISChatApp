@@ -60,8 +60,8 @@ class XMPP{
 
   onDisconnected(error){
     LOG("Disconnected, error: "+error);
-    this.isConnected = false;
-    this.isLogged = false;
+    //this.isConnected = false;
+    //this.isLogged = false;
   }
 
   onError(text){

@@ -1,16 +1,57 @@
 import React from 'react';
-import {View, Text, ScrollView, TextInput, ListView, Dimensions,Image}  from 'react-native';
+import {View, Text, ScrollView, TextInput, ListView, Dimensions,Image, AsyncStorage, Switch}  from 'react-native';
 import styles from './styles';
 import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';
 import xmpp from '../utils/XmppStore'
+import CheckBox from 'react-native-checkbox';
 
 const dismissKeyboard = require('dismissKeyboard');
 
 export default class Login extends React.Component {
   constructor( props ) {
     super(props);
-    this.state = {};
+    this.state = {savePassword: true};
+
+    this.getCredentials();
+  }
+
+  login(username, password){
+
+  }
+
+  async getCredentials(){
+    try {
+      const username = await AsyncStorage.getItem('username');
+      const password = await AsyncStorage.getItem('password');
+      if (username !== null && password !== null && username !== '' && password !== ''){
+        console.log("Setter username: " + username + "  password: " + password);
+        this.setState({username: username, password: password});
+      }
+    } catch (error) {
+      console.log("getCredentials error: " + error);
+    }
+
+  }
+
+  async saveCredentials(){
+    if(this.state.savePassword){
+      try {
+        await AsyncStorage.setItem('username', this.state.username);
+        await AsyncStorage.setItem('password', this.state.password);
+      } catch (error) {
+        console.log('Async storage: ' + error)
+      }
+    }
+    else{
+      try {
+        await AsyncStorage.setItem('username', '');
+        await AsyncStorage.setItem('password', '');
+        this.setState({username: '', password: ''});
+      } catch (error) {
+        console.log('Async storage: ' + error)
+      }
+    }
   }
 
   render() {
@@ -55,7 +96,16 @@ export default class Login extends React.Component {
                        onSubmitEditing={() => xmpp.login(this.state)}
             />
           </View>
-          <View style={styles.loginButton}><Button style={{color: 'white'}} onPress={()=> {dismissKeyboard(); xmpp.login(this.state)}}>Login</Button></View>
+          <CheckBox //Kan evt byttes ut med switch: https://facebook.github.io/react-native/docs/switch.html
+              label='Save credentials'
+              checked={this.state.savePassword}
+              onChange={(checked) => {this.setState({savePassword: !checked});}}
+              underlayColor={'transparent'}
+              checkboxStyle={{tintColor: 'white'}}
+              labelStyle={{color: 'white'}}
+          />
+
+          <View style={styles.loginButton}><Button style={{color: 'white'}} onPress={()=> {dismissKeyboard(); this.saveCredentials(); xmpp.login(this.state)}}>Login</Button></View>
           <ActivityIndicator active={xmpp.loading}/>
 
         </View>
