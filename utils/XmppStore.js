@@ -296,9 +296,6 @@ class XmppStore {
 
 
   login({username, password}){
-    console.log('logger inn')
-    console.log(this.logginIn)
-    if(!this.logginIn) {
       this.username = username;
       this.mucUsername = this._userForName(username) + "/DHISCHAT";
       this.password = password;
@@ -316,7 +313,6 @@ class XmppStore {
 
         this.getSavedData()
       }
-    }
 
   }
 

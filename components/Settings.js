@@ -35,7 +35,6 @@ export default class Settings extends React.Component {
   }
 
   getDhisProfile() {
-    console.log('inni getProfile!!')
     return fetch(realDhisApiURL + 'me?fields=firstName,surname,education,employer,jobTitle,email,phoneNumber, interests,languages', getDhisHeaderUser(xmpp.username, xmpp.password))
         .then(( response ) => response.json())
         .then(( responseJson ) => {
@@ -57,10 +56,6 @@ export default class Settings extends React.Component {
         .catch(( error ) => {
           console.error(error);
         });
-  }
-
-  componentWillReceiveProps(nextProps){
-    console.log('ny prop');
   }
 
   setDhisProfile() {
@@ -90,8 +85,6 @@ export default class Settings extends React.Component {
   }
 
   render() {
-    console.log(xmpp.username);
-    console.log(this.state.username);
     if(xmpp.username !== this.state.username){
       this.getDhisProfile();
     }
