@@ -104,7 +104,7 @@ export default class Login extends React.Component {
               labelStyle={{color: 'white'}}
           />
 
-          <View style={styles.loginButton}><Button style={{color: 'white'}} onPress={()=> {dismissKeyboard(); this.saveCredentials(); xmpp.login(this.state)}}>Login</Button></View>
+          <View style={styles.loginButton}><Button style={{color: 'white'}} onPress={()=> {dismissKeyboard(); this.saveCredentials(); xmpp.selfDisconnect = false; xmpp.login(this.state)}}>Login</Button></View>
           <ActivityIndicator active={xmpp.loading}/>
 
         </View>

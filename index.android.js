@@ -89,7 +89,7 @@ var DhisChat = React.createClass({
                 <Scene key="intView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')}/>
               </Scene>
 
-              <Scene key="settings" title="Profile" component={Settings} icon={TabIcon} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar} onRight={()=>xmpp.disconnect()} rightTitle={
+              <Scene key="settings" title="Profile" component={Settings} icon={TabIcon} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar} onRight={()=>{xmpp.selfDisconnect = true; xmpp.disconnect();}} rightTitle={
                 <Text style={{justifyContent: 'flex-end', color: 'white'}}>
                     Log out
                 </Text>
