@@ -46,22 +46,10 @@ export default class Chats extends React.Component {
     };
   }
 
-  formatDate(date){
-        let thisDate = new Date(date);
+  formatDate(date, time){
         let today = new Date();
+        return dateFormat(today, "dd.mmm.yyyy") === date ? time : date;
 
-        if( today.getFullYear() === thisDate.getFullYear() &&
-        today.getMonth() === thisDate.getMonth() &&
-        today.getDate() === thisDate.getDate()){
-          return dateFormat(thisDate, "HH:MM");
-        }
-        if( today.getFullYear() === thisDate.getFullYear() &&
-            today.getMonth() === thisDate.getMonth()){
-          return dateFormat(thisDate, "dd.mmm");
-        }
-        else {
-          return dateFormat(thisDate, "dd.mm.yyyy");
-        }
   }
 
   prevMessage(message, image) {
@@ -103,7 +91,7 @@ export default class Chats extends React.Component {
                               <View style={{flex:1, flexDirection: 'column', borderColor: 'lightgray', borderBottomWidth: 0.5, marginBottom: 10}}>
                               <View style={{flexDirection:'row', justifyContent: 'space-between', marginLeft: 10}}>
                                 <Text style={[{fontSize: 20},{fontWeight: xmpp.unSeenNotifications.Chats.indexOf(remote) > -1 ? 'bold': 'normal' }]}>{this.prettifyUsername(remote)}</Text>
-                                <Text style={styles.dateColor}>{this.formatDate(xmpp.conversation[remote].chat[0].date)}</Text>
+                                <Text style={styles.dateColor}>{this.formatDate(xmpp.conversation[remote].chat[0].date,xmpp.conversation[remote].chat[0].time )}</Text>
                               </View>
                                   <Text style={{marginLeft:10, marginBottom: 5}}>
                                     {

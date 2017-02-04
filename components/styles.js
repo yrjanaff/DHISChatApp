@@ -227,14 +227,14 @@ var styles = StyleSheet.create({
   },
 
   bubbleLeft: {
-    marginLeft: 5,
+    padding: 5,
     marginRight: 70,
     backgroundColor: '#e6e6eb',
     alignSelf: 'flex-start',
   },
 
   bubbleRight: {
-    marginRight: 5,
+    padding: 5,
     marginLeft: 70,
     backgroundColor: '#1d5288',
     alignSelf: 'flex-end',

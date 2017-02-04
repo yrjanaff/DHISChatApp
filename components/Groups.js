@@ -33,7 +33,7 @@ export default class Groups extends React.Component {
     xmpp.joinMuc(remote[1]);
 
     xmpp.unSeenNotifications.Groups = xmpp.unSeenNotifications.Groups.filter( notification => notification !== remote[0]);
-    
+
     if(remote[2]){
       if(xmpp.interpretations[remote[2]]){
         xmpp.setCurrentInterpretation(xmpp.interpretations[remote[2]]);
@@ -46,7 +46,7 @@ export default class Groups extends React.Component {
         xmpp.remoteMuc.push(remote[2]);
       }
     }
-    
+
     Actions.groupConversation();
   }
 

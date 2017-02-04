@@ -30,7 +30,9 @@ class Conversation extends React.Component {
     this.state = {
       group: props.group,
       showImagePicker: false,
-      selectedImage: ''
+      selectedImage: '',
+      lastTime: null,
+      lastDate: null
     };
     this.getImage = this.getImage.bind(this);
   }
@@ -54,6 +56,14 @@ class Conversation extends React.Component {
     );
   }
 
+  isSameDate(date){
+
+  }
+  isSameTime(time){
+
+  }
+
+
   render() {
     let dataSource = ds.cloneWithRows([], []);
 
@@ -74,14 +84,22 @@ class Conversation extends React.Component {
                       renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
                       dataSource={dataSource}
                       renderRow={(row) => {
-                        return !row.image ?
-                              <View style={[styles.bubble, row.own ? styles.bubbleRight : styles.bubbleLeft]}>
-                                <Text style={[styles.messageItem, {color: row.own ? '#ffffff' : 'black'}]}>{row.text}</Text><Text style={{fontSize: 10,marginTop: -10,color: row.own ? '#ffffff' : 'black', textAlign: row.own ? 'right' : 'left'}}>{row.from ? row.from.split('@')[0]:null}</Text>
-                              </View> :
+                        return (!row.image ?
+                            <View>
+                              {console.log(this.state.lastDate)}{console.log(row.date)}
+                              { this.state.lastDate === row.date ? null : <Text style={{textAlign: 'center', marginBottom:3, marginTop:3 }}>{row.date}</Text>}
+                              <View style={styles.bubble}>
+                                <View style={row.own ? styles.bubbleRight : styles.bubbleLeft}>
+                                  <Text style={[styles.messageItem, {color: row.own ? '#ffffff' : 'black'}]}>{row.text}</Text><Text style={{fontSize: 10,marginTop: -10,color: row.own ? '#ffffff' : 'black', textAlign: row.own ? 'right' : 'left'}}>{row.from ? row.from.split('@')[0]:null}</Text>
+                                </View>
+                                { this.state.lastTime === row.time ? null: <Text style={{textAlign: row.own ? 'right' : 'left'}}>{row.time}</Text>}
+                              </View>
+                            </View> :
 
                             <TouchableHighlight style={styles.touch} underlayColor={'#ffffff'} key={row.text}
                                       onPress={isSent && row.text === this.state.selectedImage || row.sent ? () => Actions.conView({path: row.text, header:null }) : () => { this.retrySendImage(row.text); this.setState({selectedImage: row.text});}}>
-
+                              <View>
+                                { this.state.lastDate === row.date ? null : <Text style={{textAlign: 'center', marginBottom:3, marginTop:3 }}>{row.date}</Text>}
                                <Image source={{
                                   uri: row.text
                                  }}
@@ -93,9 +111,12 @@ class Conversation extends React.Component {
 
                                  }}
                                />
+                                { this.state.lastTime === row.time ? null: <Text style={{textAlign: row.own ? 'right' : 'left'}}>{row.time}</Text>}
+                              </View>
                             </TouchableHighlight>
 
-                       }}
+                        )
+                         }}
             />
             { xmpp.sendFileError ? <Text style={[{color: 'red', textAlign:'right'}]}>{xmpp.sendFileError}</Text> : null}
           </View>

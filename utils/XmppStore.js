@@ -8,6 +8,7 @@ import { Actions } from 'react-native-mobx';
 import { sendPush } from './PushUtils'
 import { fetchInterpretation } from './DhisUtils';
 var btoa = require('Base64').btoa;
+var dateFormat = require('dateformat');
 
 @autobind
 class XmppStore {
@@ -114,10 +115,11 @@ class XmppStore {
 
   fileReceived({from, uri}){
     const from_name = from.split("/")[0];
+    let date = new Date();
     if( !this.conversation[from_name] ) {
-      this.conversation = Object.assign({}, this.conversation, {[from_name]: {chat: [{own:false, text:uri, date: new Date(), image: true, sent: true}]}});
+      this.conversation = Object.assign({}, this.conversation, {[from_name]: {chat: [{own:false, text:uri, date: dateFormat(date, "dd.mmm.yyyy"), time: dateFormat(date, "HH:MM"),image: true, sent: true}]}});
     } else {
-      this.conversation[from_name].chat.unshift({own: false, text: uri, date: new Date(), image: true, sent:true})
+      this.conversation[from_name].chat.unshift({own: false, text: uri,date: dateFormat(date, "dd.mmm.yyyy"), time: dateFormat(date, "HH:MM"), image: true, sent:true})
     }
     this.savedData = Object.assign({}, this.savedData, {conversation: this.conversation});
     this.saveState(JSON.stringify(this.savedData));
@@ -131,10 +133,11 @@ class XmppStore {
     }
   }
   sentFileinChat(image){
+    let date = new Date();
     if( !this.conversation[this.remote] ) {
-      this.conversation = Object.assign({}, this.conversation, {[this.remote]: {chat: [{own:true, text:image, date: new Date(), image: true, sent: false}]}});
+      this.conversation = Object.assign({}, this.conversation, {[this.remote]: {chat: [{own:true, text:image, date: dateFormat(date, "dd.mmm.yyyy"), time: dateFormat(date, "HH:MM"), image: true, sent: false}]}});
     } else {
-      this.conversation[this.remote].chat.unshift({own: true, text: image, date: new Date(), image: true, sent:false})
+      this.conversation[this.remote].chat.unshift({own: true, text: image, date: dateFormat(date, "dd.mmm.yyyy"), time: dateFormat(date, "HH:MM"), image: true, sent:false})
     }
 
   }
@@ -205,11 +208,14 @@ class XmppStore {
   }
 
   createConversationObject(remote, own, message) {
-    this.conversation = Object.assign({}, this.conversation, {[remote]: {chat: [{own:own, text:message, date: new Date() }]}});
+    let date = new Date();
+
+    this.conversation = Object.assign({}, this.conversation, {[remote]: {chat: [{own:own, text:message, date: dateFormat(date, "dd.mmm.yyyy"), time: dateFormat(date, "HH:MM") }]}});
   }
 
 
   sendMessage(message, group){
+    let date = new Date();
     if(!group) {
       if( !this.remote || !this.remote.trim() ) {
         console.error("No remote username is defined");
@@ -220,7 +226,7 @@ class XmppStore {
       if( !this.conversation[this.remote] ) {
         this.createConversationObject(this.remote, true, message);
       } else {
-        this.conversation[this.remote].chat.unshift({own: true, text: message, date: new Date()})
+        this.conversation[this.remote].chat.unshift({own: true, text: message, date: dateFormat(date, "dd.mmm.yyyy"), time: dateFormat(date, "HH:MM")})
       }
       // empty sent message
       this.error = null;
@@ -235,6 +241,7 @@ class XmppStore {
   }
 
   onReceiveMessage({from, body}){
+    let date = new Date();
     if (!from || !body){
       return;
     }
@@ -245,7 +252,7 @@ class XmppStore {
     if( !this.conversation[from_name] ) {
       this.createConversationObject(from_name, false, body);
     }else{
-      this.conversation[from_name].chat.unshift({own:false, text:body, date: new Date() }) //Date er en foreløpig løsning..
+      this.conversation[from_name].chat.unshift({own:false, text:body, date: dateFormat(date, "dd.mmm.yyyy"), time: dateFormat(date, "HH:MM") }) //Date er en foreløpig løsning..
     }
     this.savedData = Object.assign({}, this.savedData, {conversation: this.conversation})
     this.saveState(JSON.stringify(this.savedData));
@@ -296,6 +303,8 @@ class XmppStore {
 
 
   login({username, password}){
+    if(!this.logginIn) {
+      this.logginIn = true;
       this.username = username;
       this.mucUsername = this._userForName(username) + "/DHISCHAT";
       this.password = password;
@@ -313,7 +322,7 @@ class XmppStore {
 
         this.getSavedData()
       }
-
+    }
   }
 
   getAllMuc(){
@@ -325,6 +334,7 @@ class XmppStore {
   }
 
   disconnect() {
+    this.logginIn = false;
     XMPP.disconnect();
     Actions.chatTab()
     this.savedData = Object.assign({}, this.savedData, {lastActive: new Date()});
@@ -387,17 +397,17 @@ class XmppStore {
       return;
     }
 
-    let date = time !== null ? time : new Date();
+    let date = time !== null ? new Date(time) : new Date();
     let muc = from.split("@")[0];
     let from_name = from.split("/")[1];
 
     let own = from_name === this.username || from_name === this._userForName(this.username);
 
     if(!this.mucConversation[muc]){
-      this.mucConversation = Object.assign({}, this.mucConversation, {[muc]: {chat: [{own:own, text: message, from: from_name, date: date}]}});
+      this.mucConversation = Object.assign({}, this.mucConversation, {[muc]: {chat: [{own:own, text: message, from: from_name, date: dateFormat(date, "dd.mmm.yyyy"), time: dateFormat(date, "HH:MM")}]}});
     }
     else {
-      this.mucConversation[muc].chat.unshift({own: own, text: message, from: from_name, date: date});
+      this.mucConversation[muc].chat.unshift({own: own, text: message, from: from_name, date: dateFormat(date, "dd.mmm.yyyy"), time: dateFormat(date, "HH:MM")});
     }
 
     if(!this.activeApp){
