@@ -69,6 +69,7 @@ class XmppStore {
         this.mucSubject = null;
         this.remoteMuc = [];
         this.conversation={};
+        this.selfDisconnect = false;
     }
 
   saveInterpretation(interpretation){
@@ -336,7 +337,7 @@ class XmppStore {
   disconnect() {
     this.logginIn = false;
     XMPP.disconnect();
-    Actions.chatTab()
+    Actions.chatTab();
     this.savedData = Object.assign({}, this.savedData, {lastActive: new Date()});
     this.saveState(JSON.stringify(this.savedData));
     this.logged = false;
