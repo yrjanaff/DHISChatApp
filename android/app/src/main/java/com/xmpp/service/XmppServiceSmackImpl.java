@@ -458,18 +458,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
     @Override
     public void processMessage(Chat chat, Message message) {
-        logger.info("\n\n\n\n inne i processMessage");
-        logger.info(chat.toString());
-        logger.info(message.toString());
-        String date = null;
-        DelayInformation extraInfo = message.getExtension( "delay", "urn:xmpp:delay" );
-        try
-        {
-            date = extraInfo.getStamp().toString();
-        }catch(NullPointerException e){
-            logger.info("No stamp available");
-        }
-        this.xmppServiceListener.onMessage(message, date);
+        this.xmppServiceListener.onMessage(message);
     }
 
     @Override

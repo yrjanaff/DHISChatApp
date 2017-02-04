@@ -70,7 +70,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
     }
 
     @Override
-    public void onMessage(Message message, String date) {
+    public void onMessage(Message message) {
         logger.info(date);
         WritableMap params = Arguments.createMap();
         params.putString("thread", message.getThread());
@@ -78,7 +78,6 @@ public class XMPPCommunicationBridge implements XmppServiceListener {
         params.putString("body", message.getBody());
         params.putString("from", message.getFrom());
         params.putString("src", message.toXML().toString());
-        params.putString("date", date);
         sendEvent(reactContext, RNXMPP_MESSAGE, params);
     }
 
