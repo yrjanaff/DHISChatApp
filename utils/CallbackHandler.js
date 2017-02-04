@@ -63,12 +63,9 @@ class XMPP {
 
   onDisconnected( error ) {
     LOG("Disconnected, error: " + error);
-
-    console.log('disconnect message: ' + this.disconnectMessage);
-    console.log('selfDisconnect: ' + XmppStore.selfDisconnect);
+    
     if( !this.disconnectMessage && !XmppStore.selfDisconnect) {
       this.disconnectMessage = true;
-      //XmppStore.selfDisconnect = ;
       Alert.alert(
           'DHIS Chat',
           'Your client was disconnected. Log in again!',
@@ -88,7 +85,6 @@ class XMPP {
   }
 
   onError( text ) {
-    console.log('hei fra onError');
     LOG("Error: " + text);
     Alert.alert(
         'DHIS Chat',

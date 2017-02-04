@@ -11,13 +11,9 @@ const dismissKeyboard = require('dismissKeyboard');
 export default class Login extends React.Component {
   constructor( props ) {
     super(props);
-    this.state = {savePassword: true};
+    this.state = {savePassword: true, savePassword: false};
 
     this.getCredentials();
-  }
-
-  login(username, password){
-
   }
 
   async getCredentials(){
@@ -26,6 +22,7 @@ export default class Login extends React.Component {
       const password = await AsyncStorage.getItem('password');
       if (username !== null && password !== null && username !== '' && password !== ''){
         this.setState({username: username, password: password});
+        console.log(this.state);
       }
     } catch (error) {
       console.log("getCredentials error: " + error);
@@ -54,6 +51,9 @@ export default class Login extends React.Component {
   }
 
   render() {
+    if(this.state.username === '' && this.state.password === '' && this.state.savePassword)
+        this.getCredentials();
+
     return (
         <View style={[styles.container,{alignItems:'center', backgroundColor: '#1d5288'}]}>
           <Image
@@ -70,7 +70,7 @@ export default class Login extends React.Component {
             <TextInput style={styles.rowInput}
                        autoCorrect={false}
                        autoCapitalize="none"
-                       autoFocus={true}
+                       autoFocus={!this.state.savePassword}
                        returnKeyType={'next'}
                        placeholder="Username"
                        value={this.state.username}
@@ -98,7 +98,7 @@ export default class Login extends React.Component {
           <CheckBox //Kan evt byttes ut med switch: https://facebook.github.io/react-native/docs/switch.html
               label='Save credentials'
               checked={this.state.savePassword}
-              onChange={(checked) => {this.setState({savePassword: !checked});}}
+              onChange={(checked) => {console.log(!checked); this.setState({savePassword: !checked});}}
               underlayColor={'transparent'}
               checkboxStyle={{tintColor: 'white'}}
               labelStyle={{color: 'white'}}
@@ -106,7 +106,6 @@ export default class Login extends React.Component {
 
           <View style={styles.loginButton}><Button style={{color: 'white'}} onPress={()=> {dismissKeyboard(); this.saveCredentials(); xmpp.selfDisconnect = false; xmpp.login(this.state)}}>Login</Button></View>
           <ActivityIndicator active={xmpp.loading}/>
-
         </View>
     )
   }
