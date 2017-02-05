@@ -77,17 +77,19 @@ class Conversation extends React.Component {
 
   render() {
     let numRows = 0;
-
+    let conversations = null;
     let dataSource = ds.cloneWithRows([], []);
 
     if( !xmpp.group && xmpp.conversation[xmpp.remote] ) {
       numRows = xmpp.conversation[xmpp.remote].chat.length;
       nextDate = numRows > 1 ? xmpp.conversation[xmpp.remote].chat[1].date: null;
+      conversations = xmpp.conversation;
       dataSource = ds.cloneWithRows(xmpp.conversation[xmpp.remote].chat.map(x => x));
     }
     if( xmpp.group && xmpp.mucConversation[xmpp.remote] ) {
       numRows = xmpp.mucConversation[xmpp.remote].chat.length;
-      nextDate = numRows > 1 ? xmpp.conversation[xmpp.remote].chat[1].date: null;
+      nextDate = numRows > 1 ? xmpp.mucConversation[xmpp.remote].chat[1].date: null;
+      conversations = xmpp.mucConversation;
       dataSource = ds.cloneWithRows(xmpp.mucConversation[xmpp.remote].chat.map(x => x));
     }
 
@@ -104,7 +106,7 @@ class Conversation extends React.Component {
                       dataSource={dataSource}
                       renderRow={(row, index) => {
                         currentRow++;
-                        currentRow < numRows-1 ? this.updateDate(xmpp.conversation[xmpp.remote].chat[currentRow +1].date) : this.updateDate(row.date)
+                        currentRow < numRows-1 ? this.updateDate(conversations[xmpp.remote].chat[currentRow +1].date) : this.updateDate(row.date)
                         return (!row.image ?
                             <View>
                                 {this.renderHeader(row.date, numRows, currentRow, nextDate)}
@@ -113,7 +115,7 @@ class Conversation extends React.Component {
 
                                    <Text style={[styles.messageItem, {color: row.own ? '#ffffff' : 'black'}]}>{row.text}</Text><Text style={{fontSize: 10,marginTop: -10,color: row.own ? '#ffffff' : 'black', textAlign: row.own ? 'right' : 'left'}}>{row.from ? row.from.split('@')[0]:null}</Text>
                                 </View>
-                                {lastTime === row.time ?null:<Text style={{textAlign: row.own ? 'right' : 'left'}}>{row.time}</Text>}
+                                {lastTime === row.time ?null:<Text style={{textAlign: row.own ? 'right' : 'left', marginBottom: 5}}>{row.time}</Text>}
                               </View>
                               {this.upDateTime(row.time)}
                             </View>:

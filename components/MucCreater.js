@@ -81,7 +81,7 @@ export default class MucCreater extends React.Component {
       ToastAndroid.show('Group already exist', ToastAndroid.LONG)
     }else{
       xmpp.createInterpretationMuc = false
-      xmpp.createConference(this.state.name, xmpp.mucSubject, xmpp.newMucParticipants, this.state.username);
+      xmpp.createConference(this.state.name.trim(), xmpp.mucSubject, xmpp.newMucParticipants, this.state.username);
       this.setState({topic:'', name:''});
       Actions.pop();
       Actions.groupTab();

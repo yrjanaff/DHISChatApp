@@ -65,6 +65,8 @@ import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import android.util.Log;
 import android.os.Environment;
 import com.facebook.react.bridge.WritableArray;
+import java.util.HashMap;
+import java.util.Map;
 import com.facebook.react.bridge.Arguments;
 import android.media.MediaScannerConnection;
 import android.content.Context;
@@ -94,6 +96,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     ProviderManager.addIQProvider("query", "http://jabber.org/protocol/disco#items", new DiscoverItemsProvider());
     ProviderManager.addIQProvider("query", "http://jabber.org/protocol/disco#info", new DiscoverInfoProvider());
 */
+    Map mucInvites = new HashMap();
     XMPPTCPConnection connection;
     MediaScannerConnection msc;
     Roster roster;
@@ -516,13 +519,15 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
             room.addMessageListener( this );
 
             List<String> participants = room.getOccupants();
-            String[] temp = new String[participants.size()];
+            String[] temp = new String[participants.size()+1];
                 temp = participants.toArray(temp);
+            temp[participants.size()] = inviter;
 
-            if(!MUCs.contains(room)){
-                MUCs.add(room);
-            }
+            logger.info("inni invitatioRecieved!!!");
+            logger.info(temp.length + "");
+            logger.info(room.toString());
 
+            mucInvites.put(room.toString(), temp);
 
             this.xmppServiceListener.onMucInvotationRecevied(room.toString(), inviter, message, temp, reason);
 
@@ -563,10 +568,15 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
 
             muc.addMessageListener( this );
+            String participantString = "";
             for(int i = 0; i< participants.size(); i++)
             {
                 muc.invite(participants.getString(i), subject);
+                participantString += participants.getString(i).split("@")[0] + "\n";
             }
+
+            sendMessage("Hi!\nIn this group you can chat with:\n"
+            + participantString, name + "@conference." + connection.getServiceName());
 
         } catch (SmackException.NoResponseException e) {
             logger.info("No response from chat server.." + e);
@@ -582,6 +592,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
     @Override
     public void getAllJoinedMucs(String username){
+        logger.info("inni getAllJoinedMucs!");
         try
         {
             MultiUserChatManager userChatManager = MultiUserChatManager.getInstanceFor( connection );
@@ -606,9 +617,26 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                     muc.addMessageListener( this );
                     WritableArray occupants = Arguments.createArray();
                     List<String> participants = muc.getOccupants();
-                    for ( String nick : participants )
+logger.info("før if i get nall invittion mucs");
+                    logger.info(Integer.toString(roomInfo.getOccupantsCount()));
+                    logger.info(participants.size() + "");
+                    logger.info(muc.toString());
+                    if(roomInfo.getOccupantsCount() <= participants.size() )
                     {
-                        occupants.pushString( nick );
+                        logger.info("inni if");
+                        for ( String nick : participants )
+                        {
+                            occupants.pushString( nick );
+                        }
+                    }
+
+                    else{
+                        logger.info("Inni else");
+                       String[] mucs = (String[])mucInvites.remove(muc.toString());
+                        logger.info(mucs.length + "");
+                        for( String nick : mucs ){
+                            occupants.pushString( nick );
+                        }
                     }
 
                     room.pushArray(occupants);
@@ -624,7 +652,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         } catch (SmackException e) {
             logger.info("Something wrong with chat server.." + e);
         } catch (Exception e) {
-            logger.info("Something went wrong with getting mucs" + e);
+            logger.info("Something went wrong with getting mucs " + e);
         }
     }
 

@@ -219,11 +219,11 @@ var styles = StyleSheet.create({
   },
 
   bubble: {
-    marginTop: 10,
+    marginTop: 3,
     paddingLeft: 14,
     paddingRight: 14,
-    paddingBottom: 8,
-    paddingTop: 8,
+    paddingBottom: 3,
+    paddingTop: 3,
   },
 
   bubbleLeft: {
