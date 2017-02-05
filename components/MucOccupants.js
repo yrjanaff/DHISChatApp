@@ -62,7 +62,10 @@ export default class MucOccupants extends React.Component {
     }
   }
 
-  componentWillReceiveProps(props){ this.setState({mucRemote:props.remote}); this.setState({occupants:  this.occupantsList(props.roster) }); console.log("will receive"); console.log(this.state.mucRemote); console.log(this.state.roster)}
+  componentWillReceiveProps(props){
+    this.setState({mucRemote:props.remote});
+    this.setState({occupants:  this.occupantsList(props.roster) });
+  }
 
 
   render() {

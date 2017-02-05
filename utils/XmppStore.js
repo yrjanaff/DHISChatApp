@@ -269,6 +269,7 @@ class XmppStore {
   }
 
   onLoginError(){
+    this.logginIn = false;
     this.loading = false;
     this.loginError = "Cannot authenticate, please use correct local username";
   }
@@ -397,8 +398,7 @@ class XmppStore {
     if (!from || !message){
       return;
     }
-
-    let date = time !== null ? new Date(time) : new Date();
+    let date = time !== null ? Date.parse(time) : new Date();
     let muc = from.split("@")[0];
     let from_name = from.split("/")[1];
 

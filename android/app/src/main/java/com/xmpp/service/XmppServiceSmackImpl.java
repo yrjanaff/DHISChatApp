@@ -78,6 +78,9 @@ import android.provider.MediaStore.Images.Media;
 //import com.project.rnxmpp.ssl.DisabledSSLContext;
 import com.xmpp.ssl.UnsafeSSLContext;
 import com.xmpp.utils.Parser;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 //, ParticipantStatusListener,
 
 /**
@@ -458,9 +461,15 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         DelayInformation extraInfo = message.getExtension( "delay", "urn:xmpp:delay" );
         try
         {
-            date = extraInfo.getStamp().toString();
+            SimpleDateFormat parser = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
+            Date tmpdate = parser.parse(extraInfo.getStamp().toString());
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            date = formatter.format(tmpdate);
+
         }catch(NullPointerException e){
             logger.info("No stamp available");
+        }catch(ParseException pe){
+            logger.info("ParseException: " + pe);
         }
         this.xmppServiceListener.onMucMessage(message.getBody(),message.getFrom(), date );
     }
