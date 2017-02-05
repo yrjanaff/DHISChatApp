@@ -196,7 +196,7 @@ class XmppStore {
     this.getOccupants(props[1]);
   }
   onOccupantsFetched( occupants ){
-    conosle.log("inni onOccupantsFetched: " + occupants);
+    console.log("inni onOccupantsFetched: " + occupants);
     this.mucRemote[4] = occupants;
 
     for(let i = 0; i < this.multiUserChat.length; i++){

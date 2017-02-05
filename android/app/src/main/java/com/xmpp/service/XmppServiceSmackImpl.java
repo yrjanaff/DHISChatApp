@@ -568,14 +568,14 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
 
             muc.addMessageListener( this );
-            String participantString = "";
+            String participantString = from.split("@")[0];
             for(int i = 0; i< participants.size(); i++)
             {
                 muc.invite(participants.getString(i), subject);
-                participantString += participants.getString(i).split("@")[0] + "\n";
+                participantString += ", " + participants.getString(i).split("@")[0];
             }
 
-            sendMessage("Hi!\nIn this group you can chat with:\n"
+            sendMessage("Hi!\nThis group contains:\n"
             + participantString, name + "@conference." + connection.getServiceName());
 
         } catch (SmackException.NoResponseException e) {
