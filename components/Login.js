@@ -22,7 +22,6 @@ export default class Login extends React.Component {
       const password = await AsyncStorage.getItem('password');
       if (username !== null && password !== null && username !== '' && password !== ''){
         this.setState({username: username, password: password});
-        console.log(this.state);
       }
     } catch (error) {
       console.log("getCredentials error: " + error);
@@ -98,7 +97,7 @@ export default class Login extends React.Component {
           <CheckBox //Kan evt byttes ut med switch: https://facebook.github.io/react-native/docs/switch.html
               label='Save credentials'
               checked={this.state.savePassword}
-              onChange={(checked) => {console.log(!checked); this.setState({savePassword: !checked});}}
+              onChange={(checked) => {this.setState({savePassword: !checked});}}
               underlayColor={'transparent'}
               checkboxStyle={{tintColor: 'white'}}
               labelStyle={{color: 'white'}}

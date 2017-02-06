@@ -8,6 +8,7 @@
   "dependencies": {
     "Base64": "^1.0.0",
     "autobind": "^1.0.3",
+    "immutable": "^3.8.1",
     "material-design-icons": "^3.0.1",
     "mobx": "^2.4.0",
     "mobx-react": "^3.5.1",

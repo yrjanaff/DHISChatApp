@@ -9,17 +9,18 @@ import CameraRollPicker from 'react-native-camera-roll-picker';
 import xmpp from '../utils/XmppStore';
 const ds = new ListView.DataSource({rowHasChanged: ( r1, r2 ) => r1 !== r2});
 import InterpretationPreview from './InterpretationPreview';
-import {Icon } from 'react-native-material-design';
+import {Icon} from 'react-native-material-design';
 
 const dismissKeyboard = require('dismissKeyboard');
 
 var RNGRP = require('react-native-get-real-path');
-
+let nextDate = null;
+let lastTime = null;
 class Conversation extends React.Component {
   static title( props ) {
-    if(!xmpp.group) {
+    if( !xmpp.group ) {
       return xmpp.roster[xmpp.remote].displayName;
-    }else{
+    } else {
       return xmpp.remote.split('@')[0];
     }
 
@@ -30,9 +31,7 @@ class Conversation extends React.Component {
     this.state = {
       group: props.group,
       showImagePicker: false,
-      selectedImage: '',
-      lastTime: null,
-      lastDate: null
+      selectedImage: ''
     };
     this.getImage = this.getImage.bind(this);
   }
@@ -56,50 +55,73 @@ class Conversation extends React.Component {
     );
   }
 
-  isSameDate(date){
-
-  }
-  isSameTime(time){
-
+  updateDate( date ) {
+    nextDate = date;
   }
 
+  upDateTime( time ) {
+    lastTime = time;
+  }
+
+  renderHeader( currentDate, numRows, currentRow, nextDate) {
+    if( nextDate !== currentDate) {
+      return <Text style={{textAlign: 'center', marginBottom:3, marginTop:3 }}>{currentDate}</Text>
+    }
+    else if(currentRow === numRows -1){
+      return <Text style={{textAlign: 'center', marginBottom:3, marginTop:3 }}>{currentDate}</Text>
+    }
+    else {
+      return null;
+    }
+  }
 
   render() {
+    let numRows = 0;
+
     let dataSource = ds.cloneWithRows([], []);
 
     if( !xmpp.group && xmpp.conversation[xmpp.remote] ) {
+      numRows = xmpp.conversation[xmpp.remote].chat.length;
+      nextDate = numRows > 1 ? xmpp.conversation[xmpp.remote].chat[1].date: null;
       dataSource = ds.cloneWithRows(xmpp.conversation[xmpp.remote].chat.map(x => x));
     }
     if( xmpp.group && xmpp.mucConversation[xmpp.remote] ) {
-
+      numRows = xmpp.mucConversation[xmpp.remote].chat.length;
+      nextDate = numRows > 1 ? xmpp.conversation[xmpp.remote].chat[1].date: null;
       dataSource = ds.cloneWithRows(xmpp.mucConversation[xmpp.remote].chat.map(x => x));
     }
+
+    let currentRow = -1;
     let isSent = xmpp.currentFileSent;
+
     return (
         <View style={[styles.containerNoTabs,{paddingTop:50}]}>
-         <InterpretationPreview />
+          <InterpretationPreview />
           <View style={{flex:1}}>
             <ListView enableEmptySections
                       ref="messages"
                       renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
                       dataSource={dataSource}
-                      renderRow={(row) => {
+                      renderRow={(row, index) => {
+                        currentRow++;
+                        currentRow < numRows-1 ? this.updateDate(xmpp.conversation[xmpp.remote].chat[currentRow +1].date) : this.updateDate(row.date)
                         return (!row.image ?
                             <View>
-                              {console.log(this.state.lastDate)}{console.log(row.date)}
-                              { this.state.lastDate === row.date ? null : <Text style={{textAlign: 'center', marginBottom:3, marginTop:3 }}>{row.date}</Text>}
+                                {this.renderHeader(row.date, numRows, currentRow, nextDate)}
                               <View style={styles.bubble}>
                                 <View style={row.own ? styles.bubbleRight : styles.bubbleLeft}>
-                                  <Text style={[styles.messageItem, {color: row.own ? '#ffffff' : 'black'}]}>{row.text}</Text><Text style={{fontSize: 10,marginTop: -10,color: row.own ? '#ffffff' : 'black', textAlign: row.own ? 'right' : 'left'}}>{row.from ? row.from.split('@')[0]:null}</Text>
+
+                                   <Text style={[styles.messageItem, {color: row.own ? '#ffffff' : 'black'}]}>{row.text}</Text><Text style={{fontSize: 10,marginTop: -10,color: row.own ? '#ffffff' : 'black', textAlign: row.own ? 'right' : 'left'}}>{row.from ? row.from.split('@')[0]:null}</Text>
                                 </View>
-                                { this.state.lastTime === row.time ? null: <Text style={{textAlign: row.own ? 'right' : 'left'}}>{row.time}</Text>}
+                                {lastTime === row.time ?null:<Text style={{textAlign: row.own ? 'right' : 'left'}}>{row.time}</Text>}
                               </View>
-                            </View> :
+                              {this.upDateTime(row.time)}
+                            </View>:
 
                             <TouchableHighlight style={styles.touch} underlayColor={'#ffffff'} key={row.text}
                                       onPress={isSent && row.text === this.state.selectedImage || row.sent ? () => Actions.conView({path: row.text, header:null }) : () => { this.retrySendImage(row.text); this.setState({selectedImage: row.text});}}>
                               <View>
-                                { this.state.lastDate === row.date ? null : <Text style={{textAlign: 'center', marginBottom:3, marginTop:3 }}>{row.date}</Text>}
+                              {this.renderHeader(row.date, numRows, currentRow, nextDate)}
                                <Image source={{
                                   uri: row.text
                                  }}
@@ -111,7 +133,8 @@ class Conversation extends React.Component {
 
                                  }}
                                />
-                                { this.state.lastTime === row.time ? null: <Text style={{textAlign: row.own ? 'right' : 'left'}}>{row.time}</Text>}
+                                { lastTime === row.time ? null: <Text style={{textAlign: row.own ? 'right' : 'left'}}>{row.time}</Text>}
+                               {this.upDateTime(row.time)}
                               </View>
                             </TouchableHighlight>
 
@@ -124,40 +147,40 @@ class Conversation extends React.Component {
             <View style={{flex:1}}>
               <TextInput ref='message'
                          value={this.state.message}
-                         multiline = {true}
+                         multiline={true}
                          onChangeText={(message)=>this.setState({message})}
                          autoCapitalize={'sentences'}
                          returnKeyType={'done'}
                          style={styles.message} placeholder="Enter message..."/>
             </View>
             <View style={styles.sendButton}>
-              <Button  onPress={()=> {xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}}
-                       disabled={!this.state.message || !this.state.message.trim() && xmpp.offlineMode}
-                       style={{color: !this.state.message || !this.state.message.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>Send</Button>
+              <Button onPress={()=> {xmpp.sendMessage(this.state.message, xmpp.group);this.setState({message:''})}}
+                      disabled={!this.state.message || !this.state.message.trim() && xmpp.offlineMode}
+                      style={{color: !this.state.message || !this.state.message.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>Send</Button>
             </View>
             {
               xmpp.group ? null :
                   <View style={{ justifyContent: 'center'}}>
-                    <Button  onPress={()=> {this.setState({showImagePicker: !this.state.showImagePicker}); dismissKeyboard();}}
-                             disabled={!xmpp.remoteOnline || xmpp.offlineMode}>
+                    <Button onPress={()=> {this.setState({showImagePicker: !this.state.showImagePicker}); dismissKeyboard();}}
+                            disabled={!xmpp.remoteOnline || xmpp.offlineMode}>
                       <Icon
-                        name="local-see"
-                        color={!xmpp.remoteOnline || xmpp.offlineMode ? '#5E5E5E50':'#5E5E5E'}
-                        style={{marginRight: 10}}
-                        size={20}
-                    /></Button>
+                          name="local-see"
+                          color={!xmpp.remoteOnline || xmpp.offlineMode ? '#5E5E5E50':'#5E5E5E'}
+                          style={{marginRight: 10}}
+                          size={20}
+                      /></Button>
                   </View>
             }
           </View>
           {
             this.state.showImagePicker
                 ? <CameraRollPicker
-                    callback={this.getImage}
-                    maximum={1}
-                    selected={[]}
-                    assetType='All'
+                callback={this.getImage}
+                maximum={1}
+                selected={[]}
+                assetType='All'
 
-                />
+            />
                 : null
           }
         </View>
