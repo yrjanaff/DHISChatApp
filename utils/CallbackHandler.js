@@ -63,9 +63,10 @@ class XMPP {
 
   onDisconnected( error ) {
     LOG("Disconnected, error: " + error);
-    
+
     if( !this.disconnectMessage && !XmppStore.selfDisconnect) {
       this.disconnectMessage = true;
+      XmppStore.logginIn = false;
       Alert.alert(
           'DHIS Chat',
           'Your client was disconnected. Log in again!',
@@ -86,6 +87,7 @@ class XMPP {
 
   onError( text ) {
     LOG("Error: " + text);
+    XmppStore.logginIn = false;
     Alert.alert(
         'DHIS Chat',
         'Something went wrong. Connection timeout!',
