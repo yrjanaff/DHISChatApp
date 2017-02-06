@@ -91,7 +91,7 @@ export default class Login extends React.Component {
                        value={this.state.password}
                        onChangeText={(password)=>this.setState({password})}
                        blurOnSubmit={true}
-                       onSubmitEditing={() => xmpp.login(this.state)}
+                       onSubmitEditing={()=> {dismissKeyboard(); this.saveCredentials(); xmpp.selfDisconnect = false; xmpp.login(this.state)}}
             />
           </View>
           <CheckBox //Kan evt byttes ut med switch: https://facebook.github.io/react-native/docs/switch.html
