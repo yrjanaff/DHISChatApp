@@ -12,27 +12,38 @@ import javax.net.ssl.X509TrustManager;
  * Copyright (c) 2016. Teletronics. All rights reserved
  */
 
-public enum NullTrustManager {
+public enum NullTrustManager
+{
 
     INSTANCE();
 
-private TrustManager[] trustAllCerts;
+    private TrustManager[] trustAllCerts;
 
-    NullTrustManager() {
-    trustAllCerts = new TrustManager[]{new X509TrustManager() {
-public X509Certificate[] getAcceptedIssuers() {
-    return new X509Certificate[0];
+    NullTrustManager()
+    {
+        trustAllCerts = new TrustManager[]{ new X509TrustManager()
+        {
+            public X509Certificate[] getAcceptedIssuers()
+            {
+                return new X509Certificate[0];
+            }
+
+            @Override
+            public void checkClientTrusted( X509Certificate[] arg0, String arg1 ) throws CertificateException
+            {
+            }
+
+            @Override
+            public void checkServerTrusted( X509Certificate[] arg0, String arg1 ) throws CertificateException
+            {
+            }
+        } };
     }
 
-@Override
-public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
+    ;
 
-@Override
-public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
-    }};
-    };
-
-public TrustManager[] get() {
-    return trustAllCerts;
+    public TrustManager[] get()
+    {
+        return trustAllCerts;
     }
-    }
+}

@@ -79,8 +79,10 @@ export default class Interpretation extends React.Component {
         <View style={styles.containerNoTabs}>
           <ScrollView automaticallyAdjustContentInsets={true} horizontal={false}>
             <View style={{flex:1, flexDirection: 'column', borderColor: 'lightgray', borderBottomWidth: 1, marginBottom: 20}}>
-              <Text style={{textAlign: 'center', fontSize: 17, marginBottom: 5, fontWeight: 'bold'}}>{xmpp.currentInterpretation.name}</Text>
-              <Text style={{textAlign: 'center', fontSize: 17, marginBottom: 10, marginRight: 10, marginLeft: 10}}>{xmpp.currentInterpretation.text}</Text>
+              <Text
+                  style={{textAlign: 'center', fontSize: 17, marginBottom: 5, fontWeight: 'bold'}}>{xmpp.currentInterpretation.name}</Text>
+              <Text
+                  style={{textAlign: 'center', fontSize: 17, marginBottom: 10, marginRight: 10, marginLeft: 10}}>{xmpp.currentInterpretation.text}</Text>
             </View>
             <TouchableHighlight onPress={() => {this.props.isMuc ? Actions.mucIntView({path: xmpp.currentInterpretation.imageURL, header: getDhisHeader }) 
                 : Actions.intView({path: xmpp.currentInterpretation.imageURL, header: getDhisHeader })}}>

@@ -39,22 +39,22 @@ public interface XmppService
     void createConference( String name, String subject, ReadableArray participants, String from );
 
     @ReactMethod
-    void getAllJoinedMucs(String username);
+    void getAllJoinedMucs( String username );
 
     @ReactMethod
-    void joinMuc(String roomId);
+    void joinMuc( String roomId );
 
     @ReactMethod
-    void sendMessage(String text, String groupChat);
+    void sendMessage( String text, String groupChat );
 
     @ReactMethod
-    void fileTransfer(String uri, String to);
+    void fileTransfer( String uri, String to );
 
     @ReactMethod
-    void addUserToGroup(String username, String roomId, String subject);
+    void addUserToGroup( String username, String roomId, String subject );
 
     @ReactMethod
-    void getOccupants(String roomId);
+    void getOccupants( String roomId );
 
     @ReactMethod
     void goOffline();

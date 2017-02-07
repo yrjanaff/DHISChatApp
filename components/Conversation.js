@@ -63,11 +63,11 @@ class Conversation extends React.Component {
     lastTime = time;
   }
 
-  renderHeader( currentDate, numRows, currentRow, nextDate) {
-    if( nextDate !== currentDate) {
+  renderHeader( currentDate, numRows, currentRow, nextDate ) {
+    if( nextDate !== currentDate ) {
       return <Text style={{textAlign: 'center', marginBottom:3, marginTop:3 }}>{currentDate}</Text>
     }
-    else if(currentRow === numRows -1){
+    else if( currentRow === numRows - 1 ) {
       return <Text style={{textAlign: 'center', marginBottom:3, marginTop:3 }}>{currentDate}</Text>
     }
     else {
@@ -82,13 +82,13 @@ class Conversation extends React.Component {
 
     if( !xmpp.group && xmpp.conversation[xmpp.remote] ) {
       numRows = xmpp.conversation[xmpp.remote].chat.length;
-      nextDate = numRows > 1 ? xmpp.conversation[xmpp.remote].chat[1].date: null;
+      nextDate = numRows > 1 ? xmpp.conversation[xmpp.remote].chat[1].date : null;
       conversations = xmpp.conversation;
       dataSource = ds.cloneWithRows(xmpp.conversation[xmpp.remote].chat.map(x => x));
     }
     if( xmpp.group && xmpp.mucConversation[xmpp.remote] ) {
       numRows = xmpp.mucConversation[xmpp.remote].chat.length;
-      nextDate = numRows > 1 ? xmpp.mucConversation[xmpp.remote].chat[1].date: null;
+      nextDate = numRows > 1 ? xmpp.mucConversation[xmpp.remote].chat[1].date : null;
       conversations = xmpp.mucConversation;
       dataSource = ds.cloneWithRows(xmpp.mucConversation[xmpp.remote].chat.map(x => x));
     }

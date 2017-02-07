@@ -5,5 +5,5 @@
  *
  * See the source code for mor information
  */
-import { NativeModules } from 'react-native';
+import {NativeModules} from 'react-native';
 module.exports = NativeModules.XMPP;

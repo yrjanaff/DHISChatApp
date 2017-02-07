@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ScrollView, TextInput, ListView, Dimensions,Image, AsyncStorage, Switch}  from 'react-native';
+import {View, Text, ScrollView, TextInput, ListView, Dimensions, Image, AsyncStorage, Switch}  from 'react-native';
 import styles from './styles';
 import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';
@@ -16,42 +16,42 @@ export default class Login extends React.Component {
     this.getCredentials();
   }
 
-  async getCredentials(){
+  async getCredentials() {
     try {
       const username = await AsyncStorage.getItem('username');
       const password = await AsyncStorage.getItem('password');
-      if (username !== null && password !== null && username !== '' && password !== ''){
+      if( username !== null && password !== null && username !== '' && password !== '' ) {
         this.setState({username: username, password: password});
       }
-    } catch (error) {
+    } catch( error ) {
       console.log("getCredentials error: " + error);
     }
 
   }
 
-  async saveCredentials(){
-    if(this.state.savePassword){
+  async saveCredentials() {
+    if( this.state.savePassword ) {
       try {
         await AsyncStorage.setItem('username', this.state.username);
         await AsyncStorage.setItem('password', this.state.password);
-      } catch (error) {
+      } catch( error ) {
         console.log('Async storage: ' + error)
       }
     }
-    else{
+    else {
       try {
         await AsyncStorage.setItem('username', '');
         await AsyncStorage.setItem('password', '');
         this.setState({username: '', password: ''});
-      } catch (error) {
+      } catch( error ) {
         console.log('Async storage: ' + error)
       }
     }
   }
 
   render() {
-    if(this.state.username === '' && this.state.password === '' && this.state.savePassword)
-        this.getCredentials();
+    if( this.state.username === '' && this.state.password === '' && this.state.savePassword )
+      this.getCredentials();
 
     return (
         <View style={[styles.container,{alignItems:'center', backgroundColor: '#1d5288'}]}>
@@ -103,7 +103,8 @@ export default class Login extends React.Component {
               labelStyle={{color: 'white'}}
           />
 
-          <View style={styles.loginButton}><Button style={{color: 'white'}} onPress={()=> {dismissKeyboard(); this.saveCredentials(); xmpp.selfDisconnect = false; xmpp.login(this.state)}}>Login</Button></View>
+          <View style={styles.loginButton}><Button style={{color: 'white'}}
+                                                   onPress={()=> {dismissKeyboard(); this.saveCredentials(); xmpp.selfDisconnect = false; xmpp.login(this.state)}}>Login</Button></View>
           <ActivityIndicator active={xmpp.loading}/>
         </View>
     )

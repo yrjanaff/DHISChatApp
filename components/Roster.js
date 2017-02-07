@@ -9,11 +9,12 @@ export default class Roster extends React.Component {
     super(props);
     this.state = {};
   }
+
   render() {
     return (
-         <View style={[styles.container,{marginTop: 10}]}>
-          <ListRoster style={{color:'black'}}  isChat={false} roster={xmpp.roster}/>
-         </View>
+        <View style={[styles.container,{marginTop: 10}]}>
+          <ListRoster style={{color:'black'}} isChat={false} roster={xmpp.roster}/>
+        </View>
     )
   }
 

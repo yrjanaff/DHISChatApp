@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text,View, TextInput}  from 'react-native';
+import {Text, View, TextInput}  from 'react-native';
 import ListRoster from './ListRoster';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
@@ -13,12 +13,12 @@ export default class ChatCreater extends React.Component {
     };
   }
 
-  foundMatch(text) {
+  foundMatch( text ) {
     xmpp.group = false;
 
-    let filteredRoster =[];
-    for (let k in this.state.roster) {
-      if(this.state.roster[k].displayName.toLowerCase().indexOf(text) >= 0 )
+    let filteredRoster = [];
+    for( let k in this.state.roster ) {
+      if( this.state.roster[k].displayName.toLowerCase().indexOf(text) >= 0 )
         filteredRoster.unshift(this.state.roster[k]);
     }
 
@@ -30,22 +30,22 @@ export default class ChatCreater extends React.Component {
   }
 
   render() {
-    return(
+    return (
         <View style={styles.container}>
-          <View  style={{flex:0, flexDirection: 'row', borderColor: 'lightgray', borderBottomWidth: 7}}>
+          <View style={{flex:0, flexDirection: 'row', borderColor: 'lightgray', borderBottomWidth: 7}}>
             <Text style={{fontSize: 20, color: 'darkgray', marginTop:5 }}>TOO:</Text>
             <TextInput
-              style={{height:40, flex:1}}
-              onChangeText={(text) => {this.setState({text});this.foundMatch(text)}}
-              value={this.state.text}
-              underlineColorAndroid="#ffffff"
+                style={{height:40, flex:1}}
+                onChangeText={(text) => {this.setState({text});this.foundMatch(text)}}
+                value={this.state.text}
+                underlineColorAndroid="#ffffff"
             />
           </View>
           <View style={{marginTop:10}}>
-         <ListRoster style={{color:'black'}} isChat={true} roster={this.state.dataSource}/>
+            <ListRoster style={{color:'black'}} isChat={true} roster={this.state.dataSource}/>
           </View>
         </View>
-      );
+    );
   }
 
 }

@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {Text, View} from 'react-native';
-import {Icon } from 'react-native-material-design';
+import {Icon} from 'react-native-material-design';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
 
@@ -13,17 +13,22 @@ export default class TabIcon extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nexProps){
+  componentWillReceiveProps( nexProps ) {
     this.setState({selected: nexProps.selected})
   }
 
-  getIcon(tabtitle) {
-    switch(tabtitle){
-      case 'Chats': return 'chat-bubble';
-      case 'Contacts': return 'contact-mail';
-      case 'Groups': return  'forum';
-      case 'Interpretations': return 'insert-chart';
-      case 'Profile': return 'person';
+  getIcon( tabtitle ) {
+    switch( tabtitle ) {
+      case 'Chats':
+        return 'chat-bubble';
+      case 'Contacts':
+        return 'contact-mail';
+      case 'Groups':
+        return 'forum';
+      case 'Interpretations':
+        return 'insert-chart';
+      case 'Profile':
+        return 'person';
     }
   }
 
@@ -31,7 +36,8 @@ export default class TabIcon extends React.Component {
     let view = null;
     if( xmpp.unSeenNotifications[this.state.title] ) {
       xmpp.unSeenNotifications[this.state.title].length > 0 ?
-          view = <View style={styles.badgeView}><Text style={styles.badge}>{xmpp.unSeenNotifications[this.state.title].length}</Text></View> :
+          view =
+              <View style={styles.badgeView}><Text style={styles.badge}>{xmpp.unSeenNotifications[this.state.title].length}</Text></View> :
           view = null
     }
 

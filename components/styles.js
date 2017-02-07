@@ -6,10 +6,10 @@ var styles = StyleSheet.create({
 
 
   container: {
-      flex:1,
-      paddingTop: 55,
-      backgroundColor: '#F7F7F7',
-      paddingBottom:50
+    flex: 1,
+    paddingTop: 55,
+    backgroundColor: '#F7F7F7',
+    paddingBottom: 50
 
   },
   containerNoTabs: {
@@ -111,7 +111,7 @@ var styles = StyleSheet.create({
     backgroundColor: '#1d5288',
     padding: 5,
     borderColor: 'black',
-    borderStyle:'solid',
+    borderStyle: 'solid',
     borderRightWidth: 5,
     borderBottomWidth: 5,
     marginTop: 20,
@@ -122,7 +122,7 @@ var styles = StyleSheet.create({
     alignSelf: 'center',
 
   },
-  disabled:{
+  disabled: {
     backgroundColor: '#1d528840',
     padding: 5,
     marginTop: 20,
@@ -240,7 +240,7 @@ var styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
 
-  emptyResult:{
+  emptyResult: {
     fontSize: 20,
     color: "#5E5E5E65",
     textAlign: 'center',

@@ -4,7 +4,7 @@ import Button from 'react-native-button';
 import {Actions, ActionConst} from 'react-native-mobx';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
-import { getDhisHeader, dhisApiURL } from '../utils/DhisUtils';
+import {getDhisHeader, dhisApiURL} from '../utils/DhisUtils';
 import InterpretationMeta from '../utils/InterpretationMeta';
 
 let page = 1;
@@ -101,7 +101,7 @@ export default class InterpretationList extends React.Component {
         '!likes,!likedBy,!publicAccess,!translations,!userGroupAccesses,!attributeValues,!comments,user[name]', false);
   }
 
-  onRefresh(){
+  onRefresh() {
     this.setState({isRefreshing: true});
     this.loadMore();
   }
@@ -125,52 +125,55 @@ export default class InterpretationList extends React.Component {
                 />
                }
           >
-            <View  style={{flex:1, flexDirection: 'row', justifyContent: 'space-between', borderColor: 'lightgray', borderBottomWidth: 5, marginBottom: 10}}>
+            <View
+                style={{flex:1, flexDirection: 'row', justifyContent: 'space-between', borderColor: 'lightgray', borderBottomWidth: 5, marginBottom: 10}}>
 
-                <TextInput ref='newComment'
-                           value={this.state.search}
-                           onChangeText={(search)=>{this.setState({search}); this.setState({isSearching: true})}}
-                           returnKeyType={'search'}
-                           style={{height: 50,  flex:1}} placeholder="Search for interpretation"
-                           underlineColorAndroid="transparent"
-                           onSubmitEditing={()=>{
+              <TextInput ref='newComment'
+                         value={this.state.search}
+                         onChangeText={(search)=>{this.setState({search}); this.setState({isSearching: true})}}
+                         returnKeyType={'search'}
+                         style={{height: 50,  flex:1}} placeholder="Search for interpretation"
+                         underlineColorAndroid="transparent"
+                         onSubmitEditing={()=>{
                               if(this.state.search !== '')
                                 this.search(this.state.search);}
                            }
-                  />
+              />
               <View style={styles.sendButton}>
-                <Button  onPress={()=> {
+                <Button onPress={()=> {
                     if( this.state.search !== '')
                       this.search(this.state.search);
                     }}
-                         disabled={!this.state.search || !this.state.search.trim() && xmpp.offlineMode}
-                         style={{color: !this.state.search || !this.state.search.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>Search</Button>
+                        disabled={!this.state.search || !this.state.search.trim() && xmpp.offlineMode}
+                        style={{color: !this.state.search || !this.state.search.trim() && xmpp.offlineMode ? '#1d528830' : '#1d5288'}}>Search</Button>
               </View>
-              
+
             </View>
             { this.state.search !== '' ?
-              <View
-                  style={{flex: 1, flexDirection: 'row',justifyContent: 'space-around', borderColor: 'lightgray', borderBottomWidth: 5, marginBottom: 10}}>
-                <View><Button style={{color: '#1d5288'}} onPress={() => {this.reset(); this.setState({search:''});}}>End search</Button></View>
-              </View> : null
+                <View
+                    style={{flex: 1, flexDirection: 'row',justifyContent: 'space-around', borderColor: 'lightgray', borderBottomWidth: 5, marginBottom: 10}}>
+                  <View><Button style={{color: '#1d5288'}} onPress={() => {this.reset(); this.setState({search:''});}}>End
+                    search</Button></View>
+                </View> : null
             }
             {this.state.interpretations.length === 0 ? <Text style={styles.emptyResult}>No results</Text> :
-              this.state.interpretations.map(( interpretation, index ) => {
-              return (
-                  <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={index}
-                                      onPress={() => {
+                this.state.interpretations.map(( interpretation, index ) => {
+                  return (
+                      <TouchableHighlight style={styles.touch} underlayColor={'#d3d3d3'} key={index}
+                                          onPress={() => {
                                         xmpp.interpratationHasMuc = false;
                                       xmpp.setCurrentInterpretation(interpretation);
                                       Actions.interpretation();}}>
-                    <View key={index} style={{flex:1, flexDirection: 'column', borderBottomColor: 'lightgray', borderBottomWidth: 0.5, marginBottom: 10 }}>
-                      <Text style={[styles.bold,{fontSize: 18}]}>{interpretation.name}</Text>
-                      <Text style={{marginBottom: 10}}>
-                        {interpretation.text}
-                      </Text>
-                    </View>
-                  </TouchableHighlight>
-              );
-            })}
+                        <View key={index}
+                              style={{flex:1, flexDirection: 'column', borderBottomColor: 'lightgray', borderBottomWidth: 0.5, marginBottom: 10 }}>
+                          <Text style={[styles.bold,{fontSize: 18}]}>{interpretation.name}</Text>
+                          <Text style={{marginBottom: 10}}>
+                            {interpretation.text}
+                          </Text>
+                        </View>
+                      </TouchableHighlight>
+                  );
+                })}
           </ScrollView>
         </View>
     )
