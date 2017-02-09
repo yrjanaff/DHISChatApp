@@ -406,6 +406,7 @@ class XmppStore {
     this.savedData = Object.assign({}, this.savedData, {lastActive: new Date()});
     this.saveState(JSON.stringify(this.savedData));
     this.logged = false;
+    this.mucConversation = {};
   }
 
   createConference( chatName, subject, participants, from ) {

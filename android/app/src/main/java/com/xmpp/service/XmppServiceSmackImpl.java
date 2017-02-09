@@ -740,8 +740,11 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                     room.pushString( Integer.toString( roomInfo.getOccupantsCount() ) );
 
                     MultiUserChat muc = userChatManager.getMultiUserChat( j.getJid() );
-                    muc.join( jid );
-                    muc.addMessageListener( this );
+                    if ( !muc.isJoined() )
+                    {
+                        muc.join( jid );
+                        muc.addMessageListener( this );
+                    }
                     WritableArray occupants = Arguments.createArray();
                     List<String> participants = muc.getOccupants();
                     logger.info( "før if i get nall invittion mucs" );

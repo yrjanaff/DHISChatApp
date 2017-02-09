@@ -11,7 +11,7 @@ const dismissKeyboard = require('dismissKeyboard');
 export default class Login extends React.Component {
   constructor( props ) {
     super(props);
-    this.state = {savePassword: true, savePassword: false};
+    this.state = {savePassword: true};
 
     this.getCredentials();
   }
