@@ -44,6 +44,7 @@ import org.jivesoftware.smackx.bytestreams.socks5.provider.BytestreamsProvider;
 import org.jivesoftware.smackx.disco.provider.DiscoverItemsProvider;
 import org.jivesoftware.smackx.disco.provider.DiscoverInfoProvider;
 import org.jivesoftware.smackx.muc.Occupant;
+
 import java.util.Locale;
 
 import android.os.AsyncTask;
@@ -130,8 +131,9 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     @Override
     public void onMediaScannerConnected()
     {
-        if(file == null){
-            logger.info("file == null!");
+        if ( file == null )
+        {
+            logger.info( "file == null!" );
         }
         else
         {
@@ -551,7 +553,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         DelayInformation extraInfo = message.getExtension( "delay", "urn:xmpp:delay" );
         try
         {
-            SimpleDateFormat parser = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH );
+            SimpleDateFormat parser = new SimpleDateFormat( "EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH );
             Date tmpdate = parser.parse( extraInfo.getStamp().toString() );
             SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
             date = formatter.format( tmpdate );
@@ -743,7 +745,6 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                     room.pushString( roomInfo.getName() );
                     room.pushString( j.getJid() );
                     room.pushString( roomInfo.getSubject() );
-                    room.pushString( Integer.toString( roomInfo.getOccupantsCount() ) );
 
                     MultiUserChat muc = userChatManager.getMultiUserChat( j.getJid() );
                     if ( !muc.isJoined() )
@@ -757,26 +758,28 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                     logger.info( Integer.toString( roomInfo.getOccupantsCount() ) );
                     logger.info( participants.size() + "" );
                     logger.info( muc.toString() );
-                    if ( roomInfo.getOccupantsCount() <= participants.size() )
-                    {
-                        logger.info( "inni if" );
-                        for ( String nick : participants )
-                        {
-                            occupants.pushString( nick );
-                        }
-                    }
 
-                    else
+                    String[] mucs = (String[]) mucInvites.remove( muc.toString() );
+
+                    if ( mucs != null && mucs.length > 0 )
                     {
-                        logger.info( "Inni else" );
-                        String[] mucs = (String[]) mucInvites.remove( muc.toString() );
-                        logger.info( mucs.length + "" );
                         for ( String nick : mucs )
                         {
+                            logger.info( mucs.length + "" );
+                            logger.info( "Inni første for" );
+                            occupants.pushString( nick );
+                        }
+                    }
+                    else if ( participants.size() > 0 )
+                    {
+                        for ( String nick : participants )
+                        {
+                            logger.info( "Inni andre for" );
                             occupants.pushString( nick );
                         }
                     }
 
+                    room.pushString( Integer.toString( occupants.size() ) );
                     room.pushArray( occupants );
                     rooms.pushArray( room );
 

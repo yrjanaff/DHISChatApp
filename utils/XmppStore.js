@@ -426,7 +426,6 @@ class XmppStore {
     this.saveState(JSON.stringify(this.savedData));
     this.logged = false;
     this.mucConversation = {};
-    this.unSeenNotifications.Groups = [];
   }
 
   createConference( chatName, subject, participants, from ) {
