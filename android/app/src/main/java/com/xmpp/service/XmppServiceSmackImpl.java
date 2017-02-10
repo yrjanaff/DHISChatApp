@@ -44,6 +44,7 @@ import org.jivesoftware.smackx.bytestreams.socks5.provider.BytestreamsProvider;
 import org.jivesoftware.smackx.disco.provider.DiscoverItemsProvider;
 import org.jivesoftware.smackx.disco.provider.DiscoverInfoProvider;
 import org.jivesoftware.smackx.muc.Occupant;
+import java.util.Locale;
 
 import android.os.AsyncTask;
 
@@ -550,7 +551,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         DelayInformation extraInfo = message.getExtension( "delay", "urn:xmpp:delay" );
         try
         {
-            SimpleDateFormat parser = new SimpleDateFormat( "EEE MMM d HH:mm:ss zzz yyyy" );
+            SimpleDateFormat parser = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH );
             Date tmpdate = parser.parse( extraInfo.getStamp().toString() );
             SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
             date = formatter.format( tmpdate );

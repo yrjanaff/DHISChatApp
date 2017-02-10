@@ -28,7 +28,7 @@ class XmppStore {
   @observable activeApp = true;
   @observable sendFileError = null;
   @observable currentFileSent = true;
-  @observable unSeenNotifications = {Chats: [], Groups: [], Interpretations: []};
+  @observable unSeenNotifications = {Chats: [], Groups: []};
   @observable remoteOnline = false;
   @observable offlineMode = false;
   @observable interpretations = {};
@@ -91,14 +91,13 @@ class XmppStore {
   }
 
   fileTransferMessage( message ) {
-    console.log(message);
     if( message === 'SUCCESS' ) {
       this.currentFileSent = true;
       this.sendFileError = null;
 
       if( !this.retryPicture ) {
         if(this.conversation[this.remote] === undefined){
-          ToastAndroid.show('Picture sent successfully!', ToastAndroid.SHORT);
+          ToastAndroid.show('Picture sent successfully', ToastAndroid.SHORT);
           if(this.conversation[this.fileRemote] !== undefined){
             this.conversation[this.fileRemote].chat[0].sent = true;
             this.fileRemote = {};
@@ -106,7 +105,7 @@ class XmppStore {
         }
         else {
           this.conversation[this.remote].chat[0].sent = true;
-          ToastAndroid.show('Picture sent successfully!', ToastAndroid.SHORT);
+          ToastAndroid.show('Picture sent successfully', ToastAndroid.SHORT);
         }
       } else {
         let chatArray = this.conversation[this.remote].chat;
@@ -141,6 +140,7 @@ class XmppStore {
             text: uri,
             date: dateFormat(date, "dd.mmm.yyyy"),
             time: dateFormat(date, "HH:MM"),
+            fulldate: date,
             image: true,
             sent: true
           }]
@@ -152,6 +152,7 @@ class XmppStore {
         text: uri,
         date: dateFormat(date, "dd.mmm.yyyy"),
         time: dateFormat(date, "HH:MM"),
+        fullDate: date,
         image: true,
         sent: true
       })
@@ -179,6 +180,7 @@ class XmppStore {
             text: image,
             date: dateFormat(date, "dd.mmm.yyyy"),
             time: dateFormat(date, "HH:MM"),
+            fullDate: date,
             image: true,
             sent: false
           }]
@@ -190,6 +192,7 @@ class XmppStore {
         text: image,
         date: dateFormat(date, "dd.mmm.yyyy"),
         time: dateFormat(date, "HH:MM"),
+        fullDate: date,
         image: true,
         sent: false
       })
@@ -255,7 +258,6 @@ class XmppStore {
   }
 
   onOccupantsFetched( occupants ) {
-    console.log("inni onOccupantsFetched: " + occupants);
     this.mucRemote[4] = occupants;
 
     for( let i = 0; i < this.multiUserChat.length; i++ ) {
@@ -276,7 +278,8 @@ class XmppStore {
           own: own,
           text: message,
           date: dateFormat(date, "dd.mmm.yyyy"),
-          time: dateFormat(date, "HH:MM")
+          time: dateFormat(date, "HH:MM"),
+          fullDate: date
         }]
       }
     });
@@ -299,7 +302,8 @@ class XmppStore {
           own: true,
           text: message,
           date: dateFormat(date, "dd.mmm.yyyy"),
-          time: dateFormat(date, "HH:MM")
+          time: dateFormat(date, "HH:MM"),
+          fullDate: date
         })
       }
       // empty sent message
@@ -330,7 +334,8 @@ class XmppStore {
         own: false,
         text: body,
         date: dateFormat(date, "dd.mmm.yyyy"),
-        time: dateFormat(date, "HH:MM")
+        time: dateFormat(date, "HH:MM"),
+        fullDate: date
       }) //Date er en foreløpig løsning..
     }
     this.savedData = Object.assign({}, this.savedData, {conversation: this.conversation})
@@ -421,6 +426,7 @@ class XmppStore {
     this.saveState(JSON.stringify(this.savedData));
     this.logged = false;
     this.mucConversation = {};
+    this.unSeenNotifications.Groups = [];
   }
 
   createConference( chatName, subject, participants, from ) {
@@ -458,7 +464,7 @@ class XmppStore {
       sendPush('Conference - invite', name, 'You have been added to a conference called: ' + name, props.from);
       Vibration.vibrate([0, 500, 200, 500], false);
     }
-    else {
+    if( new Date() > Date.parse(this.lastActive) ) {
       this.unSeenNotifications.Groups.push(props.from);
       Vibration.vibrate([0, 200, 0, 0], false);
     }
@@ -491,7 +497,8 @@ class XmppStore {
             text: message,
             from: from_name,
             date: dateFormat(date, "dd.mmm.yyyy"),
-            time: dateFormat(date, "HH:MM")
+            time: dateFormat(date, "HH:MM"),
+            fullDate: date
           }]
         }
       });
@@ -502,7 +509,8 @@ class XmppStore {
         text: message,
         from: from_name,
         date: dateFormat(date, "dd.mmm.yyyy"),
-        time: dateFormat(date, "HH:MM")
+        time: dateFormat(date, "HH:MM"),
+        fullDate: date
       });
     }
 
@@ -510,10 +518,8 @@ class XmppStore {
       sendPush('Conference', from_name, message, from);
       Vibration.vibrate([0, 500, 200, 500], false);
     }
-
-    let timeDate = Date.parse(time);
-
-    if( this.remote !== muc && (Date.parse(time) > Date.parse(this.lastActive) || time === null) ) {
+    
+    if( this.remote !== muc && (date > Date.parse(this.lastActive) || time === null) ) {
       this.unSeenNotifications.Groups.push(muc);
       Vibration.vibrate([0, 200, 0, 0], false);
     }
@@ -532,8 +538,6 @@ class XmppStore {
 
 
   fileTransfer( uri ) {
-    console.log("sending picture: ");
-    console.log(uri);
     XMPP.fileTransfer(uri, this.remote);
   }
 

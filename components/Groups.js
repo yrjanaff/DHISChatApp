@@ -16,13 +16,13 @@ export default class Groups extends React.Component {
 
   return array.sort(function( a, b ) {
     if( xmpp.mucConversation[a[0]] && xmpp.mucConversation[b[0]] ) {
-      return new Date(xmpp.mucConversation[b[0]].chat[0].date + " " + xmpp.mucConversation[b[0]].chat[0].time) - new Date(xmpp.mucConversation[a[0]].chat[0].date + " " + xmpp.mucConversation[a[0]].chat[0].time);
+      return xmpp.mucConversation[b[0]].chat[0].fullDate - xmpp.mucConversation[a[0]].chat[0].fullDate;
     }
     if( xmpp.mucConversation[a[0]] ) {
-      return 1;
+      return -1;
     }
     if( xmpp.mucConversation[b[1]] ) {
-      return -1;
+      return 1;
     }
     return 0;
   });
@@ -61,7 +61,7 @@ export default class Groups extends React.Component {
 
   componentWillReceiveProps( props ) {
     xmpp.drawerOpen = false;
-    xmpp.mucRemote =[];
+    xmpp.remote='';
   }
 
   render() {

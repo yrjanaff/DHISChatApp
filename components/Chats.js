@@ -10,8 +10,8 @@ export default class Chats extends React.Component {
 
   sortArray( array ) {
     return array.sort(function( a, b ) {
-      var nameA = new Date(xmpp.conversation[a].chat[0].date);
-      var nameB = new Date(xmpp.conversation[b].chat[0].date);
+      var nameA = xmpp.conversation[a].chat[0].fullDate;
+      var nameB = xmpp.conversation[b].chat[0].fullDate;
       return nameB - nameA;
     });
   }
