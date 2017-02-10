@@ -13,18 +13,19 @@ export default class Groups extends React.Component {
   }
 
   sortArray( array ) {
-    return array.sort(function( a, b ) {
-      if( xmpp.mucConversation[a[0]] && xmpp.mucConversation[b[0]] ) {
-        return new Date(xmpp.mucConversation[b[0]].chat[0].date) - new Date(xmpp.mucConversation[a[0]].chat[0].date);
-      }
-      if( xmpp.mucConversation[a[0]] ) {
-        return -1;
-      }
-      if( xmpp.mucConversation[b[1]] ) {
-        return 1;
-      }
-      return 0;
-    });
+
+  return array.sort(function( a, b ) {
+    if( xmpp.mucConversation[a[0]] && xmpp.mucConversation[b[0]] ) {
+      return new Date(xmpp.mucConversation[b[0]].chat[0].date + " " + xmpp.mucConversation[b[0]].chat[0].time) - new Date(xmpp.mucConversation[a[0]].chat[0].date + " " + xmpp.mucConversation[a[0]].chat[0].time);
+    }
+    if( xmpp.mucConversation[a[0]] ) {
+      return 1;
+    }
+    if( xmpp.mucConversation[b[1]] ) {
+      return -1;
+    }
+    return 0;
+  });
   }
 
   onClick( remote ) {
@@ -60,6 +61,7 @@ export default class Groups extends React.Component {
 
   componentWillReceiveProps( props ) {
     xmpp.drawerOpen = false;
+    xmpp.mucRemote =[];
   }
 
   render() {
