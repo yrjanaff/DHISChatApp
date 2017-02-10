@@ -97,15 +97,9 @@ import java.text.ParseException;
 public class XmppServiceSmackImpl implements XmppService, FileTransferListener, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener,
     RosterListener, InvitationListener, MessageListener, MediaScannerConnection.MediaScannerConnectionClient
 {
-
-
     XmppServiceListener xmppServiceListener;
     Logger logger = Logger.getLogger( XmppServiceSmackImpl.class.getName() );
 
-    /*ProviderManager.addIQProvider("query", "http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
-    ProviderManager.addIQProvider("query", "http://jabber.org/protocol/disco#items", new DiscoverItemsProvider());
-    ProviderManager.addIQProvider("query", "http://jabber.org/protocol/disco#info", new DiscoverInfoProvider());
-*/
     Map mucInvites = new HashMap();
     XMPPTCPConnection connection;
     MediaScannerConnection msc;
@@ -135,7 +129,13 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     @Override
     public void onMediaScannerConnected()
     {
-        msc.scanFile( file.getAbsolutePath(), null );
+        if(file == null){
+            logger.info("file == null!");
+        }
+        else
+        {
+            msc.scanFile( file.getAbsolutePath(), null );
+        }
     }
 
     @Override
@@ -146,74 +146,81 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
 
     @Override
-    public void fileTransfer( String uri, String to )
+    public void fileTransfer( final String uri, final String to )
     {
-        FileTransferManager manager = FileTransferManager.getInstanceFor( connection );
-        File mf = Environment.getExternalStorageDirectory();
-        OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer( to + "/DHISCHAT" );
-        String[] splitURI;
-        try
+        new Thread()
         {
-            if ( uri.contains( "/0" ) )
+            @Override
+            public void run()
             {
-                splitURI = uri.split( "/0" );
+                FileTransferManager manager = FileTransferManager.getInstanceFor( connection );
+                File mf = Environment.getExternalStorageDirectory();
+                OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer( to + "/DHISCHAT" );
+                String[] splitURI;
+                try
+                {
+                    if ( uri.contains( "/0" ) )
+                    {
+                        splitURI = uri.split( "/0" );
+                    }
+                    else
+                    {
+                        splitURI = uri.split( "/sdcard0" );
+                    }
+                    File file = new File( mf.getAbsoluteFile() + new URI( splitURI[1] ).toString() );
+                    transfer.sendFile( file, "test_file" );
+                }
+                catch ( SmackException e )
+                {
+                    logger.info( e.toString() );
+                    XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( e.toString() );
+                }
+                catch ( URISyntaxException e )
+                {
+                    logger.info( e.toString() );
+                    XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( e.toString() );
+                }
+                while ( !transfer.isDone() )
+                {
+                    if ( transfer.getStatus().equals( Status.error ) )
+                    {
+                        logger.info( "ERROR: " + transfer.getError() );
+                        System.out.println( "ERROR: " + transfer.getError() );
+                        XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "ERROR" );
+                    }
+                    else if ( transfer.getStatus().equals( Status.cancelled )
+                        || transfer.getStatus().equals( Status.refused ) )
+                    {
+                        logger.info( "Cancelled: " + transfer.getError() );
+                        System.out.println( "Cancelled: " + transfer.getError() );
+                        XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "CANCELLED" );
+                    }
+                    try
+                    {
+                        Thread.sleep( 1000L );
+                    }
+                    catch ( InterruptedException e )
+                    {
+                        logger.info( e.toString() );
+                        e.printStackTrace();
+                        XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "INTERRUPTED" );
+                    }
+                }
+                if ( transfer.getStatus().equals( Status.refused ) || transfer.getStatus().equals( Status.error )
+                    || transfer.getStatus().equals( Status.cancelled ) )
+                {
+                    logger.info( "refused cancelled error " + transfer.getError() );
+                    System.out.println( "refused cancelled error " + transfer.getError() );
+                    XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "CANCELLED" );
+                }
+                else
+                {
+                    logger.info( "File transfer sucsess" );
+                    System.out.println( "Success" );
+                    XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "SUCCESS" );
+                }
             }
-            else
-            {
-                splitURI = uri.split( "/sdcard0" );
-            }
-            File file = new File( mf.getAbsoluteFile() + new URI( splitURI[1] ).toString() );
-            transfer.sendFile( file, "test_file" );
-        }
-        catch ( SmackException e )
-        {
-            logger.info( e.toString() );
-            this.xmppServiceListener.onFileTransfer( e.toString() );
-        }
-        catch ( URISyntaxException e )
-        {
-            logger.info( e.toString() );
-            this.xmppServiceListener.onFileTransfer( e.toString() );
-        }
-        while ( !transfer.isDone() )
-        {
-            if ( transfer.getStatus().equals( Status.error ) )
-            {
-                logger.info( "ERROR: " + transfer.getError() );
-                System.out.println( "ERROR: " + transfer.getError() );
-                this.xmppServiceListener.onFileTransfer( "ERROR" );
-            }
-            else if ( transfer.getStatus().equals( Status.cancelled )
-                || transfer.getStatus().equals( Status.refused ) )
-            {
-                logger.info( "Cancelled: " + transfer.getError() );
-                System.out.println( "Cancelled: " + transfer.getError() );
-                this.xmppServiceListener.onFileTransfer( "CANCELLED" );
-            }
-            try
-            {
-                Thread.sleep( 1000L );
-            }
-            catch ( InterruptedException e )
-            {
-                logger.info( e.toString() );
-                e.printStackTrace();
-                this.xmppServiceListener.onFileTransfer( "INTERRUPTED" );
-            }
-        }
-        if ( transfer.getStatus().equals( Status.refused ) || transfer.getStatus().equals( Status.error )
-            || transfer.getStatus().equals( Status.cancelled ) )
-        {
-            logger.info( "refused cancelled error " + transfer.getError() );
-            System.out.println( "refused cancelled error " + transfer.getError() );
-            this.xmppServiceListener.onFileTransfer( "CANCELLED" );
-        }
-        else
-        {
-            logger.info( "File transfer sucsess" );
-            System.out.println( "Success" );
-            this.xmppServiceListener.onFileTransfer( "SUCCESS" );
-        }
+        }.start();
     }
 
     @Override
@@ -269,8 +276,6 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                     Log.e( "", e.getMessage() );
                 }
             }
-
-            ;
         }.start();
     }
 

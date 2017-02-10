@@ -3,7 +3,7 @@ const DOMAIN = "yj-dev.dhis2.org";
 
 import {observable} from 'mobx';
 import autobind from 'autobind';
-import {AsyncStorage, AppState, Vibration, Alert} from 'react-native';
+import {AsyncStorage, AppState, Vibration, Alert, ToastAndroid} from 'react-native';
 import {Actions} from 'react-native-mobx';
 import {sendPush} from './PushUtils'
 import {fetchInterpretation} from './DhisUtils';
@@ -69,6 +69,7 @@ class XmppStore {
     this.remoteMuc = [];
     this.conversation = {};
     this.selfDisconnect = false;
+    this.fileRemote = {};
   }
 
   saveInterpretation( interpretation ) {
@@ -90,12 +91,23 @@ class XmppStore {
   }
 
   fileTransferMessage( message ) {
+    console.log(message);
     if( message === 'SUCCESS' ) {
       this.currentFileSent = true;
       this.sendFileError = null;
 
       if( !this.retryPicture ) {
-        this.conversation[this.remote].chat[0].sent = true;
+        if(this.conversation[this.remote] === undefined){
+          ToastAndroid.show('Picture sent successfully!', ToastAndroid.SHORT);
+          if(this.conversation[this.fileRemote] !== undefined){
+            this.conversation[this.fileRemote].chat[0].sent = true;
+            this.fileRemote = {};
+          }
+        }
+        else {
+          this.conversation[this.remote].chat[0].sent = true;
+          ToastAndroid.show('Picture sent successfully!', ToastAndroid.SHORT);
+        }
       } else {
         let chatArray = this.conversation[this.remote].chat;
         for( let i = 0; i < chatArray.length; i++ ) {
@@ -110,6 +122,7 @@ class XmppStore {
       this.saveState(JSON.stringify(this.savedData));
     }
     else {
+      ToastAndroid.show('Picture was not sent! Check internet connection', ToastAndroid.LONG);
       this.retryPicture = null;
       this.currentFileSent = false;
       this.sendFileError = message;
@@ -157,6 +170,7 @@ class XmppStore {
 
   sentFileinChat( image ) {
     let date = new Date();
+    this.fileRemote = this.remote;
     if( !this.conversation[this.remote] ) {
       this.conversation = Object.assign({}, this.conversation, {
         [this.remote]: {
@@ -518,6 +532,8 @@ class XmppStore {
 
 
   fileTransfer( uri ) {
+    console.log("sending picture: ");
+    console.log(uri);
     XMPP.fileTransfer(uri, this.remote);
   }
 

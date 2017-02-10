@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ScrollView, TextInput, Keyboard, ListView, Dimensions, Image, TouchableHighlight}  from 'react-native';
+import {View, Text, ScrollView, TextInput, Keyboard, ListView, Dimensions, Image, TouchableHighlight, Alert}  from 'react-native';
 import styles from './styles';
 const height = Dimensions.get('window').height;
 import Button from 'react-native-button';
@@ -10,6 +10,7 @@ import xmpp from '../utils/XmppStore';
 const ds = new ListView.DataSource({rowHasChanged: ( r1, r2 ) => r1 !== r2});
 import InterpretationPreview from './InterpretationPreview';
 import {Icon} from 'react-native-material-design';
+import ActivityIndicator from './ActivityIndicator';
 
 const dismissKeyboard = require('dismissKeyboard');
 
@@ -39,12 +40,21 @@ class Conversation extends React.Component {
   getImage( props ) {
     this.setState({showImagePicker: false});
     this.setState({selectedImage: props[0].uri});
-    xmpp.currentFileSent = false;
 
-    RNGRP.getRealPathFromURI(props[0].uri).then(filePath =>
-        xmpp.fileTransfer(filePath)
+    Alert.alert(
+        'DHIS Chat',
+        'Send selected image?',
+        [
+          {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
+          {text: 'Send', onPress: () => {
+            xmpp.currentFileSent = false;
+
+            RNGRP.getRealPathFromURI(props[0].uri).then(filePath =>
+                xmpp.fileTransfer(filePath)
+            );
+            xmpp.sentFileinChat(props[0].uri);}}
+        ]
     );
-    xmpp.sentFileinChat(props[0].uri);
   }
 
   retrySendImage( uri ) {
@@ -74,6 +84,17 @@ class Conversation extends React.Component {
       return null;
     }
   }
+
+  shouldImageBeSent(props){
+    Alert.alert(
+        'Send selected image?',
+        alertMessage,
+        [
+          {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
+          {text: 'Send', onPress: () => this.getImage(props)}
+        ]
+    )
+}
 
   render() {
     let numRows = 0;
@@ -134,7 +155,7 @@ class Conversation extends React.Component {
                                           opacity: isSent && row.text === this.state.selectedImage || row.sent ?  1 : 0.4
 
                                  }}
-                               />
+                               ><ActivityIndicator active={isSent && row.text === this.state.selectedImage || row.sent ? false : true}/></Image>
                                 { lastTime === row.time ? null: <Text style={{textAlign: row.own ? 'right' : 'left'}}>{row.time}</Text>}
                                {this.upDateTime(row.time)}
                               </View>
