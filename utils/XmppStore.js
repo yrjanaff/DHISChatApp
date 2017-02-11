@@ -9,6 +9,8 @@ import {sendPush} from './PushUtils'
 import {fetchInterpretation} from './DhisUtils';
 var btoa = require('Base64').btoa;
 var dateFormat = require('dateformat');
+var moment = require('moment');
+
 
 @autobind
 class XmppStore {
@@ -464,7 +466,7 @@ class XmppStore {
       Vibration.vibrate([0, 500, 200, 500], false);
     }
     if( new Date() > Date.parse(this.lastActive) ) {
-      this.unSeenNotifications.Groups.push(props.from);
+      this.unSeenNotifications.Groups.push(name);
       Vibration.vibrate([0, 200, 0, 0], false);
     }
 
@@ -482,7 +484,7 @@ class XmppStore {
     if( !from || !message ) {
       return;
     }
-    let date = time !== null ? Date.parse(time) : new Date();
+    let date = time !== null ? moment.utc(time) : new Date();
     let muc = from.split("@")[0];
     let from_name = from.split("/")[1];
 
@@ -518,7 +520,7 @@ class XmppStore {
       Vibration.vibrate([0, 500, 200, 500], false);
     }
     
-    if( this.remote !== muc && (date > Date.parse(this.lastActive) || time === null) ) {
+    if( this.remote !== muc && (date > new Date(this.lastActive) || time === null) ) {
       this.unSeenNotifications.Groups.push(muc);
       Vibration.vibrate([0, 200, 0, 0], false);
     }

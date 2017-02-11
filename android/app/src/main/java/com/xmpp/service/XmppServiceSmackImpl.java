@@ -579,10 +579,13 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         DelayInformation extraInfo = message.getExtension( "delay", "urn:xmpp:delay" );
         try
         {
+            logger.info(extraInfo.getStamp().toString());
             SimpleDateFormat parser = new SimpleDateFormat( "EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH );
             Date tmpdate = parser.parse( extraInfo.getStamp().toString() );
-            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ" );
             date = formatter.format( tmpdate );
+            logger.info("Inni process message!!!!");
+            logger.info(date.toString());
 
         }
         catch ( NullPointerException e )
@@ -753,82 +756,97 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     public void getAllJoinedMucs( String username )
     {
         logger.info( "inni getAllJoinedMucs!" );
-        try
+        new Thread()
         {
-            MultiUserChatManager userChatManager = MultiUserChatManager.getInstanceFor( connection );
-            Collection<HostedRoom> hostedRooms = userChatManager.getHostedRooms( "conference.yj-dev.dhis2.org" );
+            volatile boolean running = true;
 
-            String[] tmp = connection.getUser().split( "/" );
-            String jid = tmp[0];
-
-            WritableArray rooms = Arguments.createArray();
-            if ( !hostedRooms.isEmpty() )
+            @Override
+            public void run()
             {
-                for ( HostedRoom j : hostedRooms )
+                if ( !running ) return;
+                try
                 {
-                    WritableArray room = Arguments.createArray();
-                    RoomInfo roomInfo = MultiUserChatManager.getInstanceFor( connection ).getRoomInfo( j.getJid() );
-                    room.pushString( roomInfo.getName() );
-                    room.pushString( j.getJid() );
-                    room.pushString( roomInfo.getSubject() );
+                    MultiUserChatManager userChatManager = MultiUserChatManager.getInstanceFor( connection );
+                    Collection<HostedRoom> hostedRooms = userChatManager.getHostedRooms( "conference.yj-dev.dhis2.org" );
 
-                    MultiUserChat muc = userChatManager.getMultiUserChat( j.getJid() );
-                    if ( !muc.isJoined() )
+                    String[] tmp = connection.getUser().split( "/" );
+                    String jid = tmp[0];
+
+                    WritableArray rooms = Arguments.createArray();
+                    if ( !hostedRooms.isEmpty() )
                     {
-                        muc.join( jid );
-                        muc.addMessageListener( this );
-                    }
-                    WritableArray occupants = Arguments.createArray();
-                    List<String> participants = muc.getOccupants();
-                    logger.info( "før if i get nall invittion mucs" );
-                    logger.info( Integer.toString( roomInfo.getOccupantsCount() ) );
-                    logger.info( participants.size() + "" );
-                    logger.info( muc.toString() );
-
-                    String[] mucs = (String[]) mucInvites.remove( muc.toString() );
-
-                    if ( mucs != null && mucs.length > 0 )
-                    {
-                        for ( String nick : mucs )
+                        for ( HostedRoom j : hostedRooms )
                         {
-                            logger.info( mucs.length + "" );
-                            logger.info( "Inni første for" );
-                            occupants.pushString( nick );
+                            WritableArray room = Arguments.createArray();
+                            RoomInfo roomInfo = MultiUserChatManager.getInstanceFor( connection ).getRoomInfo( j.getJid() );
+                            room.pushString( roomInfo.getName() );
+                            room.pushString( j.getJid() );
+                            room.pushString( roomInfo.getSubject() );
+
+                            MultiUserChat muc = userChatManager.getMultiUserChat( j.getJid() );
+                            if ( !muc.isJoined() )
+                            {
+                                muc.join( jid );
+                                muc.addMessageListener( XmppServiceSmackImpl.this );
+                            }
+                            WritableArray occupants = Arguments.createArray();
+                            List<String> participants = muc.getOccupants();
+                            logger.info( "før if i get nall invittion mucs" );
+                            logger.info( Integer.toString( roomInfo.getOccupantsCount() ) );
+                            logger.info( participants.size() + "" );
+                            logger.info( muc.toString() );
+
+                            String[] mucs = (String[]) mucInvites.remove( muc.toString() );
+
+                            if ( mucs != null && mucs.length > 0 )
+                            {
+                                for ( String nick : mucs )
+                                {
+                                    logger.info( mucs.length + "" );
+                                    logger.info( "Inni første for" );
+                                    occupants.pushString( nick );
+                                }
+                            }
+                            else if ( participants.size() > 0 )
+                            {
+                                for ( String nick : participants )
+                                {
+                                    logger.info( "Inni andre for" );
+                                    occupants.pushString( nick );
+                                }
+                            }
+
+                            room.pushString( Integer.toString( occupants.size() ) );
+                            room.pushArray( occupants );
+                            rooms.pushArray( room );
+
                         }
                     }
-                    else if ( participants.size() > 0 )
-                    {
-                        for ( String nick : participants )
-                        {
-                            logger.info( "Inni andre for" );
-                            occupants.pushString( nick );
-                        }
-                    }
-
-                    room.pushString( Integer.toString( occupants.size() ) );
-                    room.pushArray( occupants );
-                    rooms.pushArray( room );
-
+                    XmppServiceSmackImpl.this.xmppServiceListener.onAllMucFetced( rooms );
+                    running = false;
+                }
+                catch ( SmackException.NoResponseException e )
+                {
+                    logger.info( "No response from chat server.." + e );
+                    running = false;
+                }
+                catch ( XMPPException.XMPPErrorException e )
+                {
+                    logger.info( "XMPP Error" + e );
+                    running = false;
+                }
+                catch ( SmackException e )
+                {
+                    logger.info( "Something wrong with chat server.." + e );
+                    running = false;
+                }
+                catch ( Exception e )
+                {
+                    logger.info( "Something went wrong with getting mucs " + e );
+                    running = false;
                 }
             }
-            this.xmppServiceListener.onAllMucFetced( rooms );
-        }
-        catch ( SmackException.NoResponseException e )
-        {
-            logger.info( "No response from chat server.." + e );
-        }
-        catch ( XMPPException.XMPPErrorException e )
-        {
-            logger.info( "XMPP Error" + e );
-        }
-        catch ( SmackException e )
-        {
-            logger.info( "Something wrong with chat server.." + e );
-        }
-        catch ( Exception e )
-        {
-            logger.info( "Something went wrong with getting mucs " + e );
-        }
+        }.start();
     }
 
     @Override
