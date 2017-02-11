@@ -15,7 +15,10 @@ public interface XmppService
     public void trustHosts( ReadableArray trustedHosts );
 
     @ReactMethod
-    void connect( String jid, String password, String authMethod, String hostname, Integer port );
+    void startConnectionService(String jid, String password, String authMethod, String hostname, Integer port);
+
+    @ReactMethod
+    void connect(String jid, String password, String authMethod, String hostname, Integer port);
 
     @ReactMethod
     void message( String text, String to, String thread );

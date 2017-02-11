@@ -197,6 +197,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                         System.out.println( "ERROR: " + transfer.getError() );
                         XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "ERROR" );
                         running = false;
+                        break;
                     }
                     else if ( transfer.getStatus().equals( Status.cancelled )
                         || transfer.getStatus().equals( Status.refused ) )
@@ -205,6 +206,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                         System.out.println( "Cancelled: " + transfer.getError() );
                         XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "CANCELLED" );
                         running = false;
+                        break;
                     }
                     try
                     {
@@ -216,6 +218,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                         e.printStackTrace();
                         XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "INTERRUPTED" );
                         running = false;
+                        break;
                     }
                 }
                 if ( transfer.getStatus().equals( Status.refused ) || transfer.getStatus().equals( Status.error )
@@ -271,16 +274,19 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                         {
                             Log.e( "", e.getMessage() );
                             running = false;
+                            break;
                         }
                         if ( transfer.getStatus().equals( Status.error ) )
                         {
                             Log.e( "ERROR: ", transfer.getError() + "" );
                             running = false;
+                            break;
                         }
                         if ( transfer.getException() != null )
                         {
                             transfer.getException().printStackTrace();
                             running = false;
+                            break;
                         }
                     }
                     if ( transfer.isDone() )

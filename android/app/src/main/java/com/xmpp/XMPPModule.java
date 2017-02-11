@@ -53,9 +53,16 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
 
     @Override
     @ReactMethod
-    public void connect( String jid, String password, String authMethod, String hostname, Integer port )
+    public void startConnectionService( String jid, String password, String authMethod, String hostname, Integer port )
     {
-        this.xmppService.connect( jid, password, authMethod, hostname, port );
+        this.xmppService.startConnectionService( jid, password, authMethod, hostname, port );
+    }
+
+    @Override
+    @ReactMethod
+    public void connect(String jid, String password, String authMethod, String hostname, Integer port)
+    {
+        this.xmppService.connect(jid, password, authMethod, hostname, port);
     }
 
     @Override
