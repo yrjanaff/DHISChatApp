@@ -150,7 +150,7 @@ class XMPP {
   }
 
   connect( username, password, auth = XMPP.SCRAMSHA1, hostname, port = 5222 ) {
-    XMPPModule.startConnectionService(username, password, auth, hostname, port);
+    XMPPModule.connect(username, password, auth, hostname, port);
   }
 
   message( text, user, thread = null ) {
