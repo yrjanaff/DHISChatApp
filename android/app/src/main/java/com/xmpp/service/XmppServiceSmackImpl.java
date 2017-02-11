@@ -153,9 +153,13 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     {
         new Thread()
         {
+            volatile boolean running = true;
+
             @Override
             public void run()
             {
+                if (!running) return;
+
                 FileTransferManager manager = FileTransferManager.getInstanceFor( connection );
                 File mf = Environment.getExternalStorageDirectory();
                 OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer( to + "/DHISCHAT" );
@@ -177,11 +181,13 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                 {
                     logger.info( e.toString() );
                     XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( e.toString() );
+                    running = false;
                 }
                 catch ( URISyntaxException e )
                 {
                     logger.info( e.toString() );
                     XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( e.toString() );
+                    running = false;
                 }
                 while ( !transfer.isDone() )
                 {
@@ -190,6 +196,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                         logger.info( "ERROR: " + transfer.getError() );
                         System.out.println( "ERROR: " + transfer.getError() );
                         XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "ERROR" );
+                        running = false;
                     }
                     else if ( transfer.getStatus().equals( Status.cancelled )
                         || transfer.getStatus().equals( Status.refused ) )
@@ -197,6 +204,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                         logger.info( "Cancelled: " + transfer.getError() );
                         System.out.println( "Cancelled: " + transfer.getError() );
                         XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "CANCELLED" );
+                        running = false;
                     }
                     try
                     {
@@ -207,6 +215,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                         logger.info( e.toString() );
                         e.printStackTrace();
                         XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "INTERRUPTED" );
+                        running = false;
                     }
                 }
                 if ( transfer.getStatus().equals( Status.refused ) || transfer.getStatus().equals( Status.error )
@@ -215,12 +224,14 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                     logger.info( "refused cancelled error " + transfer.getError() );
                     System.out.println( "refused cancelled error " + transfer.getError() );
                     XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "CANCELLED" );
+                    running = false;
                 }
                 else
                 {
                     logger.info( "File transfer sucsess" );
                     System.out.println( "Success" );
                     XmppServiceSmackImpl.this.xmppServiceListener.onFileTransfer( "SUCCESS" );
+                    running = false;
                 }
             }
         }.start();
@@ -234,9 +245,13 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
         new Thread()
         {
+            volatile boolean running = true;
+
             @Override
             public void run()
             {
+                if (!running) return;
+
                 IncomingFileTransfer transfer = request.accept();
                 File mf = Environment.getExternalStorageDirectory();
                 file = new File( mf.getAbsoluteFile() + "/DCIM/Camera/" + transfer.getFileName() );
@@ -255,14 +270,17 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                         catch ( Exception e )
                         {
                             Log.e( "", e.getMessage() );
+                            running = false;
                         }
                         if ( transfer.getStatus().equals( Status.error ) )
                         {
                             Log.e( "ERROR: ", transfer.getError() + "" );
+                            running = false;
                         }
                         if ( transfer.getException() != null )
                         {
                             transfer.getException().printStackTrace();
+                            running = false;
                         }
                     }
                     if ( transfer.isDone() )
@@ -272,11 +290,13 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                         System.out.println( uri );
                         System.out.println( request.getRequestor().toString() );
                         XmppServiceSmackImpl.this.xmppServiceListener.onFileRecieved( uri.toString(), request.getRequestor().toString() );
+                        running = false;
                     }
                 }
                 catch ( Exception e )
                 {
                     Log.e( "", e.getMessage() );
+                    running = false;
                 }
             }
         }.start();
