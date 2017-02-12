@@ -119,17 +119,22 @@ var styles = StyleSheet.create({
     width: 200,
     marginRight: 20,
     marginLeft: 20,
-    alignSelf: 'center',
+    alignSelf: 'center'
 
   },
   disabled: {
     backgroundColor: '#1d528840',
     padding: 5,
+    borderColor: 'black',
+    borderStyle: 'solid',
+    borderRightWidth: 5,
+    borderBottomWidth: 5,
     marginTop: 20,
+    borderRadius: 10,
     width: 200,
     marginRight: 20,
     marginLeft: 20,
-    alignSelf: 'center',
+    alignSelf: 'center'
   },
   sendButton: {
     justifyContent: 'center',

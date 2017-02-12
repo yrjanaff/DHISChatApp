@@ -90,7 +90,7 @@ export default class MucCreater extends React.Component {
     }
   }
 
-  setMucFill() {
+  setMucFill(){
     if( xmpp.createInterpretationMuc ) {
       xmpp.mucSubject = xmpp.currentInterpretation.url;
     } else {
@@ -128,7 +128,7 @@ export default class MucCreater extends React.Component {
             <ListRoster style={{color:'black'}} roster={this.state.dataSource} clicked={this.updateParticipants}/>
           </View>
           <View
-              style={ xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1 ? styles.disabled :styles.buttons}>
+              style={[{ flex: 0, height: 35, flexDirection: 'column', justifyContent: 'center'},xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1 ? styles.disabled :styles.buttons]}>
             <Button style={{color: '#ffffff'}} disabled={
             xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1
           } onPress={()=> this.onClick()}>Create group</Button>
@@ -136,5 +136,4 @@ export default class MucCreater extends React.Component {
         </View>
     );
   }
-
 }
