@@ -67,7 +67,7 @@ export default class ListRoster extends React.Component {
                     renderScrollComponent={props => <ScrollView {...props} />}
                     dataSource={dataSource}
                     renderRow={(row) =>
-                        <TouchableHighlight onPress={() => this.onClickedRow(this.state.roster[row])}>
+                        <TouchableHighlight underlayColor='transparent' onPress={() => this.onClickedRow(this.state.roster[row])}>
                           <View style={{flex:1, flexDirection: 'row', borderBottomColor: 'lightgray', borderBottomWidth: 0.5, marginBottom: 10 }}>
                             <View style={[this.getAvailableIcon(this.state.roster[row].presence), {justifyContent: 'flex-start', paddingBottom: 10} ]}/>
                             <Text style={[{fontSize:17},{paddingBottom: 10},this.props.style]}> {this.state.roster[row].displayName}</Text>

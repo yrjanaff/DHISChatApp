@@ -141,7 +141,7 @@ class Conversation extends React.Component {
                               {this.upDateTime(row.time)}
                             </View>:
 
-                            <TouchableHighlight style={styles.touch} underlayColor={'#ffffff'} key={row.text}
+                            <TouchableHighlight style={styles.touch} underlayColor={'transparent'} key={row.text}
                                       onPress={isSent && row.text === this.state.selectedImage || row.sent ? () => Actions.conView({path: row.text, header:null }) : () => { this.retrySendImage(row.text); this.setState({selectedImage: row.text});}}>
                               <View>
                               {this.renderHeader(row.date, numRows, currentRow, nextDate)}
