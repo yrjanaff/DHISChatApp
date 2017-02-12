@@ -37,7 +37,7 @@ export default class InterpretationPreview extends React.Component {
                    }}
                 />
                 <Text
-                    style={{flex: 1, marginRight: 10}}>{xmpp.currentInterpretation.text.length > 240 ? xmpp.currentInterpretation.text.slice(0, 260).concat('...') : xmpp.currentInterpretation.text}</Text>
+                    style={{flex: 1, marginRight: 10}}>{xmpp.currentInterpretation.text.length > 240 ? xmpp.currentInterpretation.text.slice(0, 150).concat('...') : xmpp.currentInterpretation.text}</Text>
                 <Icon
                     name={'keyboard-arrow-right'}
                     style={{justifyContent: 'flex-start', padding: 0, alignSelf: 'center'}}
