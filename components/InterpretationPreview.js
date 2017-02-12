@@ -46,7 +46,7 @@ export default class InterpretationPreview extends React.Component {
               </View>
             </TouchableHighlight>
         )
-      }
+      }else {return null}
     } else {
       return null;
     }

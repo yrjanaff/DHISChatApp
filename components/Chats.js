@@ -31,6 +31,7 @@ export default class Chats extends React.Component {
 
   componentWillReceiveProps( props ) {
     xmpp.remote = '';
+    xmpp.mucRemote = [];
   }
 
 

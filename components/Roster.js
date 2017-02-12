@@ -10,6 +10,11 @@ export default class Roster extends React.Component {
     this.state = {};
   }
 
+  componentWillReceiveProps( props ) {
+    xmpp.remote = '';
+    xmpp.mucRemote = [];
+  }
+
   render() {
     return (
         <View style={[styles.container,{marginTop: 10}]}>
