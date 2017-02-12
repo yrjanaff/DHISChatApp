@@ -729,7 +729,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                 participantString += ", " + participants.getString( i ).split( "@" )[0];
             }
 
-            sendMessage( "In this group you can chat with: : "
+            sendMessage( "In this group you can chat with: "
                 + participantString, name + "@conference." + connection.getServiceName() );
 
         }

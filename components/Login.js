@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ScrollView, TextInput, ListView, Dimensions, Image, AsyncStorage, Switch}  from 'react-native';
+import {View, Text, ScrollView, TextInput, ListView, Dimensions, Image, AsyncStorage, Switch, TouchableHighlight}  from 'react-native';
 import styles from './styles';
 import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';
@@ -103,8 +103,9 @@ export default class Login extends React.Component {
               labelStyle={{color: 'white'}}
           />
 
+          <TouchableHighlight underlayColor='transparent' onPress={()=> {dismissKeyboard(); this.saveCredentials(); xmpp.selfDisconnect = false; xmpp.login(this.state)}}>
           <View style={styles.loginButton}><Button style={{color: 'white'}}
-                                                   onPress={()=> {dismissKeyboard(); this.saveCredentials(); xmpp.selfDisconnect = false; xmpp.login(this.state)}}>Login</Button></View>
+                                                   onPress={()=> {dismissKeyboard(); this.saveCredentials(); xmpp.selfDisconnect = false; xmpp.login(this.state)}}>Login</Button></View></TouchableHighlight>
           <ActivityIndicator active={xmpp.loading}/>
         </View>
     )

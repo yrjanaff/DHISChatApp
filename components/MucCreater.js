@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TextInput, ScrollView, findNodeHandle, Keyboard, ToastAndroid}  from 'react-native';
+import {Text, View, TextInput, ScrollView, findNodeHandle, Keyboard, ToastAndroid, TouchableHighlight}  from 'react-native';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
 import Button from 'react-native-button';
@@ -127,12 +127,15 @@ export default class MucCreater extends React.Component {
           <View style={{flex:1}}>
             <ListRoster style={{color:'black'}} roster={this.state.dataSource} clicked={this.updateParticipants}/>
           </View>
+          <TouchableHighlight underlayColor='transparent' disabled={
+            xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1
+          } onPress={()=> this.onClick()}>
           <View
               style={[{ flex: 0, height: 35, flexDirection: 'column', justifyContent: 'center'},xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1 ? styles.disabled :styles.buttons]}>
             <Button style={{color: '#ffffff'}} disabled={
             xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1
           } onPress={()=> this.onClick()}>Create group</Button>
-          </View>
+          </View></TouchableHighlight>
         </View>
     );
   }
