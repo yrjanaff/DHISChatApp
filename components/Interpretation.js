@@ -101,7 +101,7 @@ export default class Interpretation extends React.Component {
             <View style={{margin: 10}}>
               <Text style={[styles.bold,{fontSize: 18, marginBottom: 10, marginTop: 10}]}>Comments:</Text>
               {
-                this.state.comments.length !== 0 ?
+                this.state.comments && this.state.comments.length !== 0 ?
                     this.state.comments.map(( comment, index ) => {
                       return (
                           <View key={index} style={{marginBottom: 20}}>

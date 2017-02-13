@@ -9,7 +9,6 @@ import {Icon} from 'react-native-material-design';
 export default class Groups extends React.Component {
   constructor( props ) {
     super(props);
-    xmpp.remote = null;
   }
 
   sortArray( array ) {

@@ -71,13 +71,13 @@ var DhisChat = React.createClass({
                       color='#ffffff'
                   />
                 } backButtonImage={require('./image/back_chevron.png')}/>
-                <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0} titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')}/>
+                <Scene key="mucInterpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0} titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')} clone/>
                 <Scene key="newMuc" component={MucCreater} hideTabBar duration={0} title="New group" titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')}/>
                 <Scene key="mucIntView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')}/>
               </Scene>
 
               <Scene key="interpretationTab" title="Interpretations" icon={TabIcon} >
-                <Scene key="interpretationList" title="Interpretations" duration={0} component={InterpretationList} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar}/>
+                <Scene key="interpretationList" title="Interpretations" duration={0} component={InterpretationList} hideBackImage onBack={() => null} titleStyle={title} navigationBarStyle={navigationBar} clone/>
                 <Scene key="interpretation" component={Interpretation} hideTabBar title="Interpretation" duration={0} titleStyle={title} navigationBarStyle={navigationBar} onRight={() =>  {Actions.newInterpretationMuc();
                   xmpp.createInterpretationMuc = true;}} rightTitle={
                   <Icon
@@ -86,6 +86,12 @@ var DhisChat = React.createClass({
                   />
                 } backButtonImage={require('./image/back_chevron.png')}/>
                 <Scene key="newInterpretationMuc" component={MucCreater} hideTabBar duration={0} navigationBarStyle={navigationBar} titleStyle={title} title="New group" onBack={() => {xmpp.createInterpretationMuc = false; Actions.pop()}} backButtonImage={require('./image/back_chevron.png')}/>
+                <Scene key="interConversation" component={GroupConversation} hideTabBar duration={0} onBack={() => {Actions.interpretationList({type:ActionConst.RESET})}} titleStyle={title} navigationBarStyle={navigationBar} onRight={() => {xmpp.drawerOpen = !xmpp.drawerOpen; xmpp.getOccupants(xmpp.mucRemote[1])}} rightTitle={
+                                                  <Icon
+                                                      name='people'
+                                                      color='#ffffff'
+                                                  />
+                                                } backButtonImage={require('./image/back_chevron.png')}/>
                 <Scene key="intView" component={ImageViewer} hideTabBar duration={0} title="Zoom" titleStyle={title} navigationBarStyle={navigationBar} backButtonImage={require('./image/back_chevron.png')}/>
               </Scene>
 
