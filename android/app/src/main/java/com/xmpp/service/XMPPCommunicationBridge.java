@@ -23,13 +23,13 @@ import android.util.Log;
 import java.util.logging.Logger;
 
 /**
- * Created by Kristian Frølund on 7/19/16.
- * Copyright (c) 2016. Teletronics. All rights reserved
+ *
+ * Connection Bridge between Android and JS
  */
 
 public class XMPPCommunicationBridge implements XmppServiceListener
 {
-
+    //TAGs to send to JS
     public static final String RNXMPP_ERROR = "XMPPError";
     public static final String RNXMPP_LOGIN_ERROR = "XMPPLoginError";
     public static final String RNXMPP_MESSAGE = "XMPPMessage";
@@ -60,7 +60,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener
     @Override
     public void onError( Exception e )
     {
-        sendEvent( reactContext, RNXMPP_ERROR, "Hei! Du er nå i onError..."/*e.getLocalizedMessage()*/ );
+        sendEvent( reactContext, RNXMPP_ERROR, e.getLocalizedMessage() );
     }
 
     @Override
@@ -79,11 +79,8 @@ public class XMPPCommunicationBridge implements XmppServiceListener
     public void onMessage( Message message )
     {
         WritableMap params = Arguments.createMap();
-        params.putString( "thread", message.getThread() );
-        params.putString( "subject", message.getSubject() );
         params.putString( "body", message.getBody() );
         params.putString( "from", message.getFrom() );
-        params.putString( "src", message.toXML().toString() );
         sendEvent( reactContext, RNXMPP_MESSAGE, params );
     }
 
@@ -104,14 +101,6 @@ public class XMPPCommunicationBridge implements XmppServiceListener
                 status = presence.getType().name();
             }
             rosterProps.putString( "presence", status );
-            rosterProps.putString( "status", roster.getPresence( rosterEntry.getUser() ).toString() );
-            WritableArray groupArray = Arguments.createArray();
-            for ( RosterGroup rosterGroup : rosterEntry.getGroups() )
-            {
-                groupArray.pushString( rosterGroup.getName() );
-            }
-            rosterProps.putArray( "groups", groupArray );
-            rosterProps.putString( "subscription", rosterEntry.getType().toString() );
             rosterResponse.putMap( rosterEntry.getUser(), rosterProps );
         }
         sendEvent( reactContext, RNXMPP_ROSTER, rosterResponse );
@@ -154,16 +143,11 @@ public class XMPPCommunicationBridge implements XmppServiceListener
     }
 
     @Override
-    public void onMucInvotationRecevied( String room, String inviter, Message message, String[] occupants, String reason )
+    public void onMucInvotationRecevied(Message message, String[] occupants, String reason )
     {
         WritableMap params = Arguments.createMap();
-        params.putString( "thread", message.getThread() );
         params.putString( "subject", reason );
-        params.putString( "body", message.getBody() );
         params.putString( "from", message.getFrom() );
-        params.putString( "src", message.toXML().toString() );
-        params.putString( "room", room );
-        params.putString( "inviter", inviter );
         WritableArray participants = Arguments.createArray();
         for ( String occupant : occupants )
         {
@@ -190,7 +174,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener
     }
 
     @Override
-    public void onJoinedMessage( WritableArray occupants, WritableArray messages )
+    public void onMucJoined( WritableArray occupants, WritableArray messages )
     {
         WritableMap params = Arguments.createMap();
         params.putArray( "occupants", occupants );
@@ -239,6 +223,7 @@ public class XMPPCommunicationBridge implements XmppServiceListener
         sendEvent( reactContext, RNXMPP_OCCUPANTSFETCHED, occupants );
     }
 
+    //Sends event from Android to JS
     void sendEvent( ReactContext reactContext, String eventName, @Nullable Object params )
     {
         reactContext
