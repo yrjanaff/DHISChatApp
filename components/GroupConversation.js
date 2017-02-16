@@ -25,7 +25,7 @@ export default class GroupConversation extends React.Component {
   render() {
     let open = xmpp.drawerOpen;
     return (
-        <View style={[styles.containerNoTabs,{paddingTop: 50}] }>
+        <View style={[styles.containerNoTabs, {paddingTop: 50} ]}>
           <Drawer
               type="overlay"
               open={open}

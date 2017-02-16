@@ -524,8 +524,6 @@ class XmppStore {
       this.unSeenNotifications.Groups.push(muc);
       Vibration.vibrate([0, 200, 0, 0], false);
     }
-
-
   }
 
   addUserToGroup( username, groupId, subject ) {
@@ -537,7 +535,6 @@ class XmppStore {
     XMPP.getOccupants(roomId)
   }
 
-
   fileTransfer( uri ) {
     XMPP.fileTransfer(uri, this.remote);
   }
@@ -547,7 +544,6 @@ class XmppStore {
     this.saveState(JSON.stringify(Object.assign({}, this.savedData, {lastActive: new Date()})));
 
     isOffline ? XMPP.goOffline() : XMPP.goOnline();
-
   }
 
   async saveState( state ) {
@@ -557,8 +553,6 @@ class XmppStore {
       Alert.alert('AsyncStorage error: ', error.message);
     }
   }
-
-
 }
 
 export default new XmppStore();
