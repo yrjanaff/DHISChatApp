@@ -34,13 +34,13 @@ public interface XmppServiceListener
 
     void onLogin( String username, String password );
 
-    void onMucInvotationRecevied( String room, String inviter, Message message, String[] occupants, String reason );
+    void onMucInvotationRecevied( Message message, String[] occupants, String reason );
 
     void onAllMucFetced( WritableArray mucRooms );
 
     void onPresenceChanged( String user, String status );
 
-    void onJoinedMessage( WritableArray occupants, WritableArray messages );
+    void onMucJoined( WritableArray occupants, WritableArray messages );
 
     void onMucMessage( String body, String from, String time );
 

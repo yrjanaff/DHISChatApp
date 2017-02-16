@@ -673,7 +673,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
             mucInvites.put( room.toString(), temp );
 
-            this.xmppServiceListener.onMucInvotationRecevied( room.toString(), inviter, message, temp, reason );
+            this.xmppServiceListener.onMucInvotationRecevied(message, temp, reason );
 
         }
         catch ( SmackException.NoResponseException e )
@@ -872,7 +872,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                 for ( String nick : participants )
                     occupants.pushString( nick );
 
-                this.xmppServiceListener.onJoinedMessage( occupants, null );
+                this.xmppServiceListener.onMucJoined( occupants, null );
 
             }
             catch ( SmackException.NoResponseException e )
