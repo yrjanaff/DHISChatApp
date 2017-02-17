@@ -320,14 +320,12 @@ class XmppStore {
     }
   }
 
-  onReceiveMessage( {from, body} ) {
-    let date = new Date();
+  onReceiveMessage( {from, body, time} ) {
+    let date = time !== null ? moment.utc(time) : new Date();
     if( !from || !body ) {
       return;
     }
-
     const from_name = from.split("/")[0];
-
 
     if( !this.conversation[from_name] ) {
       this.createConversationObject(from_name, false, body);

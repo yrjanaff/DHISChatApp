@@ -63,6 +63,17 @@ export default class Groups extends React.Component {
     xmpp.remote='';
   }
 
+  prettifyUsername( username ) {
+    if( xmpp.roster[username] ) {
+      return xmpp.roster[username].displayName;
+    }
+    var name = username.split('@')[0];
+    if(name === xmpp.username){
+      return 'you';
+    }
+    return name;
+  }
+
   render() {
     let groupChats = this.sortArray(xmpp.multiUserChat);
     return (
@@ -89,7 +100,7 @@ export default class Groups extends React.Component {
                                 {
                                   xmpp.mucConversation[current[0]] ?
                                       <Text
-                                          style={{marginLeft: 10, marginBottom: 5}}>{xmpp.mucConversation[current[0]].chat[0].from.split('@')[0]}: {this.prevMessage(xmpp.mucConversation[current[0]].chat[0].text)}</Text> :
+                                          style={{marginLeft: 10, marginBottom: 5}}>{this.prettifyUsername(xmpp.mucConversation[current[0]].chat[0].from)}: {this.prevMessage(xmpp.mucConversation[current[0]].chat[0].text)}</Text> :
                                       <Text style={{marginLeft: 10, marginBottom: 5, color:"lightgray"}}>No messages</Text>
                                 }
                                 {current[2] ?

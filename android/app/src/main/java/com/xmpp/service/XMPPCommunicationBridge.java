@@ -76,11 +76,12 @@ public class XMPPCommunicationBridge implements XmppServiceListener
     }
 
     @Override
-    public void onMessage( Message message )
+    public void onMessage( Message message, String time )
     {
         WritableMap params = Arguments.createMap();
         params.putString( "body", message.getBody() );
         params.putString( "from", message.getFrom() );
+        params.putString( "time", time);
         sendEvent( reactContext, RNXMPP_MESSAGE, params );
     }
 

@@ -20,7 +20,7 @@ public interface XmppServiceListener
 
     void onLoginError( Exception e );
 
-    void onMessage( Message message );
+    void onMessage( Message message, String date );
 
     void onRosterReceived( Roster roster );
 

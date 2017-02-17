@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text}  from 'react-native';
+import {View, Text, TextInput,ScrollView}  from 'react-native';
 import ListRoster from './ListRoster';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
@@ -7,7 +7,10 @@ import xmpp from '../utils/XmppStore';
 export default class Roster extends React.Component {
   constructor( props ) {
     super(props);
-    this.state = {};
+    this.state = {
+      roster: xmpp.roster,
+      dataSource: xmpp.roster
+    };
   }
 
   componentWillReceiveProps( props ) {
@@ -15,10 +18,37 @@ export default class Roster extends React.Component {
     xmpp.mucRemote = [];
   }
 
+  foundMatch( text ) {
+    xmpp.group = false;
+
+    let filteredRoster = [];
+    for( let k in this.state.roster ) {
+      if( this.state.roster[k].displayName.toLowerCase().indexOf(text) >= 0 )
+        filteredRoster.unshift(this.state.roster[k]);
+    }
+
+    this.setState({
+      text,
+      dataSource: filteredRoster
+    });
+
+  }
+
   render() {
     return (
-        <View style={[styles.container,{marginTop: 10}]}>
-          <ListRoster style={{color:'black'}} isChat={false} roster={xmpp.roster}/>
+        <View style={styles.container}>
+          <View style={{flex:0, flexDirection: 'row', borderColor: 'lightgray', borderBottomWidth: 7}}>
+            <Text style={{fontSize: 20, color: 'darkgray', marginTop:5 }}>Search:</Text>
+            <TextInput
+                style={{height:40, flex:1}}
+                onChangeText={(text) => {this.setState({text});this.foundMatch(text)}}
+                value={this.state.text}
+                underlineColorAndroid="#ffffff"
+            />
+          </View>
+          <ScrollView style={{marginTop:10}}>
+            <ListRoster style={{color:'black'}} isChat={false} roster={this.state.dataSource}/>
+          </ScrollView>
         </View>
     )
   }

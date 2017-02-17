@@ -65,6 +65,17 @@ class Conversation extends React.Component {
     );
   }
 
+  prettifyUsername( username ) {
+    if( xmpp.roster[username] ) {
+      return xmpp.roster[username].displayName;
+    }
+    var name = username.split('@')[0];
+    if(name === xmpp.username){
+      return 'you';
+    }
+    return name;
+  }
+
   updateDate( date ) {
     nextDate = date;
   }
@@ -134,7 +145,7 @@ class Conversation extends React.Component {
                               <View style={styles.bubble}>
                                 <View style={row.own ? styles.bubbleRight : styles.bubbleLeft}>
 
-                                   <Text style={[styles.messageItem, {color: row.own ? '#ffffff' : 'black'}]}>{row.text}</Text><Text style={{fontSize: 10,marginTop: -10,color: row.own ? '#ffffff' : 'black', textAlign: row.own ? 'right' : 'left'}}>{row.from ? row.from.split('@')[0]:null}</Text>
+                                   <Text style={[styles.messageItem, {color: row.own ? '#ffffff' : 'black'}]}>{row.text}</Text><Text style={{fontSize: 10,marginTop: -10,color: row.own ? '#ffffff' : 'black', textAlign: row.own ? 'right' : 'left'}}>{row.from ? this.prettifyUsername(row.from):null}</Text>
                                 </View>
                                 {lastTime === row.time ?null:<Text style={{textAlign: row.own ? 'right' : 'left', marginBottom: 5}}>{row.time}</Text>}
                               </View>
