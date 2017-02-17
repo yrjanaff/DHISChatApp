@@ -65,7 +65,7 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
         this.xmppService.message( text, to, thread );
     }
 
-    @Override
+  /*  @Override
     @ReactMethod
     public void presence( String to, String type )
     {
@@ -77,7 +77,7 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
     public void removeRoster( String to )
     {
         this.xmppService.removeRoster( to );
-    }
+    }*/
 
     @Override
     @ReactMethod
@@ -93,12 +93,12 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
         this.xmppService.fetchRoster();
     }
 
-    @Override
+   /* @Override
     @ReactMethod
     public void sendStanza( String stanza )
     {
         this.xmppService.sendStanza( stanza );
-    }
+    }*/
 
     @Override
     @ReactMethod
@@ -142,17 +142,4 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
         this.xmppService.getOccupants( roomId );
     }
 
-    @Override
-    @ReactMethod
-    public void goOffline()
-    {
-        this.xmppService.goOffline();
-    }
-
-    @Override
-    @ReactMethod
-    public void goOnline()
-    {
-        this.xmppService.goOnline();
-    }
 }

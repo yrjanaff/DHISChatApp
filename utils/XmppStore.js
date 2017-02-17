@@ -412,10 +412,6 @@ class XmppStore {
     }
   }
 
-  getAllMuc() {
-    XMPP.getAllMuc()
-  }
-
   fetchRoster() {
     XMPP.fetchRoster();
   }
@@ -538,14 +534,6 @@ class XmppStore {
   fileTransfer( uri ) {
     XMPP.fileTransfer(uri, this.remote);
   }
-
-  settingOfflineMode( isOffline ) {
-    this.offlineMode = isOffline;
-    this.saveState(JSON.stringify(Object.assign({}, this.savedData, {lastActive: new Date()})));
-
-    isOffline ? XMPP.goOffline() : XMPP.goOnline();
-  }
-
   async saveState( state ) {
     try {
       await AsyncStorage.setItem(this._userForName(this.username), state);

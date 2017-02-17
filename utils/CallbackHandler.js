@@ -158,21 +158,21 @@ class XMPP {
     XMPPModule.message(text, user, thread);
   }
 
-  sendStanza( stanza ) {
+ /* sendStanza( stanza ) {
     XMPPModule.sendStanza(stanza);
-  }
+  }*/
 
   fetchRoster() {
     XMPPModule.fetchRoster();
   }
 
-  presence( to, type ) {
+ /* presence( to, type ) {
     XMPPModule.presence(to, type);
-  }
+  }*/
 
-  removeFromRoster( to ) {
+ /* removeFromRoster( to ) {
     XMPPModule.removeRoster(to);
-  }
+  }*/
 
   disconnect() {
     if( this.isConnected ) {

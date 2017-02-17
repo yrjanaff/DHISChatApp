@@ -438,7 +438,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         }
     }
 
-    @Override
+   /* @Override
     public void presence( String to, String type )
     {
         try
@@ -449,9 +449,9 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         {
             logger.log( Level.WARNING, "Could not send presence", e );
         }
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void removeRoster( String to )
     {
         Roster roster = Roster.getInstanceFor( connection );
@@ -467,7 +467,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                 logger.log( Level.WARNING, "Could not remove roster entry: " + to );
             }
         }
-    }
+    }*/
 
     @Override
     public void disconnect()
@@ -511,7 +511,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         }
     }
 
-    @Override
+   /* @Override
     public void sendStanza( String stanza )
     {
         StanzaPacket packet = new StanzaPacket( stanza );
@@ -523,7 +523,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         {
             logger.log( Level.WARNING, "Could not send stanza", e );
         }
-    }
+    }*/
 
     @Override
     public void chatCreated( Chat chat, boolean createdLocally )
@@ -937,47 +937,5 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         this.xmppServiceListener.onOccupantsFetched( occupants );
 
     }
-
-    @Override
-    public void goOffline()
-    {
-        connection.removeConnectionListener( this );
-        ChatManager.getInstanceFor( connection ).removeChatListener( this );
-        MultiUserChatManager.getInstanceFor( connection ).removeInvitationListener( this );
-        FileTransferManager.getInstanceFor( connection ).removeFileTransferListener( this );
-        roster.removeRosterListener( this );
-
-        for ( Chat temp : chats )
-        {
-            temp.removeMessageListener( this );
-        }
-        for ( MultiUserChat muc : MUCs )
-        {
-            muc.removeMessageListener( this );
-        }
-
-        presence( null, "unavailable" );
-    }
-
-    @Override
-    public void goOnline()
-    {
-        connection.addConnectionListener( this );
-        ChatManager.getInstanceFor( connection ).addChatListener( this );
-        MultiUserChatManager.getInstanceFor( connection ).addInvitationListener( this );
-        FileTransferManager.getInstanceFor( connection ).addFileTransferListener( this );
-        roster.addRosterListener( this );
-
-        for ( Chat temp : chats )
-        {
-            temp.addMessageListener( this );
-        }
-        for ( MultiUserChat muc : MUCs )
-        {
-            muc.addMessageListener( this );
-        }
-        presence( null, "available" );
-    }
-
 
 }
