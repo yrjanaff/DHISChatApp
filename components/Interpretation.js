@@ -33,7 +33,7 @@ export default class Interpretation extends React.Component {
     return fetch(dhisApiURL + 'interpretations/' + xmpp.currentInterpretation.id + '/comments', {
       method: 'POST',
       headers: {
-        'Authorization': `Basic ${btoa('admin:district')}`,
+        'Authorization': `Basic ${btoa(xmpp.username + ':' + xmpp.password)}`,
         'Content-Type': 'text/plain'
       },
       body: comment

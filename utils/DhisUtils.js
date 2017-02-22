@@ -43,7 +43,7 @@ export const getDhisHeader = () => {
   return {
     method: 'GET',
     headers: {
-      'Authorization': `Basic ${btoa('admin:district')}`,
+      'Authorization': `Basic ${btoa(xmpp.username + ':' + xmpp.password)}`,
       'Content-Type': 'application/json'
     }
   }
@@ -53,7 +53,7 @@ export const getDhisHeaderUser = ( username, password ) => {
   return {
     method: 'GET',
     headers: {
-      'Authorization': `Basic ${btoa(username + ':' + password)}`,
+      'Authorization': `Basic ${btoa(xmpp.username + ':' + password)}`,
       'Content-Type': 'application/json'
     }
   }
@@ -63,7 +63,7 @@ export const getDhisImageHeader = () => {
   return {
     method: 'GET',
     headers: {
-      'Authorization': `Basic ${btoa('admin:district')}`,
+      'Authorization': `Basic ${btoa(xmpp.username + ':' + xmpp.password)}`,
       'Content-Type': 'image/png;charset=UTF-8'
     }
   }
@@ -73,11 +73,12 @@ export const postDhisHeader = () => {
   return {
     method: 'POST',
     headers: {
-      'Authorization': `Basic ${btoa('admin:district')}`,
+      'Authorization': `Basic ${btoa(xmpp.username + ':' + xmpp.password)}`,
       'Content-Type': 'text/plain'
     }
   }
 };
 
+//export const dhisApiURL = 'https://play.dhis2.org/demo/api/';
 export const dhisApiURL = 'https://197.243.37.125/hmis/api/';
 

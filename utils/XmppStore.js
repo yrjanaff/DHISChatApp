@@ -400,7 +400,7 @@ class XmppStore {
       } else {
         this.loginError = null;
 
-        XMPP.trustHosts(['1x-193-157-251-127.uio.no', '1x-193-157-200-122.uio.no', '1x-193-157-188-65.uio.no', 'yj-dev.dhis2.org'])
+        XMPP.trustHosts(['1x-193-157-251-127.uio.no', '1x-193-157-200-122.uio.no', '1x-193-157-188-65.uio.no', 'yj-dev.dhis2.org','197.243.37.125/hmis'])
         // try to login to test domain with the same password as username
         XMPP.connect(this._userForName(this.username), this.password, "", DOMAIN, 5222);
         this.loading = true
