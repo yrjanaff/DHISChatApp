@@ -4,7 +4,7 @@ import styles from './styles';
 import Button from 'react-native-button';
 import ActivityIndicator from './ActivityIndicator';
 import xmpp from '../utils/XmppStore';
-import {getDhisHeaderUser, dhisApiURL, realDhisApiURL} from '../utils/DhisUtils';
+import {getDhisHeaderUser, dhisApiURL} from '../utils/DhisUtils';
 var btoa = require('Base64').btoa;
 
 const dismissKeyboard = require('dismissKeyboard');
@@ -35,7 +35,7 @@ export default class Settings extends React.Component {
   }
 
   getDhisProfile() {
-    return fetch(realDhisApiURL + 'me?fields=firstName,surname,education,employer,jobTitle,email,phoneNumber, interests,languages', getDhisHeaderUser(xmpp.username, xmpp.password))
+    return fetch(dhisApiURL + 'me?fields=firstName,surname,education,employer,jobTitle,email,phoneNumber, interests,languages', getDhisHeaderUser(xmpp.username, xmpp.password))
         .then(( response ) => response.json())
         .then(( responseJson ) => {
           this.setState({
@@ -62,7 +62,7 @@ export default class Settings extends React.Component {
     this.setState({updated: ''});
     let profile = new Profile(this.state.firstName, this.state.surname, this.state.education, this.state.employer, this.state.jobTitle,
         this.state.email, this.state.phoneNumber, this.state.interests, this.state.languages);
-    return fetch(realDhisApiURL + 'me/user-account', {
+    return fetch(dhisApiURL + 'me/user-account', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${btoa(xmpp.username + ':' + xmpp.password)}`,
