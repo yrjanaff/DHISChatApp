@@ -25,8 +25,6 @@ public interface XmppServiceListener
 
     void onIQ( IQ iq );
 
-    void onPresence( Presence presence );
-
     void onConnnect( String username, String password );
 
     void onDisconnect( Exception e );
@@ -36,10 +34,6 @@ public interface XmppServiceListener
     void onMucInvotationRecevied( Message message, String[] occupants, String reason );
 
     void onAllMucFetced( WritableArray mucRooms );
-
-    void onPresenceChanged( String user, String status );
-
-    void onMucJoined( WritableArray occupants, WritableArray messages );
 
     void onMucMessage( String body, String from, String time );
 

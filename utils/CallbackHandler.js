@@ -8,7 +8,6 @@ import XmppStore from './XmppStore';
 var map = {
   'message': 'XMPPMessage',
   'iq': 'XMPPIQ',
-  'presence': 'XMPPPresence',
   'connect': 'XMPPConnect',
   'disconnect': 'XMPPDisconnect',
   'error': 'XMPPError',
@@ -17,8 +16,6 @@ var map = {
   'roster': 'XMPPRoster',
   'mucInvitation': 'XMPPMucInvitation',
   'allMucs': 'XMPPAllMucRooms',
-  'presenceChanged': 'XMPPPresenceChanced',
-  'joinedRoom': 'XMPPRoomJoined',
   'mucMessage': 'XMPPMucMessage',
   'fileTransfer': 'XMPPFileTransfer',
   'fileReceived': 'XMPPFileReceived',

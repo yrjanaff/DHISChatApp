@@ -114,12 +114,6 @@ public class XMPPCommunicationBridge implements XmppServiceListener
     }
 
     @Override
-    public void onPresence( Presence presence )
-    {
-        sendEvent( reactContext, RNXMPP_PRESENCE, presence.toString() );
-    }
-
-    @Override
     public void onConnnect( String username, String password )
     {
         WritableMap params = Arguments.createMap();
@@ -163,25 +157,6 @@ public class XMPPCommunicationBridge implements XmppServiceListener
     public void onAllMucFetced( WritableArray mucRooms )
     {
         sendEvent( reactContext, RNXMPP_ALLMUCS, mucRooms );
-    }
-
-    @Override
-    public void onPresenceChanged( String user, String status )
-    {
-        WritableMap params = Arguments.createMap();
-        params.putString( "user", user );
-        params.putString( "status", status );
-        sendEvent( reactContext, RNXMPP_PRESENCECHANGE, params );
-    }
-
-    @Override
-    public void onMucJoined( WritableArray occupants, WritableArray messages )
-    {
-        WritableMap params = Arguments.createMap();
-        params.putArray( "occupants", occupants );
-        params.putArray( "messages", messages );
-        sendEvent( reactContext, RXMPP_ROOMJOINED, params );
-
     }
 
     @Override

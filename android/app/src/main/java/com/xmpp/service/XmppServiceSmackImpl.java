@@ -111,8 +111,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     List<String> trustedHosts = new ArrayList<>();
     String password;
     File file;
-    List<Chat> chats = new ArrayList<>();
-    List<MultiUserChat> MUCs = new ArrayList<>();
+
     private Context context;
 
     //constuctor
@@ -374,12 +373,12 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         roster = Roster.getInstanceFor( connection );
         roster.addRosterLoadedListener( this );
         roster.addRosterListener( this );
-
+//////// This is for getting a receipt on a message ? REMOVE ?????////////////////////////////////
         DeliveryReceiptManager dm = DeliveryReceiptManager
             .getInstanceFor(connection);
         dm.setAutoReceiptMode(AutoReceiptMode.always);
         dm.addReceiptReceivedListener(this);
-
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
         new AsyncTask<Void, Void, Void>()
         {
@@ -424,12 +423,12 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
         ChatManager chatManager = ChatManager.getInstanceFor( connection );
         Chat chat = chatManager.getThreadChat( chatIdentifier );
-
+//////// This is for getting a receipt on a message ? REMOVE ?????////////////////////////////////
         Message msg = new Message();
         msg.setBody(text);
         msg.setTo(to);
         msg.setType(org.jivesoftware.smack.packet.Message.Type.chat);
-
+/////////////////////////////////////////////////////////////////////////////////////////////////
         if ( chat == null )
         {
             if ( thread == null )
@@ -452,17 +451,13 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         }
     }
 
+//////// This is for getting a receipt on a message ? REMOVE ?????////////////////////////////////
     @Override
     public void onReceiptReceived(final String fromid,
         final String toid, final String msgid,
         final Stanza packet) {
-        logger.info("\n\n\ninne i onReceiptReceived");
-        logger.info(fromid);
-        logger.info(toid);
-        logger.info(msgid);
-        logger.info(packet.toString());
-
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //disconnect from openfire
     @Override
@@ -509,14 +504,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
     }
 
     @Override
-    public void chatCreated( Chat chat, boolean createdLocally )
-    {
-        if ( !chats.contains( chat ) )
-        {
-            chats.add( chat );
-        }
-        chat.addMessageListener( this );
-    }
+    public void chatCreated( Chat chat, boolean createdLocally ) {chat.addMessageListener( this );}
 
     @Override
     public void processPacket( Stanza packet ) throws SmackException.NotConnectedException
@@ -558,6 +546,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
             SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ" );
             date = formatter.format( tmpdate );
 
+//////// This is for getting a receipt on a message ? REMOVE ?????////////////////////////////////
            if(message != null || !message.getBody().isEmpty()) {
                 DeliveryReceiptManager deliveryReceiptManager = DeliveryReceiptManager.getInstanceFor(connection);
                 if(DeliveryReceiptManager.hasDeliveryReceiptRequest(message)) {
@@ -577,6 +566,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
                     }
                 }
             }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
         }
         catch ( NullPointerException e )
@@ -672,10 +662,6 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
             String[] temp = new String[participants.size() + 1];
             temp = participants.toArray( temp );
             temp[participants.size()] = inviter;
-
-            logger.info( "inni invitatioRecieved!!!" );
-            logger.info( temp.length + "" );
-            logger.info( room.toString() );
 
             mucInvites.put( room.toString(), temp );
 
@@ -855,25 +841,12 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         MultiUserChat muc = MultiUserChatManager.getInstanceFor( connection ).getMultiUserChat( roomId );
         if ( !muc.isJoined() )
         {
-            if ( MUCs.contains( muc ) )
-            {
-                MUCs.add( muc );
-            }
-            muc.addMessageListener( this );
-
             try
             {
                 String[] tmp = connection.getUser().split( "/" );
                 String jid = tmp[0];
                 muc.join( jid, null, null, connection.getPacketReplyTimeout() );
-
-                WritableArray occupants = Arguments.createArray();
-                List<String> participants = muc.getOccupants();
-                for ( String nick : participants )
-                    occupants.pushString( nick );
-
-                this.xmppServiceListener.onMucJoined( occupants, null );
-
+                muc.addMessageListener( this );
             }
             catch ( SmackException.NoResponseException e )
             {
