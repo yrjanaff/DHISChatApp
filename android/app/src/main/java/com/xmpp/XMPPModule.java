@@ -34,10 +34,6 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
         this.xmppService.fileTransfer( uri, to );
     }
 
-    /*@Override
-    @ReactMethod
-    public void fileRecieve() { this.xmppService.fileRecieve(); }*/
-
     @Override
     public String getName()
     {
@@ -65,20 +61,6 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
         this.xmppService.message( text, to, thread );
     }
 
-  /*  @Override
-    @ReactMethod
-    public void presence( String to, String type )
-    {
-        this.xmppService.presence( to, type );
-    }
-
-    @Override
-    @ReactMethod
-    public void removeRoster( String to )
-    {
-        this.xmppService.removeRoster( to );
-    }*/
-
     @Override
     @ReactMethod
     public void disconnect()
@@ -92,13 +74,6 @@ public class XMPPModule extends ReactContextBaseJavaModule implements com.xmpp.s
     {
         this.xmppService.fetchRoster();
     }
-
-   /* @Override
-    @ReactMethod
-    public void sendStanza( String stanza )
-    {
-        this.xmppService.sendStanza( stanza );
-    }*/
 
     @Override
     @ReactMethod

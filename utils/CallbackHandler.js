@@ -158,21 +158,9 @@ class XMPP {
     XMPPModule.message(text, user, thread);
   }
 
- /* sendStanza( stanza ) {
-    XMPPModule.sendStanza(stanza);
-  }*/
-
   fetchRoster() {
     XMPPModule.fetchRoster();
   }
-
- /* presence( to, type ) {
-    XMPPModule.presence(to, type);
-  }*/
-
- /* removeFromRoster( to ) {
-    XMPPModule.removeRoster(to);
-  }*/
 
   disconnect() {
     if( this.isConnected ) {
@@ -204,13 +192,6 @@ class XMPP {
     XMPPModule.addUserToGroup(username, roomId, subject);
   }
 
-  goOffline() {
-    XMPPModule.goOffline();
-  }
-
-  goOnline() {
-    XMPPModule.goOnline();
-  }
 }
 
 module.exports = new XMPP();

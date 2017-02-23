@@ -69,7 +69,7 @@ export default class Groups extends React.Component {
     }
     var name = username.split('@')[0];
     if(name === xmpp.username){
-      return 'you';
+      return 'You';
     }
     return name;
   }

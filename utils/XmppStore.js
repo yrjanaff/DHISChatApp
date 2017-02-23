@@ -336,7 +336,7 @@ class XmppStore {
         date: dateFormat(date, "dd.mmm.yyyy"),
         time: dateFormat(date, "HH:MM"),
         fullDate: date
-      }) //Date er en foreløpig løsning..
+      })
     }
     this.savedData = Object.assign({}, this.savedData, {conversation: this.conversation})
     this.saveState(JSON.stringify(this.savedData));
