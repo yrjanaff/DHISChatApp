@@ -54,7 +54,7 @@ export default class Settings extends React.Component {
           });
         })
         .catch(( error ) => {
-          console.error(error);
+          console.log(error);
         });
   }
 
@@ -79,7 +79,7 @@ export default class Settings extends React.Component {
           }
         })
         .catch(( error ) => {
-          console.error(error);
+          console.log("could not get profile: " +error);
         });
 
   }

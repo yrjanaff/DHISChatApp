@@ -20,20 +20,11 @@ public interface XmppService
     @ReactMethod
     void message( String text, String to, String thread );
 
-   // @ReactMethod
- //   void presence( String to, String type );
-
-   // @ReactMethod
-  //  void removeRoster( String to );
-
     @ReactMethod
     void disconnect();
 
     @ReactMethod
     void fetchRoster();
-
-   // @ReactMethod
-   // void sendStanza( String stanza );
 
     @ReactMethod
     void createConference( String name, String subject, ReadableArray participants, String from );
@@ -55,6 +46,5 @@ public interface XmppService
 
     @ReactMethod
     void getOccupants( String roomId );
-
 }
 

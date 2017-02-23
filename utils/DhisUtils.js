@@ -79,6 +79,8 @@ export const postDhisHeader = () => {
   }
 };
 
-export const dhisApiURL = 'https://play.dhis2.org/demo/api/';
 
+//export const dhisApiURL = 'https://197.243.37.125/hmis/api/';
+export const dhisApiURL = 'https://play.dhis2.org/demo/api/';
 export const realDhisApiURL = 'https://yj-dev.dhis2.org/dhis/api/';
+
