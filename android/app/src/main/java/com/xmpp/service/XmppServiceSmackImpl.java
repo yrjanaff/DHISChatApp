@@ -429,7 +429,6 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
         msg.setBody(text);
         msg.setTo(to);
         msg.setType(org.jivesoftware.smack.packet.Message.Type.chat);
-        String id = DeliveryReceiptRequest.addTo(msg);
 
         if ( chat == null )
         {
