@@ -40,10 +40,12 @@ export const fetchInterpretation = ( url, conversation ) => {
 };
 
 export const getDhisHeader = () => {
+  console.log(xmpp.username);
+  console.log(xmpp.password);
   return {
     method: 'GET',
     headers: {
-      'Authorization': `Basic ${btoa('admin:district')}`,
+      'Authorization': `Basic ${btoa(xmpp.username + ':' + xmpp.password)}`,
       'Content-Type': 'application/json'
     }
   }
@@ -63,7 +65,7 @@ export const getDhisImageHeader = () => {
   return {
     method: 'GET',
     headers: {
-      'Authorization': `Basic ${btoa('admin:district')}`,
+      'Authorization': `Basic ${btoa(xmpp.username + ':' + xmpp.password)}`,
       'Content-Type': 'image/png;charset=UTF-8'
     }
   }
@@ -73,7 +75,7 @@ export const postDhisHeader = () => {
   return {
     method: 'POST',
     headers: {
-      'Authorization': `Basic ${btoa('admin:district')}`,
+      'Authorization': `Basic ${btoa(xmpp.username + ':' + xmpp.password)}`,
       'Content-Type': 'text/plain'
     }
   }
@@ -81,6 +83,7 @@ export const postDhisHeader = () => {
 
 
 //export const dhisApiURL = 'https://197.243.37.125/hmis/api/';
-export const dhisApiURL = 'https://play.dhis2.org/demo/api/';
-export const realDhisApiURL = 'https://yj-dev.dhis2.org/dhis/api/';
+//export const dhisApiURL = 'https://play.dhis2.org/demo/api/';
+//export const realDhisApiURL = 'https://yj-dev.dhis2.org/dhis/api/';
 
+export const dhisApiURL = 'https://hmis.moh.gov.rw/hmis/api/';

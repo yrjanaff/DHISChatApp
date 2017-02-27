@@ -38,6 +38,7 @@ export default class InterpretationList extends React.Component {
     return fetch(dhisApiURL + 'interpretations?page=' + page + '&pageSize=15&' + args, getDhisHeader())
         .then(( response ) => response.json())
         .then(( responseJson ) => {
+        console.log(responseJson);
           for( let i = 0; i < responseJson.interpretations.length; i++ ) {
             let interpretation = responseJson.interpretations[i];
             let type = interpretation.type.toLowerCase();
@@ -58,12 +59,14 @@ export default class InterpretationList extends React.Component {
               type = 'eventChart';
             }
 
-            if( type != 'reportTables' && type != 'dataset_report' ) {
-              let tempInterpret = new InterpretationMeta(interpretation.id, interpretation.user.name, interpretation.text, dhisApiURL + 'interpretations/' + interpretation.id,
-                  dhisApiURL + type + 's/' + typeId + '/data', null);
+            let name = interpretation.user ? interpretation.user.name: '-User not found-';
+            let imageUrl = (type != 'reportTables' && type != 'dataset_report') ? dhisApiURL + type + 's/' + typeId + '/data' : '.../image/dash-fighting.jpg';
+
+              let tempInterpret = new InterpretationMeta(interpretation.id, name, interpretation.text, dhisApiURL + 'interpretations/' + interpretation.id,
+                  imageUrl, null);
+
               interpretations.unshift(tempInterpret);
               xmpp.saveInterpretation(tempInterpret);
-            }
             if( i + 1 == responseJson.interpretations.length ) {
               if( this.state.interpretations === [] || !concat ) {
                 this.setState({isRefreshing: false});
