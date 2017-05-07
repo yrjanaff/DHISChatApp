@@ -125,9 +125,9 @@ export default class MucCreater extends React.Component {
               />
             </View>
           </View>
-          <View style={{flex:1}}>
+          <ScrollView style={{flex:1}}>
             <ListRoster style={{color:'black'}} roster={this.state.dataSource} clicked={this.updateParticipants}/>
-          </View>
+          </ScrollView>
           <TouchableHighlight underlayColor='transparent' disabled={
             xmpp.offlineMode || !this.state.name || !this.state.name.trim() || xmpp.newMucParticipants.length < 1
           } onPress={()=> this.onClick()}>

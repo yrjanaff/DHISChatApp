@@ -336,7 +336,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
         XMPPTCPConnectionConfiguration.Builder confBuilder = XMPPTCPConnectionConfiguration.builder()
             .setServiceName( serviceName )
-            .setCompressionEnabled( true )
+            .setCompressionEnabled( false )
             .setUsernameAndPassword( jidParts[0], password )
             .setConnectTimeout( 3000 )
             .setSecurityMode( ConnectionConfiguration.SecurityMode.disabled ); //required
@@ -344,7 +344,7 @@ public class XmppServiceSmackImpl implements XmppService, FileTransferListener, 
 
         confBuilder.setResource( "DHISCHAT" );
 
-        if ( hostname != null )
+        if ( hostname != null  )
         {
             confBuilder.setHost( hostname );
         }

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TextInput}  from 'react-native';
+import {Text, View, TextInput, ScrollView}  from 'react-native';
 import ListRoster from './ListRoster';
 import styles from './styles';
 import xmpp from '../utils/XmppStore';
@@ -41,9 +41,9 @@ export default class ChatCreater extends React.Component {
                 underlineColorAndroid="#ffffff"
             />
           </View>
-          <View style={{marginTop:10}}>
+          <ScrollView style={{marginTop:10}}>
             <ListRoster style={{color:'black'}} isChat={true} roster={this.state.dataSource}/>
-          </View>
+          </ScrollView>
         </View>
     );
   }
